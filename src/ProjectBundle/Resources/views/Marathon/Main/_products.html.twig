@@ -1,0 +1,53 @@
+{% if brand_types|length > 0 %}
+<section class="section-pad home-product bg-col">
+	<div class="container">
+		<div class="head-title">
+			<h4 class="section-title grey-text thin center">{% trans %}menu.product{% endtrans %}</h4>
+		</div>
+		<div class="clearfix">
+			<div class="owl-carousel owl-products">
+				{% for brand_type in brand_types %}
+				<div class="item">
+					<a href="#">
+						{% if brand_type.image %}
+						<img src="{{asset(brand_type.image) | imagine_filter('img_250x250')}}" alt="{{brand_type.title}}" />
+						{% else %}
+						<img src="https://placehold.it/250x250?text={{brand_type.title}}" alt="{{brand_type.title}}" />
+						{% endif %}
+						<span class="abs-center">{{brand_type.title}}</span>
+					</a>
+				</div>
+				{% endfor %}
+			</div>
+		</div>
+
+	</div>
+</section>
+
+<script>
+	$(function() {
+		$('.owl-products').owlCarousel({
+	    loop:false,
+			dots:false,
+			nav:true,
+	    margin:25,
+			navText:['<i class="material-icons">navigate_before</i>','<i class="material-icons">navigate_next</i>'],
+	    responsiveClass:true,
+	    responsive:{
+        0:{
+          items:1
+        },
+				480:{
+          items:2
+        },
+        600:{
+          items:3
+        },
+        1000:{
+          items:5
+        }
+	    }
+		})
+	});
+</script>
+{% endif %}

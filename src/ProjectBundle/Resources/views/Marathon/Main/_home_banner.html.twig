@@ -1,0 +1,40 @@
+<section class="rev_slider_wrapper slider-5">
+	{% if banners|length > 0 %}
+	<div id="slider2" data-height="700" class="rev_slider" data-version="5.0">
+		<ul>
+			{% for banner in banners %}
+			<li data-transition="random">
+				{% if banner.image %}
+					<img src="{{asset(banner.image) | imagine_filter('img_w_1300') }}" alt="" width="1300" height="700" data-bgposition="top center" data-bgfit="cover" data-bgrepeat="no-repeat" data-bgparallax="1">
+				{% endif %}
+
+				{% if banner.getTitle %}
+					<div class="tp-caption tp-resizeme banner-caption-h1" data-x="center" data-hoffset="0" data-y="top" data-voffset="200" data-transform_idle="o:1;" data-transform_in="x:[-175%];y:0px;z:0;rX:0;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;opacity:0.01;s:3000;e:Power3.easeOut;" data-transform_out="s:1000;e:Power3.easeInOut;s:1000;e:Power3.easeInOut;" data-mask_in="x:[100%];y:0;s:inherit;e:inherit;" data-splitin="none" data-splitout="none" data-start="500">
+						{{banner.getTitle}}
+					</div>
+				{% endif %}
+
+				{% if banner.getSubtitle %}
+				<div class="tp-caption tp-resizeme banner-caption-p large" data-x="center" data-hoffset="0" data-y="top" data-voffset="300" data-transform_idle="o:1;" data-transform_in="x:[-175%];y:0px;z:0;rX:0;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;opacity:0.01;s:3000;e:Power3.easeOut;" data-transform_out="s:1000;e:Power3.easeInOut;s:1000;e:Power3.easeInOut;" data-mask_in="x:[100%];y:0;s:inherit;e:inherit;" data-splitin="none" data-splitout="none" data-start="1500">
+					{{banner.getSubtitle}}
+				</div>
+				{% endif %}
+
+				{#<div class="tp-caption tp-resizeme banner-btn banner-btn01" data-x="center" data-hoffset="-100" data-y="top" data-voffset="400" data-transform_idle="o:1;" data-transform_in="y:[100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;opacity:0;s:2000;e:Power4.easeInOut;" data-transform_out="s:1000;e:Power3.easeInOut;s:1000;e:Power3.easeInOut;" data-splitin="none" data-splitout="none" data-responsive_offset="on" data-start="2300">
+					<a href="#" class="thm-btn arrow-push-in-right"><span>Shop Now <i class="fa fa-caret-right"></i></span></a>
+				</div>
+				<div class="tp-caption tp-resizeme banner-btn banner-btn02" data-x="center" data-hoffset="100" data-y="top" data-voffset="400" data-transform_idle="o:1;" data-transform_in="y:[100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;opacity:0;s:2000;e:Power4.easeInOut;" data-transform_out="s:1000;e:Power3.easeInOut;s:1000;e:Power3.easeInOut;" data-splitin="none" data-splitout="none" data-responsive_offset="on" data-start="2300">
+					<a href="#" class="thm-btn borderd arrow-push-in-right"><span>More Details <i class="fa fa-caret-right"></i></span></a>
+				</div>#}
+				{% if banner.getWebsite %}
+				<div class="tp-caption tp-resizeme banner-btn banner-btn03" data-x="center" data-hoffset="0" data-y="top" data-voffset="400" data-transform_idle="o:1;" data-transform_in="y:[100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;opacity:0;s:2000;e:Power4.easeInOut;" data-transform_out="s:1000;e:Power3.easeInOut;s:1000;e:Power3.easeInOut;" data-splitin="none" data-splitout="none" data-responsive_offset="on" data-start="2300">
+					<a href="{{banner.getWebsite}}" class="thm-btn arrow-push-in-right"><span>Shop Now <i class="fa fa-caret-right"></i></span></a>
+				</div>
+				{% endif %}
+			</li>
+			{% else %}
+			{% endfor %}
+		</ul>
+	</div>
+	{% endif %}
+</section>

@@ -1,0 +1,5 @@
+admin_customer_payment_epayment_list:
+  path: /
+  defaults: {_controller: ProjectBundle:AdminCustomerPaymentEpayment:index}
+  requirements:
+    _method: get

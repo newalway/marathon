@@ -1,0 +1,142 @@
+{% extends 'ProjectBundle::admin.html.twig'%}
+
+{% block stylesheets %}
+  {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <script src="{{asset('bundles/fosjsrouting/js/router.js')}}"></script>
+  <script src="{{path('fos_js_routing_js', {'callback': 'fos.Router.setData'})}}"></script>
+{% endblock %}
+
+{% use "ProjectBundle:AdminMemberB2B:blocks.html.twig" %}
+{% use "ProjectBundle::flash_message.html.twig" %}
+
+{% block content %}
+
+<div ng-app="memberApp" ng-controller="memberController" ng-init="init('{{acctoken}}')">
+    <div class="row">
+        <div class="col-md-8 margin-10-0">
+            <a href="{{path('admin_member_b2b_new')}}" class="btn btn-instagram" title="Add"><i class="fa fa-plus"></i> Add</a>
+        </div>
+    </div>
+    <br class="clearBoth">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box" style="min-height: 1000px;">
+                <div class="box-body">
+                    <div class="row">
+                        <form id="data_form_search" action="{{path('admin_member_b2b')}}" method="get" role="form" enctype="multipart/form-data" class="form-horizontal"
+                        data-search_data_path="{{path('admin_member_b2b')}}"
+                        data-search_export_excel_path="{{path('admin_member_b2b_group_export_excel')}}">
+                        {% include 'ProjectBundle:AdminMemberB2B:_form_search.html.twig' %}
+                    </form>
+                    <div class="col-md-12">
+                        <button type="button" class="btn bg-red" data-form_id="data_group" id="group_delete">
+                            <i class="fa fa-trash-o"></i> Delete
+                        </button>
+                        <button type="button" class="btn bg-olive" data-form_id="data_group" id="group_enable">
+                            <i class="fa fa-unlock"></i> Active
+                        </button>
+                        <button type="button" class="btn bg-gray" data-form_id="data_group" id="group_disable">
+                            <i class="fa fa-lock"></i> Inactive
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <form action="#" method="post" id="data_group" data-delete_path="{{path('admin_member_b2b_delete')}}" data-enable_path="{{path('admin_member_b2b_enable')}}" data-disable_path="{{path('admin_member_b2b_disable')}}">
+                <div class="box-body icheck">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th width="19"></th>
+                                <th>Name</th>
+                                <th>Company Name</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                                {#<th>Roles</th>#}
+                                <th class="text-center" width="50">Status</th>
+                                <th class="text-center" width="50">View</th>
+                                <th class="text-center" width="50">Reset Password</th>
+                                <th class="text-center" width="50">Edit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for data in paginated.currentpageresults %}
+                            <tr class="odd gradeX">
+                                <td>
+                                    <input type="checkbox" name="data_ids[]" class="check_all" value="{{data.id}}"/>
+                                </td>
+                                <td>{{data.firstname}} {{data.lastname}}</td>
+                                <td>{{data.companyname}}</td>
+                                <td>
+                                    {% if data.phoneNumber %}
+                                    <a href="tel:{{data.phoneNumber}}">{{data.phoneNumber}}</a>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if data.email %}
+                                    <a href="mailto:{{data.email}}">{{data.email}}</a>
+                                    {% endif %}
+                                </td>
+
+                                {# <td><span class="badge bg-green">B2B</span></td> #}
+
+                                <td class="text-center">
+                                    {% if data.enabled > 0%}
+                                    <span class="label label-success">Active</span>
+                                    {% else %}
+                                    <span class="label label-danger">Inactive</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-center"><a href="{{path('admin_member_b2b_view', {'id' : data.id})}}" title="View"><i class="fa fa-file-text-o fa-2x"></a></td>
+                                <td class="text-center">
+                                    <a href="{{path('admin_member_b2b_change_password', {'id' : data.id})}}" title="Reset Password"><i class="fa fa-key fa-2x"></i></a>
+                                </td>
+                                <td class="text-center">
+                                  <a href="{{path('admin_member_b2b_edit', {'id' : data.id})}}" title="Edit"><i class="fa fa-pencil-square-o fa-2x"></i></a>
+                                </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                    </div><!-- /.box-body -->
+
+                    <div class="box-footer clearfix">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="margin">Total : {{paginated.getNbResults}}</div>
+                            </div>
+                            <div class="col-md-9">
+                                {% if paginated.havetopaginate %}
+                                {{pagerfanta(paginated,'twitter_bootstrap3_translated')}}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div><!-- /.box -->
+        </div> <!-- .col-xs-12 -->
+    </div> <!-- .row -->
+</div>
+
+<script type="text/javascript">
+
+var app = angular.module('memberApp', []);
+
+app.controller('memberController',['$scope', '$sce', '$timeout', function($scope, $sce, $timeout)
+{
+    $scope.init = function(token){
+        $scope.setToken(token);
+    }
+    $scope.setToken = function(token){
+        $scope.access_token = token;
+    }
+    $scope.getToken = function(){
+        return $scope.access_token;
+    }
+}]);
+</script>
+{% endblock %}

@@ -1,0 +1,52 @@
+admin_power:
+  path: /
+  defaults: {_controller: ProjectBundle:AdminPower:index}
+  requirements:
+    _method: get
+
+admin_power_new:
+  path: /new
+  defaults: {_controller: ProjectBundle:AdminPower:new}
+
+admin_power_create:
+  path: /create
+  defaults: {_controller: ProjectBundle:AdminPower:create}
+  requirements:
+    _method: post
+
+admin_power_edit:
+  path: /{id}/edit
+  defaults: {_controller: ProjectBundle:AdminPower:edit}
+  requirements:
+    id: \d+
+
+admin_power_update:
+  path: /{id}
+  defaults: {_controller: ProjectBundle:AdminPower:update}
+  requirements:
+    _method: post
+    id: \d+
+
+admin_power_delete:
+  path: /{id}/delete
+  defaults: {_controller: ProjectBundle:AdminPower:delete}
+  requirements:
+    _method: get
+
+admin_power_group_delete:
+  path: /group-delete
+  defaults: {_controller: ProjectBundle:AdminPower:group_delete}
+  requirements:
+    _method: post
+
+admin_power_sort:
+  path: /sort
+  defaults: {_controller: ProjectBundle:AdminPower:sort}
+  requirements:
+    _method: get
+
+admin_power_sort_prosess:
+  path: /sort-prosess
+  defaults: {_controller: ProjectBundle:AdminPower:sort_prosess}
+  requirements:
+    _method: post

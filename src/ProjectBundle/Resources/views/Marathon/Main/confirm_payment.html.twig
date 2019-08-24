@@ -1,0 +1,223 @@
+{% extends "ProjectBundle:"~ view_layout ~":layout.html.twig" %}
+
+{% block title %}{% trans %}payment.title{% endtrans %} | {{ parent() }}{% endblock %}
+{% block orders_payment_active %}active{% endblock %}
+{% block breadcrumb_title1 %}{% trans %}menu.confirm.payment{% endtrans %}{% endblock %}
+
+{% block breadcrumb_sub %}
+    {{ parent() }}
+    <li class="active">{% trans %}payment.title{% endtrans %}</li>
+{% endblock %}
+
+
+{% block content %}
+  <section class="payment">
+    <div class="container " ng-app="myApp" ng-controller="myCtrl">
+      <div class="row form-pay form-group">
+          <form method="post" enctype="multipart/form-data" id="frmSearch" enctype="multipart/form-data">
+              <div class="col-sm-4 pull-right">
+                <div class = "input-group">
+                 {{form_widget(form.orderSearch,{'attr' : {'id' : 'orderSearch','ng-model' :"orderSearch"}})}}
+                 <!-- <input type="text" id="orderSearch" name="orderSearch" value="" class="form-control"> -->
+               <span class = "input-group-btn">
+                  <button id="btnorderSearch" class = "btn btn-default form-control" ng-click="searchOrder()" type = "button">
+                    <i class="fa fa-search"></i>
+                  </button>
+               </span>
+            </div><!-- /input-group -->
+            <div class="error-form order-err err-message">{% trans %}error.order.number.search{% endtrans %}</div>
+              </div>
+          </form>
+      </div>
+      <div class="style-pay">
+        <form method="post" id="frmData" enctype="multipart/form-data" action="{{path('confirm_payment')}}" enctype="multipart/form-data" {#autocomplete="off"#}>
+          {{form_widget(form._token)}}
+          <div class="row">
+
+            <div class="col-sm-12">
+              <h2 class="title-h2"><span>{% trans %}payment.title{% endtrans %}</span></h2>
+
+              <div class="row form-pay form-group">
+                <div class="col-sm-12">
+                  {%block flash_message%}
+                  	{%for flashMessage in app.session.flashbag.get('notice')%}
+                  	<div class="alert alert-success alert-dismissible">
+                  	  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                  	  <i class="fa fa-check-circle-o"></i> {{ flashMessage|raw }}
+                  	</div>
+                  	{%endfor%}
+                  {%endblock%}
+                </div>
+                <div class="col-sm-4">
+                  <p>{% trans %}payment.orderno{% endtrans %} *</p>
+                  {{form_widget(form.orderNumber,{'attr': {'id' : 'orderNumber','ng-model':'frm.orderNumber'}})}}
+            			<div class="error-form err-message">{{form_errors(form.orderNumber)}}</div>
+                  	<div class="error-form order-err err-message">{% trans %}error.order.number.search{% endtrans %}</div>
+                </div>
+                <div class="col-sm-8">
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <p for="date_of_birth">{% trans %}payment.date{% endtrans %} *</p>
+                      <div class="input-group">
+                        {{form_widget(form.dateTransfer, {'id' : 'dateTransfer'})}}
+                        <div class="input-group-addon"><label for="dateTransfer"><i class="fa fa-calendar"></i></label></div>
+                      </div>
+                      <div class="error-form err-message">{{form_errors(form.dateTransfer)}}</div>
+                    </div>
+                    <div class="col-sm-6">
+                      <p>{% trans %}payment.time{% endtrans %} *</p>
+
+
+                      <div class="input-group form-group">
+                        {% for timeTransfer in form.timeTransfer %}
+                          {{ form_widget(timeTransfer,{'attr': {'class': 'form-control'}})}}
+                          {% if loop.index == 1 %}
+                          <div class="input-group-addon"> : </div>
+                            {% endif %}
+                        {% endfor %}
+                      </div>
+                      <div class="error-form err-message">  {{form_errors(form.timeTransfer)}}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row form-pay form-group">
+                <div class="col-sm-4">
+                  <p>{% trans %}payment.fname{% endtrans %} *</p>
+                  {{form_widget(form.firstName, {'attr':{'id' : 'firstname','ng-model':'frm.firstName'}})}}
+            			<div class="error-form err-message">{{form_errors(form.firstName)}}</div>
+                </div>
+                <div class="col-sm-4">
+                  <p>{% trans %}payment.lname{% endtrans %} *</p>
+                  {{form_widget(form.lastName, {'attr':{'id' : 'lastname','ng-model':'frm.lastName'}})}}
+            			<div class="error-form err-message">{{form_errors(form.lastName)}}</div>
+                </div>
+                <div class="col-sm-4">
+                  <p>{% trans %}member.personal.phone{% endtrans %} *</p>
+                  {{form_widget(form.phone,{'attr': {'id' : 'phone','ng-model':'frm.phone'}})}}
+                  <div class="error-form err-message">{{form_errors(form.phone)}}</div>
+                </div>
+              </div>
+
+          {#    <div class="row form-pay">
+                <div class="col-sm-6">
+                  <p>{% trans %}payment.email{% endtrans %} *</p>
+                  {{form_widget(form.email, {'id' : 'email'})}}
+            			<div class="error-form">{{form_errors(form.email)}}</div>
+                </div>
+                <div class="col-sm-6">
+                  <p>{% trans %}payment.phone{% endtrans %} *</p>
+                  {{form_widget(form.phone, {'id' : 'phone'})}}
+            			<div class="error-form">{{form_errors(form.phone)}}</div>
+                </div>
+              </div>#}
+
+              <div class="row form-pay form-group">
+                <div class="col-sm-4">
+                  <p>{% trans %}payment.bank{% endtrans %} *</p>
+                  {{form_widget(form.bankAccount, {'id' : 'bankAccount'})}}
+            			<div class="error-form err-message">{{form_errors(form.bankAccount)}}</div>
+                </div>
+                <div class="col-sm-4">
+                  <p>{% trans %}payment.amount{% endtrans %} *</p>
+                  {{form_widget(form.amount, {'attr':{'id':'amount', 'ng-model':'frm.amount'}} )}}
+            			<div class="error-form err-message">{{form_errors(form.amount)}}</div>
+                </div>
+                <div class="col-sm-4">
+                  <p>{% trans %}payment.file{% endtrans %} *</p>
+                  {{form_widget(form.attach_file,{'attr': {'class': 'form-control'}})}}
+                  <div class="error-form err-message">{{form_errors(form.attach_file)}}</div>
+                  <div class="txt-upload">
+                    {% trans %}payment.file.txt{% endtrans %}
+                  </div>
+                </div>
+              </div>
+
+            <div class="row form-pay form-group">
+              <div class="col-sm-12">
+              <div class="text-center">
+                <div class="form-group wc-proceed-to-checkout form-button">
+                    <button type="submit"  class="btn btn-lg btn-primary">{% trans %}payment.submit{% endtrans %}</button>
+                </div>
+              </div>
+            </div>
+            </div>
+
+          </div>
+
+
+        </form>
+
+
+
+      </div>
+    </div>
+  </div>
+  </section>
+  <script>
+
+      $('#dateTransfer').datepicker({
+          todayHighlight:true,
+          todayBtn:'linked',
+          format: 'dd/mm/yyyy',
+          endDate: '+0d',
+          maxDate: "now"
+      });
+      var valindateTransfer = $('#dateTransfer').val();
+
+      if(valindateTransfer.length === 0){
+        $("#dateTransfer").datepicker('setDate', 'now');
+      }
+
+      $( "div .order-err" ).hide();
+      var app = angular.module('myApp', []);
+      app.config(['$locationProvider', function($locationProvider){
+        $locationProvider.html5Mode({
+          enabled: true,
+          requireBase: false
+        })
+      }])
+       app.controller('myCtrl', function($scope, $http ,$location) {
+
+         $scope.frm = {};
+         $scope.frm.dateTransfer = '{{form.vars.value.dateTransfer|date}}';
+         $scope.frm.orderNumber = '{{form.vars.value.orderNumber}}';
+         $scope.frm.firstName = '{{form.vars.value.firstName}}';
+         $scope.frm.lastName = '{{form.vars.value.lastName}}';
+         $scope.frm.phone = '{{form.vars.value.phone}}';
+         $scope.frm.amount = '{{form.vars.value.amount}}';
+         $scope.searchOrder = function() {
+         $http({
+           method: 'POST',
+           url: '{{path('search_payment_data')}}',
+           data: $.param({orderId: $scope.orderSearch}),
+           headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
+         }).then(function successCallback(response) {
+           if (response.data != false ){
+
+             $scope.frm.orderNumber = response.data.orderNumber;
+             $scope.frm.firstName = response.data.firstname;
+             $scope.frm.lastName = response.data.lastname;
+             $scope.frm.phone = response.data.phone;
+             $scope.frm.amount = response.data.totalPrice;
+             $location.search('orderId', $scope.frm.orderNumber); //set query string
+
+             $( "div .order-err" ).hide();
+           }else{
+             $( "div .order-err" ).show();
+             $scope.frm.orderNumber = ' ';
+             $location.search('orderId', $scope.orderSearch); //set query string
+           }
+         }, function errorCallback(response) {
+
+          });
+        };
+        if($location.search().hasOwnProperty('orderId')){
+            var myvalue = $location.search();
+            $scope.orderSearch = myvalue.orderId;
+            $scope.searchOrder();
+        }
+      });
+    </script>
+{% endblock %}

@@ -1,0 +1,112 @@
+services:
+#    project.example:
+#        class: ProjectBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]
+
+    utilities:
+          class: ProjectBundle\Utils\Utilities
+          public: true
+          arguments:
+              - '@kernel'
+              - '@security.encoder_factory'
+              - '@mailer'
+              - '@router'
+              - '@translator'
+
+    collections:
+          class: ProjectBundle\Utils\Collections
+          public: true
+          arguments:
+              - '@kernel'
+              - '@mailer'
+              - '@router'
+
+    app.product:
+          class: ProjectBundle\Utils\Products
+          public: true
+          arguments:
+              - '@kernel'
+              - '@security.encoder_factory'
+              - '@mailer'
+              - '@router'
+              - '@security.authorization_checker'
+
+    app.form.admin_user:
+         class: ProjectBundle\Form\Type\AdminUserType
+         public: true
+         arguments: ["@security.token_storage"]
+         tags: [form.type]
+
+    app.form.admin_product:
+         class: ProjectBundle\Form\Type\AdminProductType
+         arguments:
+             - '@kernel'
+             - '@request_stack'
+         tags: [form.type]
+
+    project.password_resetting:
+        class: ProjectBundle\EventListener\PasswordResettingListener
+        arguments: ['@router']
+        tags:
+            - { name: kernel.event_subscriber }
+
+    exportexcel:
+          class: ProjectBundle\Utils\ExportExcel
+          #arguments: ['@phpexcel']
+          arguments:
+              - '@kernel'
+              - '@translator'
+          public: true
+
+    importexcel:
+          class: ProjectBundle\Utils\ImportExcel
+          #arguments: ['@phpexcel']
+          arguments:
+              - '@kernel'
+              - '@translator'
+          public: true
+
+    cybersource:
+          class: ProjectBundle\Utils\Cybersource
+          public: true
+          arguments:
+              - '@kernel'
+              - '@security.encoder_factory'
+              - '@mailer'
+              - '@router'
+
+    app.custom_fos_user_mailer:
+          class: ProjectBundle\Mailer\CustomFosMailer
+          arguments:
+              - '@mailer'
+              - '@router'
+              - '@templating'
+              - { confirmation.template: %fos_user.registration.confirmation.template%, resetting.template: %fos_user.resetting.email.template%, from_email: { confirmation: %fos_user.registration.confirmation.from_email%, resetting: %fos_user.resetting.email.from_email% }}
+
+    app.form.admin_template_customer_group:
+         class: ProjectBundle\Form\Type\AdminTemplateCustomerGroupType
+         arguments:
+             - '@kernel'
+             - '@request_stack'
+         tags: [form.type]
+
+    app.form.admin_product_category:
+         class: ProjectBundle\Form\Type\AdminProductCategoryType
+         arguments:
+             - '@kernel'
+             - '@request_stack'
+         tags: [form.type]
+
+    app.form.admin_event:
+         class: ProjectBundle\Form\Type\AdminEventType
+         arguments:
+             - '@kernel'
+             - '@request_stack'
+         tags: [form.type]
+
+    app.form.admin_search_event:
+         class: ProjectBundle\Form\Type\AdminSearchEvenType
+         arguments:
+             - '@kernel'
+             - '@request_stack'
+         tags: [form.type]

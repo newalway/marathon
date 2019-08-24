@@ -1,0 +1,67 @@
+{% extends "ProjectBundle:"~ view_layout ~":layout.html.twig" %}
+
+{% block title %}{% trans %}menu.health.tips{% endtrans %}{% endblock %}
+{% block health_tip_active %}active{% endblock %}
+{% block m_health_tip_active %}active{% endblock %}
+
+{% block breadcrumb_title1 %}{% trans %}menu.health.tips{% endtrans %}{% endblock %}
+
+{% block breadcrumb_sub %}
+    {{ parent() }}
+    <li class="active">{% trans %}menu.health.tips{% endtrans %}</li>
+{% endblock %}
+
+{% block content %}
+    <section class="section-padding has-dynamic-divider blog-v2" data-count-element="3">
+        <div class="container">
+            <div class="row">
+                {% for data in paginated.currentpageresults %}
+                <div class="col-md-4 dynamic-divider-element ">
+                    <div class="single-blog-post">
+                        <div class="img-holder">
+                            {% if data.image %}
+                            <img src="{{asset(data.image) | imagine_filter('img_720x486')}}" alt="{{data.title}}" />
+                            {% else %}
+                            <img src="/template/img/blog-post/page-1.jpg" alt="{{data.title}}">
+                            {% endif %}
+                            <div class="overlay">
+                                <ul>
+                                    <li><a href="{{path('blog_detail',{'id':data.id,'slug':data.title|slug})}}"><i class="fa fa-link"></i></a></li>
+                                    <li><a href="{{asset(data.image)}}" data-fancybox data-type="image" data-caption="{{data.title}}" ><i class="fa fa-search-plus"></i></a></li>
+                                </ul>
+                            </div>
+                            <div class="icon-holder">
+                                <i class="fc-icon ftc-icon-dumbbell"></i>
+                                <p>{% trans %}health.tips{% endtrans %}</p>
+                            </div>
+                        </div>
+                        <div class="content">
+                            <ul class="meta">
+                                <li><a href="{{path('blog_detail',{'id':data.id,'slug':data.title|slug})}}"><i class="fa fa-calendar"></i>{{data.publicDate|date('d F Y')}}</a></li>
+                                {#<li><a href="{{path('blog_detail',{'id':data.id,'slug':data.title|slug})}}"><i class="fa fa-tag"></i>Mano</a></li>
+                                <li><a href="{{path('blog_detail',{'id':data.id,'slug':data.title|slug})}}"><i class="fa fa-tag"></i>Fitness Tips, Athlete, Jump</a></li>#}
+                            </ul>
+                            <a href="{{path('blog_detail',{'id':data.id,'slug':data.title|slug})}}"><h3>{{data.title}}</h3></a>
+                            <p>{{data.shortDesc}}</p>
+                            <a class="read-more arrow-push-in-right" href="{{path('blog_detail',{'id':data.id,'slug':data.title|slug})}}"><span>{% trans %}read.more{% endtrans %}<i class="fa fa-caret-right"></i></span></a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- <ul class="post-pagination list-inline text-center">
+                <li><a href="#"><i class="fa fa-caret-left"></i></a></li>
+                <li class="active"><a href="#">1</a></li>
+                <li><a href="#">2</a></li>
+                <li><a href="#">3</a></li>
+                <li><a href="#"><i class="fa fa-caret-right"></i></a></li>
+            </ul> -->
+            <div class="center">
+    			{% if paginated.havetopaginate %}
+    				{{pagerfanta(paginated,'twitter_bootstrap3_translated_template')}}
+    			{% endif %}
+    		</div>
+        </div>
+    </section>
+{% endblock %}

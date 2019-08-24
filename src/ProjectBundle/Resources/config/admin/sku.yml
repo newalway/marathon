@@ -1,0 +1,16 @@
+admin_sku_edit:
+    path: /{id}/edit
+    defaults: {_controller: ProjectBundle:AdminSku:edit}
+    requirements:
+        id: \d+
+    options:
+        expose: true
+
+admin_sku_update:
+    path: /{id}
+    defaults: {_controller: ProjectBundle:AdminSku:update}
+    requirements:
+        _method: post
+        id: \d+
+    options:
+        expose: true

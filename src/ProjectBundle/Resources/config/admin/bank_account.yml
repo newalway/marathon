@@ -1,0 +1,68 @@
+admin_bank_account:
+  path: /
+  defaults: {_controller: ProjectBundle:AdminBankAccount:index}
+  requirements:
+    _method: get
+
+admin_bank_account_new:
+  path: /new
+  defaults: {_controller: ProjectBundle:AdminBankAccount:new}
+  requirements:
+    _method: get
+
+admin_bank_account_create:
+  path: /create
+  defaults: {_controller: ProjectBundle:AdminBankAccount:create}
+  requirements:
+    _method: post
+
+admin_bank_account_edit:
+  path: /{id}/edit
+  defaults: {_controller: ProjectBundle:AdminBankAccount:edit}
+  requirements:
+    _method: get,post
+    id: \d+
+
+admin_bank_account_update:
+  path: /{id}
+  defaults: {_controller: ProjectBundle:AdminBankAccount:update}
+  requirements:
+    _method: post
+    id: \d+
+
+admin_bank_account_delete:
+  path: /{id}/delete
+  defaults: {_controller: ProjectBundle:AdminBankAccount:delete}
+  requirements:
+    _method: get
+    id: \d+
+
+admin_bank_account_group_delete:
+  path: /group-delete
+  defaults: {_controller: ProjectBundle:AdminBankAccount:group_delete}
+  requirements:
+    _method: post
+
+admin_bank_account_group_enable:
+  path: /group-enable
+  defaults: {_controller: ProjectBundle:AdminBankAccount:group_enable}
+  requirements:
+    _method: post
+
+admin_bank_account_group_disable:
+  path: /group-disable
+  defaults: {_controller: ProjectBundle:AdminBankAccount:group_disable}
+  requirements:
+    _method: post
+
+admin_bank_account_sort:
+  path: /sort
+  defaults: {_controller: ProjectBundle:AdminBankAccount:sort}
+  requirements:
+    _method: get
+
+admin_bank_account_sort_prosess:
+  path: /sort-prosess
+  defaults: {_controller: ProjectBundle:AdminBankAccount:sort_prosess}
+  requirements:
+    _method: post

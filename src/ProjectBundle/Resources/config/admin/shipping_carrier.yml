@@ -1,0 +1,37 @@
+admin_shipping_carrier:
+  path: /
+  defaults: {_controller: ProjectBundle:AdminShippingCarrier:index}
+  requirements:
+    _method: get
+
+admin_shipping_carrier_new:
+  path: /new
+  defaults: {_controller: ProjectBundle:AdminShippingCarrier:new}
+  requirements:
+    _method: get
+
+admin_shipping_carrier_create:
+  path: /create
+  defaults: {_controller: ProjectBundle:AdminShippingCarrier:create}
+  requirements:
+    _method: post
+
+admin_shipping_carrier_edit:
+  path: /{id}/edit
+  defaults: {_controller: ProjectBundle:AdminShippingCarrier:edit}
+  requirements:
+    _method: get, post
+    id: \d+
+
+admin_shipping_carrier_delete:
+  path: /{id}/delete
+  defaults: {_controller: ProjectBundle:AdminShippingCarrier:delete}
+  requirements:
+    _method: get
+    id: \d+
+
+admin_shipping_carrier_group_delete:
+  path: /group-delete
+  defaults: {_controller: ProjectBundle:AdminShippingCarrier:group_delete}
+  requirements:
+    _method: post

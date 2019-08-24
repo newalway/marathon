@@ -1,0 +1,25 @@
+admin_contact:
+  path: /
+  defaults: {_controller: ProjectBundle:AdminContact:index}
+  requirements:
+    _method: get
+
+admin_contact_view:
+  path: /{id}/view
+  defaults: {_controller: ProjectBundle:AdminContact:view}
+  requirements:
+    _method: get
+    id: \d+
+
+admin_contact_delete:
+  path: /{id}/delete
+  defaults: {_controller: ProjectBundle:AdminContact:delete}
+  requirements:
+    _method: get
+    id: \d+
+
+admin_contact_group_delete:
+  path: /group-delete
+  defaults: {_controller: ProjectBundle:AdminContact:group_delete}
+  requirements:
+    _method: post

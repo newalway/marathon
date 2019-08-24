@@ -1,0 +1,58 @@
+admin_discount:
+  path: /
+  defaults: {_controller: ProjectBundle:AdminDiscount:index}
+  requirements:
+    _method: get
+
+admin_discount_new:
+  path: /new
+  defaults: {_controller: ProjectBundle:AdminDiscount:new}
+
+admin_discount_create:
+  path: /create
+  defaults: {_controller: ProjectBundle:AdminDiscount:create}
+  requirements:
+    _method: post
+
+admin_discount_edit:
+  path: /{id}/edit
+  defaults: {_controller: ProjectBundle:AdminDiscount:edit}
+  requirements:
+    id: \d+
+
+admin_discount_update:
+  path: /{id}
+  defaults: {_controller: ProjectBundle:AdminDiscount:update}
+  requirements:
+    _method: post
+    id: \d+
+
+admin_discount_delete:
+  path: /{id}/delete
+  defaults: {_controller: ProjectBundle:AdminDiscount:delete}
+  requirements:
+    _method: get
+
+admin_discount_group_delete:
+  path: /group-delete
+  defaults: {_controller: ProjectBundle:AdminDiscount:group_delete}
+  requirements:
+    _method: post
+
+admin_discount_setting:
+  path: /setting
+  defaults: {_controller: ProjectBundle:AdminDiscount:setting}
+  requirements:
+    _method: get, post
+
+# admin_discount_group_enable:
+#   path: /group-enable
+#   defaults: {_controller: ProjectBundle:AdminDiscount:group_enable}
+#   requirements:
+#     _method: post
+#
+# admin_discount_group_disable:
+#   path: /group-disable
+#   defaults: {_controller: ProjectBundle:AdminDiscount:group_disable}
+#   requirements:
+#     _method: post

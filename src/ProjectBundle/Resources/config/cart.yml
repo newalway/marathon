@@ -1,0 +1,45 @@
+cart:
+    path: /
+    defaults: {_controller: ProjectBundle:Cart:index}
+    requirements:
+        _method: get
+
+cart_apply_discount_code:
+    path: /apply-discount-code
+    defaults: {_controller: ProjectBundle:Cart:applyDiscountCode}
+    requirements:
+        _method: post
+    options:
+        expose: true
+
+cart_remove_discount_code:
+    path: /remove-discount-code
+    defaults: {_controller: ProjectBundle:Cart:removeDiscountCode}
+    requirements:
+        _method: post
+    options:
+        expose: true
+
+cart_add_item_to_cart:
+    path: /additemtocart
+    defaults: {_controller: ProjectBundle:Cart:addItemToCart}
+    requirements:
+        _method: post
+    options:
+        expose: true
+
+cart_get_item_cart:
+    path: /getitemcart
+    defaults: {_controller: ProjectBundle:Cart:getItemCart}
+    requirements:
+        _method: get
+    options:
+        expose: true
+
+cart_update_item_cart:
+    path: /updateitemcart
+    defaults: {_controller: ProjectBundle:Cart:updateItemCart}
+    requirements:
+        _method: get
+    options:
+        expose: true

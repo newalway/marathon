@@ -1,0 +1,57 @@
+{% if layout_shops|length > 0 %}
+	<div class="container-fluid pomotion-section">
+		{% for layout_shop in layout_shops %}
+			<div class="col-md-4 col-sm-6" style="">
+
+				{% if layout_shop.getContent %}
+
+					<div class="single-shop-cta">
+						<div class="img-holder">
+							{% if layout_shop.image %}
+								<img src="{{asset(layout_shop.image)}}" alt="">
+							{% endif %}
+							<div class="shop-cta-content">
+								<div class="{% if layout_shop.contentPosition == 'L' %}shop-cta-content-left{% endif %}">
+									{% if layout_shop.getContent %}
+										{{layout_shop.getContent|raw}}
+									{% endif %}
+
+									{% if layout_shop.getLinkUrl %}
+									<a href="{{layout_shop.getLinkUrl}}" class="{% if layout_shop.buttonPosition == 'R' %}btn-right{% endif %} arrow-push-in-right">
+										<span>
+											{% if layout_shop.getLinkTitle %}
+												{{layout_shop.getLinkTitle}}
+											{% else %}
+												Shop Now
+											{% endif %}
+											<i class="fa fa-caret-right"></i>
+										</span>
+									</a>
+									{% endif %}
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- /.single-shop-cta -->
+
+				{% else %}
+					<div class="">
+						<div class="img-holder">
+							{% if layout_shop.getLinkUrl %}
+							<a href="{{layout_shop.getLinkUrl}}">
+							{% endif %}
+								{% if layout_shop.image %}
+									<img src="{{asset(layout_shop.image)}}">
+								{% endif %}
+							{% if layout_shop.getLinkUrl %}
+							</a>
+							{% endif %}
+						</div>
+					</div>
+				{% endif %}
+
+			</div>
+			<!-- /.col-md-4 -->
+		{% endfor %}
+	</div><!-- /.pormotion-section -->
+{% endif %}

@@ -1,0 +1,19 @@
+Hello Admin,<br/><br/>
+
+You have a new message in bank transfer.<br/><br/>
+
+Name: {{payment_bank_transfer.firstName}} {{payment_bank_transfer.lastName}}<br/>
+Email: {{user.email}}<br/>
+Phone: {{payment_bank_transfer.phone}}<br/>
+Bank: {{bank_account.title}}<br/>
+Price: {{payment_bank_transfer.amount|number_format(0, '', ',')}}<br/>
+Order Number: {{customer_order.orderNumber}}<br/>
+Date Payment: {{payment_bank_transfer.dateTransfer|date('d/m/Y')}}<br/>
+Time Payment: {{payment_bank_transfer.timeTransfer|date('H:i')}}<br/>
+{% if payment_bank_transfer.attachfile %}
+	Attach File : <a href="{{ url('admin_customer_payment_bank_transfer_download',{'id': payment_bank_transfer.id}) }}">Download</a>
+{% endif %}
+
+<br/><br/>
+Automatically generated email<br/>
+Marathon

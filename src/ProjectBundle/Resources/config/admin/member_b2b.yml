@@ -1,0 +1,73 @@
+admin_member_b2b:
+  path: /
+  defaults: {_controller: ProjectBundle:AdminMemberB2B:index}
+  requirements:
+    _method: get
+
+admin_member_b2b_new:
+  path: /new
+  defaults: {_controller: ProjectBundle:AdminMemberB2B:new}
+
+admin_member_b2b_create:
+  path: /create
+  defaults: {_controller: ProjectBundle:AdminMemberB2B:create}
+  requirements:
+    _method: post
+
+admin_member_b2b_edit:
+  path: /{id}/edit
+  defaults: {_controller: ProjectBundle:AdminMemberB2B:edit}
+  requirements:
+    id: \d+
+
+admin_member_b2b_update:
+  path: /{id}
+  defaults: {_controller: ProjectBundle:AdminMemberB2B:update}
+  requirements:
+    _method: post
+    id: \d+
+
+admin_member_b2b_change_password:
+  path: /change_password/{id}
+  defaults: {_controller: ProjectBundle:AdminMemberB2B:change_password}
+  requirements:
+    _method: get
+    id: \d+
+
+admin_member_b2b_change_password_update:
+  path: /change_password_update/{id}
+  defaults: {_controller: ProjectBundle:AdminMemberB2B:change_password_update}
+  requirements:
+    _method: post
+    id: \d+
+
+admin_member_b2b_view:
+  path: /{id}/view
+  defaults: {_controller: ProjectBundle:AdminMemberB2B:view}
+  requirements:
+    _method: get
+    id: \d+
+
+admin_member_b2b_group_export_excel:
+  path: /group-export-excel
+  defaults: {_controller: ProjectBundle:AdminMemberB2B:group_export_excel}
+  requirements:
+    _method: post
+
+admin_member_b2b_delete:
+  path: /group-delete
+  defaults: {_controller: ProjectBundle:AdminMemberB2B:group_delete}
+  requirements:
+    _method: post
+
+admin_member_b2b_enable:
+  path: /group-enable
+  defaults: {_controller: ProjectBundle:AdminMemberB2B:group_enable}
+  requirements:
+    _method: post
+
+admin_member_b2b_disable:
+  path: /group-disable
+  defaults: {_controller: ProjectBundle:AdminMemberB2B:group_disable}
+  requirements:
+    _method: post

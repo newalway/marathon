@@ -1,0 +1,96 @@
+{% extends 'ProjectBundle::admin.html.twig'%}
+
+{% use "ProjectBundle:AdminBankAccount:blocks.html.twig" %}
+{% use "ProjectBundle::flash_message.html.twig" %}
+
+{% block content %}
+<div class="row">
+	<div class="col-md-8 margin-10-0">
+		<a href="{{path('admin_bank_account_new')}}" class="btn btn-instagram" title="Add"><i class="fa fa-plus"></i> Add</a>
+		{#<a href="{{path('admin_bank_account_sort')}}" class="btn bg-purple" title="sort"><i class="fa fa-list-ol"></i> Sort</a>
+		<a href="{{path('admin_bank_account')}}" class="btn btn-info" title="Refresh"><i class="fa fa-refresh"></i> Refresh</a>#}
+	</div>
+</div>
+
+<br class="clearBoth">
+
+<div class="row">
+  <div class="col-xs-12">
+    <div class="box" style="min-height: 1000px;">
+    	<div class="box-body">
+		  	<div class="row">
+		  		<div class="col-md-12">
+						<button type="button" class="btn bg-red" data-form_id="data_group" id="group_delete">
+							<i class="fa fa-trash-o"></i> Delete
+						</button>
+						<button type="button" class="btn bg-olive" data-form_id="data_group" id="group_enable">
+							<i class="fa fa-unlock"></i> Enable
+						</button>
+						<button type="button" class="btn bg-gray" data-form_id="data_group" id="group_disable">
+							<i class="fa fa-lock"></i> Disable
+						</button>
+					</div>
+    		</div>
+    	</div>
+
+      <form action="#" method="post" id="data_group" data-delete_path="{{path('admin_bank_account_group_delete')}}" data-enable_path="{{path('admin_bank_account_group_enable')}}" data-disable_path="{{path('admin_bank_account_group_disable')}}">
+	      <div class="box-body icheck">
+	      	<table class="table table-hover">
+	      		<thead>
+	          <tr>
+	            <th width="19"><input type="checkbox" id="select_all" /></th>
+							<th width="80"></th>
+              <th>Bank</th>
+							<th>Account Number</th>
+							<th>Account Name</th>
+              <th class="text-center" width="50">Status</th>
+              <th class="text-center" width="50">Edit</th>
+							<th class="text-center" width="50">Delete</th>
+	          </tr>
+	          </thead>
+	          <tbody>
+							{% for data in paginated.currentpageresults %}
+							<tr class="odd gradeX">
+								<td>
+									<input type="checkbox" name="data_ids[]" class="check_all" value="{{data.id}}"/>
+								</td>
+								<td>
+                  {%if data.image%}
+                    <a href="{{asset(data.image)}}" class="fancybox" rel="group" title="Image" >
+  					    		  <img src="{{asset(data.image) | imagine_filter('img_h_50')}}" alt="Image" />
+                    </a>
+					    		{%else%}
+					    		  <img src="https://placehold.it/50x50" alt="Image">
+					    		{%endif%}
+                </td>
+                <td>{{data.title}}</td>
+								<td>{{data.accountnumber}}</td>
+								<td>{{data.accountname}}</td>
+								<td class="text-center">{{data.status|raw}}</td>
+                <td class="text-center"><a href="{{path('admin_bank_account_edit', {'id' : data.id})}}" title="Edit"><i class="fa fa-pencil-square-o fa-2x"></i></a></td>
+                <td class="text-center"><a href="{{path('admin_bank_account_delete', {'id' : data.id})}}" onclick="return confirm('Are you sure you want to delete?');" title="Delete"><i class="fa fa-trash fa-2x"></i></a></td>
+							</tr>
+							{% endfor %}
+						</tbody>
+	        </table>
+
+	      </div><!-- /.box-body -->
+
+      	<div class="box-footer clearfix">
+	      	<div class="row">
+	        	<div class="col-md-3">
+	        		<div class="margin">Total : {{paginated.getNbResults}}</div>
+	      		</div>
+	      		<div class="col-md-9">
+      				{% if paginated.havetopaginate %}
+				        {{pagerfanta(paginated,'twitter_bootstrap3_translated')}}
+							{% endif %}
+						</div>
+					</div>
+				</div>
+      </form>
+    </div><!-- /.box -->
+  </div>
+</div>
+
+{% endblock %}

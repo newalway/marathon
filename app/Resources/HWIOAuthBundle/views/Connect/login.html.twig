@@ -1,0 +1,23 @@
+{% extends '@HWIOAuth/layout.html.twig' %}
+
+{% block hwi_oauth_content %}
+
+    <section class="section-padding">
+		<div class="container">
+			<div class="row">
+                {% if error is defined and error %}
+                    {% if error == 'Account is disabled.' %}
+                        <span>The email is already registered.</span>
+                    {% else %}
+                        <span>{{ error }}</span>
+                    {% endif %}
+                {% endif %}
+                <br/>
+                {% for owner in hwi_oauth_resource_owners() %}
+                <a href="{{ hwi_oauth_login_url(owner) }}">{{ owner | trans({}, 'HWIOAuthBundle') }}</a> <br />
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+{% endblock hwi_oauth_content %}

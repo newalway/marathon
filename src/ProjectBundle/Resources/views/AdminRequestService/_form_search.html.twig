@@ -1,0 +1,17 @@
+<div class="col-xs-12">
+	<div class="col-md-4 margin-bottom-4"></div>
+	<div class="col-md-8 margin-bottom-8">
+		<div class="">
+			<input id="q" name="search_data[q]" class="form-control" placeholder="Search ..." type="text" value="{% if app.request.get('search_data')['q'] is defined %}{{app.request.get('search_data')['q']}}{% endif %}">
+		</div>
+	</div>
+</div>
+
+<div class="col-md-12 text-center" style="margin-top:20px;">
+	<button type="submit" class="btn btn-primary" data-form_id="data_form_search" id="search_data_path">
+		<i class="fa fa-search"></i> Search
+	</button>
+	<button type="button" class="btn btn-info" data-form_id="data_form_search" id="search_export_excel_path">
+		<i class="fa fa-file-text-o"></i> Export
+	</button>
+</div>

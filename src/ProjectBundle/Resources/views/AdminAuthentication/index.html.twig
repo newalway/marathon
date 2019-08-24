@@ -1,0 +1,27 @@
+{% extends 'ProjectBundle::admin.html.twig'%}
+
+{% block javascripts %}
+  {{ parent() }}
+{% endblock %}
+
+{% use "ProjectBundle:AdminAuthentication:blocks.html.twig" %}
+{% use "ProjectBundle::flash_message.html.twig" %}
+{% block content %}
+
+<form action="{{path('admin_authentication_update')}}" method="post" id="data_form" class="form-horizontal">
+
+  {% for group_data in group_datas %}
+    {{ render(controller('ProjectBundle:AdminAuthentication:_databygroup', {'group_data':group_data} )) }}
+  {% endfor %}
+
+  <div class="">
+    <div class="row">
+      <div class="col-md-offset-3 col-md-6">
+        <button id="save" name="save" type="submit" class="btn btn-primary">{{btn_label_save}}</button>
+        <a href="{{path('admin_authentication')}}" class="btn btn-default">{{btn_label_close}}</a>
+      </div>
+    </div>
+  </div>
+
+</form>
+{% endblock %}

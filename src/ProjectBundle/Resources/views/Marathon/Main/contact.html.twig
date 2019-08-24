@@ -1,0 +1,144 @@
+{% extends "ProjectBundle:"~ view_layout ~":layout.html.twig" %}
+
+{% block title %}{% trans %}menu.contact.us{% endtrans %} | {{ parent() }}{% endblock %}
+{% block contact_active %}active{% endblock %}
+{% block m_contact_active %}active{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+{% endblock %}
+
+{% block breadcrumb_title1 %}{% trans %}menu.contact.us{% endtrans %}{% endblock %}
+
+{% block breadcrumb_sub %}
+  {{ parent() }}
+  <li class="active">{% trans %}menu.contact.us{% endtrans %}</li>
+{% endblock %}
+
+{% block content %}
+    <section class="contact-section contact-page section-padding">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="section-title">
+                        <h1><span>Contact Info</span></h1>
+                    </div>
+                    <div class="contact-info-box">
+                        <h2>Want to Help Or Have Questions ?</h2>
+                        <ul>
+                            <li>
+                                <div class="icon-box">
+                                    <i class="fa fa-map-marker"></i>
+                                </div>
+                                <!-- /.icon-box -->
+                                <div class="text-box">
+                                    <p>
+                                        {% trans %}company.name{% endtrans %}<br />
+                                        {% trans %}company.address{% endtrans %}
+                                    </p>
+                                </div>
+                                <!-- /.text-box -->
+                            </li>
+                            <li>
+                                <div class="icon-box">
+                                    <i class="fa fa-phone"></i>
+                                </div>
+                                <!-- /.icon-box -->
+                                <div class="text-box">
+                                    <p>+66 (0) 2433 7992-4, +66 (0) 2434 0500-6</p>
+                                </div>
+                                <!-- /.text-box -->
+                            </li>
+                            <li>
+                                <div class="icon-box">
+                                    <i class="fa fa-fax"></i>
+                                </div>
+                                <!-- /.icon-box -->
+                                <div class="text-box">
+                                    <p>+66 (0) 2433 3722-6</p>
+                                </div>
+                                <!-- /.text-box -->
+                            </li>
+                            <li>
+                                <div class="icon-box">
+                                    <i class="fa fa-envelope"></i>
+                                </div>
+                                <!-- /.icon-box -->
+                                <div class="text-box">
+                                    <p><a href="mailto:info@marathon.co.th">info@marathon.co.th</a></p>
+                                </div>
+                                <!-- /.text-box -->
+                            </li>
+                            {#<li>
+                                <div class="icon-box">
+                                    <i class="fa fa-clock-o"></i>
+                                </div>
+                                <!-- /.icon-box -->
+                                <div class="text-box">
+                                    <p class="text-justify">Week Days&nbsp;&nbsp;&nbsp;&nbsp;: 05:00 – 22:00
+                                        <br />Saturday &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: 08:00 – 18:00
+                                        <br />Sunday&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: 08:00 – 12:00</p>
+                                </div>
+                                <!-- /.text-box -->
+                            </li>#}
+                        </ul>
+                    </div>
+                    <!-- /.contact-info-box -->
+                </div>
+                <!-- /.col-md-4 -->
+                <div class="col-md-8" ng-app="contactApp" ng-controller="contactController">
+                    <div class="section-title">
+                        <h1><span>Get In Touch With Us</span></h1>
+                    </div>
+                    <form class="home-contact-form contact-form" ng-submit="processForm()">
+                        <input type="hidden" name="contact[_token]" id="contact__token" value="{{form._token.vars.value}}">
+
+                        <div class="alert ng-cloak" role="alert" ng-show="message" ng-class="success ? 'alert-success' : 'alert-danger'" style="border-radius:0;">
+                            <div class="close" ng-click="message=false"><span style="font-family: Roboto;">&times;</span></div>
+                            <span class="message-text" ng-bind="message"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="text" placeholder="{% trans %}contact.name{% endtrans %} *" ng-model="formData.name" ng-class="{ 'border-error' : errors.name }">
+                                <div class="text-error" ng-show="errors.name" ng-bind="errors.name"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" placeholder="{% trans %}contact.phone{% endtrans %} *" ng-model="formData.telephone_number" ng-class="{ 'border-error' : errors.telephone_number }">
+                                <div class="text-error" ng-show="errors.telephone_number" ng-bind="errors.telephone_number"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="email" placeholder="{% trans %}contact.email{% endtrans %}" ng-model="formData.email" ng-class="{ 'border-error' : errors.email }">
+                                <div class="text-error" ng-show="errors.email" ng-bind="errors.email"></div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <textarea placeholder="{% trans %}contact.message{% endtrans %} *" ng-model="formData.message" ng-class="{ 'border-error' : errors.message }"></textarea>
+                                <div class="text-error" ng-show="errors.message" ng-bind="errors.message"></div>
+                            </div>
+                            <div class="col-md-12 text-center" style="height:50px;">
+                                <button type="submit" class="arrow-push-out-right" ng-hide="getDataLoading()"><span>{% trans %}contact.send{% endtrans %} <i class="fa fa-caret-right"></i></span></button>
+                                <i ng-show="getDataLoading()" class="fa fa-circle-o-notch fa-spin fa-2x ng-cloak"></i>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="home-google-map">
+        <div class="google-map" id="contact-google-map" data-map-lat="13.78607139505944" data-map-lng="100.46938572300769" data-icon-path="{{ app.request.getSchemeAndHttpHost() ~ asset('images/marathon/map-marker.png') }}" data-map-title="Marathon (Thailand) Co.,Ltd." data-map-zoom="17"></div>
+    </section>
+
+    <div class="footer-texture"></div>
+
+{% endblock %}
+
+{% block javascripts_body %}
+    {{ parent() }}
+    <script src="{{ asset('javascripts/contactApp.js') }}"></script>
+    <script src="http://maps.googleapis.com/maps/api/js?key={{google_maps_api_key}}&language={{app.request.locale}}"></script>
+    <script src="{{ asset('js/gmap.js') }}"></script>
+    <script src="{{ asset('js/default-map.js') }}"></script>
+{% endblock %}

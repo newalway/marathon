@@ -1,0 +1,33 @@
+
+
+<div class="box-body icheck">
+
+
+	<div class="form-group">
+    <label class="control-label col-md-2" for="status"> Choose excel file</label>
+		<div class="col-md-9">
+
+			{{form_widget(form.file, {'id' : 'file'})}}
+			<div class="error-form">{{form_errors(form.file)}}</div>
+			<!-- <input type="file" name="file" value=""> -->
+    </div>
+	</div>
+
+  <!-- <div class="form-group">
+		<label class="control-label col-md-2" for="status"> Status</label>
+		<div class="col-md-9">
+			{#{form_widget(form.status, {'id' : 'status'})}#}
+			<div class="error-form">{#{form_errors(form.status)}#}</div>
+		</div>
+	</div> -->
+
+</div>
+
+<div class="box-footer">
+	<div class="row">
+		<div class="col-md-offset-2 col-md-10">
+			{{form_widget(form.save, {'id' : 'save', 'label': btn_label_save})}}
+			<!-- <button type="submit" name="button">Import data</button> -->
+		</div>
+	</div>
+</div>

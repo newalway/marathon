@@ -1,0 +1,140 @@
+parameters:
+    admin_max_per_page: 20
+    api_max_per_page: 100
+    max_per_review: 10
+    max_per_page_latest_product: 12
+    max_best_seller_product: 12
+    max_per_page_order: 12
+    max_query_recent_order: 5 # in profile page
+    set_time_cookie_limit: 86400  # 1 day = 86400
+    set_time_cookie_latlnt_limit: 1800  # 30min
+    web_path: %kernel.root_dir%/../web
+    userfiles_upload_path: %kernel.root_dir%/../web/uploads/userfiles/
+    files_upload_bank_transfer: %kernel.root_dir%/../data/banks/
+    source_data_export_path: %kernel.root_dir%/../data/excel/
+    browscapcache_path: %kernel.root_dir%/../var/browscapcache
+    source_path_spreadsheet_mime_type: ['application/vnd.ms-excel','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','application/vnd.ms-office','application/zip','text/plain', 'text/plain','application/vnd.ms-excel','text/x-csv' ]
+    geoip_path: %kernel.root_dir%/data/GeoIP
+    oauth2_token_endpoint: "/oauth/v2/token"
+    oauth2_client_id: "1_64xhzlnqatooogw8ssk8c0o8gc4k0004gwcss4s4kw80gkg44s"
+    oauth2_client_secret: "148k6ifrglhc4kwk04ogsogscsss0wwog04ggggo8ook800okk"
+    access_token_customer_scope: "customer"
+    access_token_client_scope: "client"
+    access_token_admin_scope: "admin"
+    view_layout: "Marathon"
+    view_main: "%view_layout%/Main"
+    view_member: "%view_layout%/Member"
+    view_product: "%view_layout%/Product"
+    view_checkout: "%view_layout%/Checkout"
+    view_cart: "%view_layout%/Cart"
+    view_delivery_address: "%view_layout%/DeliveryAddress"
+    shipping_price_based_rate: 'price_based_rate'
+    shipping_weight_based_rate: 'weight_based_rate'
+    shipping_distance_based_rate: 'distance_based_rate'
+
+    param_resetting_email_pattern: ['/{email}/','/{first_name}/','/{last_name}/','/{confirmation_url}/']
+
+    payment_options:
+        BT:
+            title: 'Bank Transfer'
+        CRDT:
+            title: 'Credit / Debit Card'
+        COD:
+            title: 'Cash on Delivery'
+        RFQ:
+            title: 'Request for Quotations'
+
+    payment_bank_transfer_code: 'BT'
+    payment_credit_code: 'CRDT'
+    payment_cash_on_deliveryr_code: 'COD'
+    payment_quotation_code: 'RFQ'
+
+    payment_currency_type: 'TH'
+    payment_status_awaiting_payment: 'Awaiting payment'
+    payment_status_waiting: 'Waiting'
+    payment_status_paid: 'Paid'
+    payment_status_unpaid: 'Unpaid'
+    payment_status_pending: 'Pending'
+    payment_status_cancelled: 'Cancelled'
+    payment_status_refunded: 'Refunded'
+    payment_status_shipped: 'Shipped'
+    payment_status_unfulfilled: 'Unfulfilled'
+    payment_status_processing: 'Processing'
+    payment_status_successful: 'successful'
+    payment_status_failed: 'failed'
+    payment_status_process: 'process'
+
+    #FB App : Marathon (dev@zap-interactive.com)
+    facebook_client_id: "2036722976373215"
+    facebook_client_secret: "1b25a3428b5e76c571dd9ca72247d74d"
+    #facebook_client_id: "661938883911120"
+    #facebook_client_secret: "4e14223c56aca07a80769b08841644e1"
+
+    #Google App : Web client 1 - Marathon project (num@zap-interactive.com)
+    google_client_id: "976615058428-e4fd7p50ban9afpebe30a76mr5c15p51.apps.googleusercontent.com"
+    google_client_secret: "n0aKWDoyeeliOjQo5EgeYuHt"
+    #Google App : OAuth client - localhost project (num@zap-interactive.com)
+    #google_client_id: "990249891803-s3ft35iq28pfcr768c3u17rbuda7d2ak.apps.googleusercontent.com"
+    #google_client_secret: "yqWXj10Sg2IlemDf8bb3ePQ5"
+
+    #default_sender_mail_address: 'num@zap-asia.com'
+    default_sender_mail_address: 'no-reply@marathon.co.th'
+    default_sender_mail_name: 'Marathon'
+
+    cons_discount_type: {'Percentage':1, 'Fixed amount':2}
+    cons_discount_type_percentage: 1
+    cons_discount_type_fixed_amount: 2
+    cons_discount_applies_to: {'Entire order':1, 'Specific products':2}
+    cons_discount_applies_entire_order: 1
+    cons_discount_applies_specific_products: 2
+    cons_discount_minimum_requirement: {'None':'1', 'Minimum purchase amount':'2', 'Minimum quantity of items':'3'}
+    cons_discount_minimum_requirement_none: 1
+    cons_discount_minimum_requirement_amount: 2
+    cons_discount_minimum_requirement_quantity: 3
+    product_category_root_id: 1
+
+twig:
+    globals:
+        product_service: '@app.product'
+        admin_max_per_page: %admin_max_per_page%
+        view_main: %view_main%
+        view_member: %view_member%
+        view_product: %view_product%
+        view_checkout: %view_checkout%
+        view_cart: %view_cart%
+        view_layout: %view_layout%
+        view_delivery_address: %view_delivery_address%
+        files_upload_bank_transfer: %files_upload_bank_transfer%
+
+        cons_discount_type_percentage: %cons_discount_type_percentage%
+        cons_discount_type_fixed_amount: %cons_discount_type_fixed_amount%
+        cons_discount_applies_entire_order: %cons_discount_applies_entire_order%
+        cons_discount_applies_specific_products: %cons_discount_applies_specific_products%
+        cons_discount_minimum_requirement_none: %cons_discount_minimum_requirement_none%
+        cons_discount_minimum_requirement_amount: %cons_discount_minimum_requirement_amount%
+        cons_discount_minimum_requirement_quantity: %cons_discount_minimum_requirement_quantity%
+
+        payment_bank_transfer_code: %payment_bank_transfer_code%
+        payment_credit_code: %payment_credit_code%
+        payment_cash_on_deliveryr_code: %payment_cash_on_deliveryr_code%
+        payment_quotation_code: %payment_quotation_code%
+
+        payment_currency_type: %payment_currency_type%
+        payment_status_awaiting_payment: %payment_status_awaiting_payment%
+        payment_status_waiting: %payment_status_waiting%
+        payment_status_paid: %payment_status_paid%
+        payment_status_unpaid: %payment_status_unpaid%
+        payment_status_cancelled: %payment_status_cancelled%
+        payment_status_refunded: %payment_status_refunded%
+        payment_status_shipped: %payment_status_shipped%
+        payment_status_unfulfilled: %payment_status_unfulfilled%
+        payment_status_processing: %payment_status_processing%
+        payment_status_successful: %payment_status_successful%
+        payment_status_failed: %payment_status_failed%
+        payment_status_process: %payment_status_process%
+        payment_status_pending: %payment_status_pending%
+
+        btn_label_save: 'Save'
+        btn_label_save_add: 'Save & Add New'
+        btn_label_save_edit: 'Save & Edit'
+        btn_label_close: 'Close'

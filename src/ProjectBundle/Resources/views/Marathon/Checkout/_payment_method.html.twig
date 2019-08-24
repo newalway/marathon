@@ -1,0 +1,122 @@
+<div class="">
+    <div class="panel-group" id="accordion">
+
+        {% if is_granted('ROLE_CUSTOMER') %}
+            {% if payment_bank_transfer_code in payment_options %}
+                <div ng-click="getPaymentOptionCode($event, '{{payment_bank_transfer_code}}')" class="panel inputGroup panel-default radio-block active">
+                    <div class="icon clearfix"></div>
+                    <div class="payment-a panel-title padding-title-payment">
+                        <!-- <input type='radio' id='rbank-payment' name='payment-options'/> -->
+                        <label class="radio-label">{% trans %}payment.method.bank.title{% endtrans %}
+                            <a data-toggle="collapse" data-parent="#accordion" href="#bank-payment"></a>
+                            <label class=" active" ng-show="arr_cart_data.summary.payment_option=='{{payment_bank_transfer_code}}'"></label>
+                        </label>
+                    </div>
+
+                    <div id="bank-payment" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <p>{% trans %}payment.method.bank.description{% endtrans %}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if payment_credit_code in payment_options %}
+                <div ng-click="getPaymentOptionCode($event, '{{payment_credit_code}}')" class="panel inputGroup panel-default radio-block">
+                    <div class="icon clearfix"></div>
+                    <!-- <input type='radio' id='rcredit-payment' name='payment-options' value='Not-Working'/> -->
+                    <div class="payment-b panel-title padding-title-payment">
+                        <label class="payment-b radio-label">{% trans %}payment.method.credit.title{% endtrans %}
+                            <span class="">
+                                <img src="{{asset('images/marathon/checkout/card.png')}}" alt="">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#credit-payment"></a>
+                            </span>
+                            <label class="payment-b active" ng-show="arr_cart_data.summary.payment_option=='{{payment_credit_code}}'"></label>
+                        </label>
+                    </div>
+                    <div id="credit-payment" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <p>{% trans %}payment.method.credit.description{% endtrans %}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if payment_cash_on_deliveryr_code in payment_options %}
+                <div ng-click="getPaymentOptionCode($event, '{{payment_cash_on_deliveryr_code}}')" class="panel inputGroup panel-default radio-block">
+                    <div class="icon clearfix"></div>
+                    <div class="payment-c panel-title padding-title-payment">
+                        <label class="payment-c radio-label">{% trans %}payment.method.cod.title{% endtrans %}
+                            <a data-toggle="collapse" data-parent="#accordion" href="#cod-payment"></a>
+                            <label class="payment-c active" ng-show="arr_cart_data.summary.payment_option=='{{payment_cash_on_deliveryr_code}}'"></label>
+                        </label>
+                    </div>
+                    <div id="cod-payment" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <p>{% trans %}payment.method.cod.description{% endtrans %}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% endif %}
+
+        {% if is_granted('ROLE_CLIENT') %}
+            {% if payment_quotation_code in payment_options %}
+                <div ng-click="getPaymentOptionCode($event, '{{payment_quotation_code}}')" class="panel inputGroup panel-default radio-block active">
+                    <div class="icon clearfix"></div>
+                    <div class="payment-rfq panel-title padding-title-payment">
+                        <!-- <input type='radio' id='rbank-payment' name='payment-options'/> -->
+                        <label class="radio-label">
+                            Request for Quotations
+                            <a data-toggle="collapse" data-parent="#accordion" href="#quotation-payment"></a>
+                            <label class=" active" ng-show="arr_cart_data.summary.payment_option=='{{payment_quotation_code}}'"></label>
+                        </label>
+                    </div>
+                </div>
+            {% endif %}
+        {% endif %}
+
+    </div>
+</div>
+
+{# show message crdt_code #}
+{% if payment_credit_code in payment_options %}
+    {% for flashMessage in app.session.flashbag.get('cybersource_errors') %}
+        <div class="container alert alert-dismissible text-danger">
+            <div class="">
+                <i class="fa fa-2x fa-exclamation-circle"></i> {{ flashMessage }}
+            </div>
+        </div>
+    {% endfor %}
+{% endif %}
+
+<div class="margin-top-40 text-right">
+    <form action="{{path('checkout_place_order')}}" method="post" enctype="multipart/form-data">
+        {{form_widget(place_order_form._token)}}
+        <button ng-disabled="validatePlaceOrder()" type="submit" class="thm-btn thm-blue-bg place-order">
+            {% if is_granted('ROLE_CLIENT') %}
+            RFQ Submit
+            {% else %}
+            Place Order
+            {% endif %}
+        </button>
+    </form>
+</div>
+
+<script type="text/javascript">
+    $('.payment-a').on('click', function(){
+        $( "#bank-payment" ).slideDown('slow');
+        $( "#credit-payment" ).slideUp();
+        $( "#cod-payment" ).slideUp();
+    });
+    $('.payment-b').on('click', function(){
+        $( "#bank-payment" ).slideUp();
+        $( "#credit-payment" ).slideDown('slow');
+        $( "#cod-payment" ).slideUp();
+    });
+    $('.payment-c').on('click', function(){
+        $( "#bank-payment" ).slideUp();
+        $( "#credit-payment" ).slideUp();
+        $( "#cod-payment" ).slideDown('slow');
+    });
+</script>

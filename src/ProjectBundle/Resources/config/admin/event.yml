@@ -1,0 +1,52 @@
+admin_event:
+  path: /
+  defaults: {_controller: ProjectBundle:AdminEvent:index}
+  requirements:
+    _method: get
+
+admin_event_new:
+  path: /new
+  defaults: {_controller: ProjectBundle:AdminEvent:new}
+
+admin_event_create:
+  path: /create
+  defaults: {_controller: ProjectBundle:AdminEvent:create}
+  requirements:
+    _method: post
+
+admin_event_edit:
+  path: /{id}/edit
+  defaults: {_controller: ProjectBundle:AdminEvent:edit}
+  requirements:
+    id: \d+
+
+admin_event_update:
+  path: /{id}
+  defaults: {_controller: ProjectBundle:AdminEvent:update}
+  requirements:
+    _method: post
+    id: \d+
+
+admin_event_delete:
+  path: /{id}/delete
+  defaults: {_controller: ProjectBundle:AdminEvent:delete}
+  requirements:
+    _method: get
+
+admin_event_group_delete:
+  path: /group-delete
+  defaults: {_controller: ProjectBundle:AdminEvent:group_delete}
+  requirements:
+    _method: post
+
+admin_event_group_enable:
+  path: /group-enable
+  defaults: {_controller: ProjectBundle:AdminEvent:group_enable}
+  requirements:
+    _method: post
+
+admin_event_group_disable:
+  path: /group-disable
+  defaults: {_controller: ProjectBundle:AdminEvent:group_disable}
+  requirements:
+    _method: post

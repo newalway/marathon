@@ -1,0 +1,187 @@
+{% extends "ProjectBundle:"~ view_layout ~":layout.html.twig" %}
+
+{% block title %}{% trans %}request_service.head{% endtrans %} | {{ parent() }}{% endblock %}
+{% block track_active %}active{% endblock %}
+{% block m_track_active %}active{% endblock %}
+
+{% block breadcrumb_title1 %}{% trans %}request_service.head{% endtrans %}{% endblock %}
+
+{% block breadcrumb_sub %}
+    {{ parent() }}
+    <li class="active">{% trans %}request_service.head{% endtrans %}</li>
+{% endblock %}
+
+{% block content %}
+<section class="sidebar-pages pb0 request-sevice-section" ng-app="requestServiceApp" ng-controller="requestServiceController">
+    <div class="container">
+        <div class="col-sm-12">
+            <div class="alert ng-cloak" role="alert" ng-show="message" ng-class="success ? 'alert-success' : 'alert-danger'" style="border-radius:0;">
+                <div class="close" ng-click="message=false"><span style="font-family: Roboto;">&times;</span></div>
+                <span class="message-text" ng-bind="message"></span>
+            </div>
+          {#{% block flash_message %}
+            {% for flashMessage in app.session.flashbag.get('notice')%}
+            <div class="alert alert-success alert-dismissible">
+              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+              <i class="fa fa-check-circle-o"></i> {{ flashMessage|raw }}
+            </div>
+            {% endfor %}
+          {% endblock %} #}
+        </div>
+        {#<form id="data_form" action="{{path('request_service')}}" method="post" role="form" enctype="multipart/form-data">#}
+        <form class="subscribe" ng-submit="processForm()" method="post" enctype="multipart/form-data">
+            {{form_widget(form._token)}}
+            <div class="col-md-12">
+                <h2 class="title-h2"><span>{% trans %}request_service.head{% endtrans %}</span></h2>
+            </div>
+            <div class="form-group col-md-3">
+                    <div class="field-label"><label for="">{% trans %}request_service.text.title{% endtrans %}</label></div>
+                    {{form_widget(form.requestTitle,  { 'attr': {'ng-model':'formData.requestTitle'}})}}
+                    {#<div class="err-message">{{form_errors(form.requestTitle)}}</div>#}
+            </div>
+            <div class="form-group col-md-3">
+                    <div class="field-label"><label for="">{% trans %}request_service.text.product_title{% endtrans %}<span class="red-text"> *</span></label></div>
+                    {{form_widget(form.productTitle, { 'attr': {'ng-model':'formData.productTitle'}})}}
+                    <div class="err-message" ng-show="errors.productTitle" ng-bind="errors.productTitle">{{form_errors(form.productTitle)}}</div>
+            </div>
+            <div class="form-group col-md-3">
+                  <div class="field-label"><label for="">{% trans %}request_service.text.product_model{% endtrans %}</label></div>
+                  {{form_widget(form.productModel, { 'attr': {'ng-model':'formData.productModel'}})}}
+                  <div class="err-message" ng-show="errors.productModel" ng-bind="errors.productModel">{{form_errors(form.productModel)}}</div>
+            </div>
+            <div class="form-group col-md-3">
+                    <div class="field-label"><label for="">{% trans %}request_service.text.productTextType{% endtrans %}</label></div>
+                    {{form_widget(form.productTextType, { 'attr': {'ng-model':'formData.productTextType'}})}}
+                    <div class="err-message" ng-show="errors.productTextType" ng-bind="errors.productTextType">{{form_errors(form.productTextType)}}</div>
+            </div>
+            <div class="form-group col-md-3">
+                    <div class="field-label"><label for="">{% trans %}request_service.text.series_no{% endtrans %}</label></div>
+                    {{form_widget(form.productSerialNumber,{ 'attr': {'ng-model':'formData.productSerialNumber'}})}}
+                    <div class="err-message" ng-show="errors.productSerialNumber" ng-bind="errors.productSerialNumber">{{form_errors(form.productSerialNumber)}}</div>
+            </div>
+            <div class="form-group col-md-3">
+                    <div class="field-label"><label for="">{% trans %}request_service.text.productWarrantyNumber{% endtrans %}</label></div>
+                    {{form_widget(form.productWarrantyNumber, { 'attr': {'ng-model':'formData.productWarrantyNumber'}})}}
+                    <div class="err-message" ng-show="errors.productWarrantyNumber" ng-bind="errors.productWarrantyNumber">{{form_errors(form.productWarrantyNumber)}}</div>
+            </div>
+            <div class="form-group col-md-12">
+                    <div class="field-label"><label for="">{% trans %}request_service.text.description{% endtrans %}<span class="red-text"> *</span></label></div>
+                    {{form_widget(form.requestDetail, { 'attr': {'ng-model':'formData.requestDetail'}})}}
+                    <div class="err-message" ng-show="errors.requestDetail" ng-bind="errors.requestDetail">{{form_errors(form.requestDetail)}}</div>
+            </div>
+            <div class="form-group col-md-3">
+                    <div class="field-label"><label for="">{% trans %}member.personal.fname{% endtrans %}<span class="red-text"> *</span></label></div>
+                    {{form_widget(form.firstName,  { 'attr': {'ng-model':'formData.firstName'}})}}
+                    <div class="err-message" ng-show="errors.firstName" ng-bind="errors.firstName">{{form_errors(form.firstName)}}</div>
+            </div>
+            <div class="form-group col-md-3">
+                    <div class="field-label"><label for="">{% trans %}member.personal.lname{% endtrans %}<span class="red-text"> *</span></label></div>
+                    {{form_widget(form.lastName, { 'attr': {'ng-model':'formData.lastName'}})}}
+                    <div class="err-message" ng-show="errors.lastName" ng-bind="errors.lastName">{{form_errors(form.lastName)}}</div>
+            </div>
+            <div class="form-group col-md-3">
+                    <div class="field-label"><label for="">{% trans %}member.personal.phone{% endtrans %}<span class="red-text"> *</span></label></div>
+                    {{form_widget(form.phone,{ 'attr': {'ng-model':'formData.phone'}})}}
+                    <div class="err-message" ng-show="errors.phone" ng-bind="errors.phone">{{form_errors(form.phone)}}</div>
+            </div>
+            <div class="form-group col-md-3">
+                    <div class="field-label"><label for="">{% trans %}member.personal.email{% endtrans %}</label></div>
+                    {{form_widget(form.email, { 'attr': {'ng-model':'formData.email'}})}}
+                    <div class="err-message" ng-show="errors.email" ng-bind="errors.email">{{form_errors(form.email)}}</div>
+            </div>
+            <div class="form-group col-md-3">
+                    <div class="field-label"><label for="">{% trans %}member.address{% endtrans %}<span class="red-text"> *</span></label></div>
+                    {{form_widget(form.address, { 'attr': {'ng-model':'formData.address'}})}}
+                    <div class="err-message" ng-show="errors.address" ng-bind="errors.address">{{form_errors(form.address)}}</div>
+            </div>
+
+            <div class="form-group col-md-3">
+                    <div class="field-label"><label for="">{% trans %}member.subDistrict{% endtrans %}<span class="red-text"> *</span></label></div>
+                    {{form_widget(form.subDistrict, { 'attr': {'ng-model':'formData.subDistrict'}})}}
+                    <div class="err-message" ng-show="errors.subDistrict" ng-bind="errors.subDistrict">{{form_errors(form.subDistrict)}}</div>
+            </div>
+            <div class="form-group col-md-3">
+                <div class="">
+                    <div class="field-label"><label for="amphure">{% trans %}member.district{% endtrans %}<span class="red-text"> *</span></label></div>
+                    {{form_widget(form.district, { 'attr': {'ng-model':'formData.district'}})}}
+                    <div class="red-text" ng-show="errors.district" ng-bind="errors.district">{{form_errors(form.district)}}</div>
+                </div>
+            </div>
+            <div class="form-group col-md-3">
+                <div class="field-label"><label for="">{% trans %}member.province{% endtrans %} *</label></div>
+                {{form_widget(form.province, { 'attr': {'ng-model':'formData.province'}})}}
+                <div class="err-message" ng-show="errors.province" ng-bind="errors.province">{{form_errors(form.province)}}</div>
+            </div>
+            <div class="form-group col-md-3">
+                <div class="field-label"><label for="">{% trans %}member.postcode{% endtrans %}<span class="red-text"> *</span></label></div>
+                {{form_widget(form.postCode,  { 'attr': {'ng-model':'formData.postCode'}})}}
+                <div class="err-message" ng-show="errors.postCode" ng-bind="errors.postCode">{{form_errors(form.postCode)}}</div>
+            </div>
+            <div class="col-md-12 text-center">
+                <div class="form-group">
+                    <button type="submit" name="button" class="thm-btn arrow-push-out-right" ng-disabled="getDataLoading()"><span>ส่งข้อมูล <i class="fa fa-caret-right"></i></span></button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+{% endblock %}
+{% block javascripts_body %}
+	{{ parent() }}
+
+    <script>
+
+    var app = angular.module('requestServiceApp',[]);
+    app.factory('request_service_data', ['$http', function request_service_data($http){
+      return {
+        request_service_create: function(dataObj){
+          return $http({
+            method:'POST',
+            url:Routing.generate('request_service_create', true),
+            data: $.param(dataObj),
+            headers: {'Content-Type':'application/x-www-form-urlencoded'
+          } });
+        }
+      };
+    }]);
+
+    app.controller('requestServiceController', ['$scope', 'request_service_data', function($scope, request_service_data){
+
+        $scope.processForm = function(){
+            $scope.setDataLoading(true);
+            $scope.formData._token = angular.element('#projectbundle_requestservice__token').val();
+            request_service_data.request_service_create($scope.formData).then(function onSuccess(response) {
+                var data = response.data;
+                if(!data.success){
+                  $scope.message = data.message;
+                  $scope.errors = data.errors;
+                  $scope.success = data.success;
+                }else{
+                  $scope.message = data.message;
+                  $scope.success = data.success;
+                  //reset data
+                  $scope.formData = {};
+                  $scope.errors = {};
+                }
+                $scope.setDataLoading(false);
+
+            }).catch(function onError(response) {
+
+            });
+        };
+
+        $scope.getDataLoading = function() {
+          return $scope.data_loaded;
+        };
+        $scope.setDataLoading = function(value) {
+          $scope.data_loaded = value;
+        };
+
+        $scope.formData = {};
+        $scope.errors = {};
+        $scope.message = undefined;
+        $scope.setDataLoading(false);
+    }]);
+        </script>
+{% endblock %}

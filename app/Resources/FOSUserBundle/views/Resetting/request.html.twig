@@ -1,0 +1,9 @@
+{% extends "FOSUserBundle::bundle-layout.html.twig" %}
+
+{% block title %}{{ 'menu.reset_password'|trans }} | {{ parent() }}{% endblock %}
+
+{% block body_class %}{{ parent() }} fos-request{% endblock %}
+
+{% block content %}
+{% include "@FOSUser/Resetting/request_content.html.twig" %}
+{% endblock content %}

@@ -1,0 +1,16 @@
+{% extends "FOSUserBundle::bundle-layout.html.twig" %}
+
+{% block title %}{{ 'menu.reset_password'|trans }} | {{ parent() }}{% endblock %}
+
+{% block body_class %}{{ parent() }} fos-reset-check-email{% endblock %}
+
+{% block content %}
+  <div class="container fos-container">
+    <h2 class="text-center">{{ 'reset_password.title'|trans }}</h2>
+    <div class="text-center">
+      {% set email = app.request.get('username') %}
+      {{ 'resetting.check_email'|trans({'%tokenLifetime%': tokenLifetime, '%email%':email}, 'FOSUserBundle')|nl2br }}
+      <br/><br/>
+    </div>
+  </div>
+{% endblock %}

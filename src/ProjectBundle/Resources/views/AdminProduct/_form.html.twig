@@ -1,0 +1,1019 @@
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+{% if form.vars.value.id %}
+	{% set is_variant = product_service.isVariants(product) %}
+	{% set gallery_images = product.productImages %}
+{% else %}
+	{% set is_variant = false %}
+	{% set gallery_images = false %}
+{% endif %}
+
+{#{{dump(form.translations.th.title.vars)}}#}
+
+<div ng-app="productApp" ng-controller="mainCtrl" ng-init="init('{{acctoken}}', '{{form.vars.value.id}}', '{% if form.vars.value.price %}{{form.vars.value.price}}{% endif %}', '{% if form.vars.value.compareAtPrice %}{{form.vars.value.compareAtPrice}}{% endif %}', '{% if form.vars.value.sku %}{{form.vars.value.sku}}{% endif %}', '{% if form.vars.value.inventoryPolicyStatus %}{{form.vars.value.inventoryPolicyStatus}}{% endif %}', '{% if form.vars.value.inventoryQuantity %}{{form.vars.value.inventoryQuantity}}{% endif %}')">
+
+	<div class="row">
+		<div class="col-md-8">
+
+			<div class="box">
+				<div class="box-header with-border">
+					<h3 class="box-title">Title</h3>
+				</div>
+
+				<!-- /.box-header -->
+				<div class="box-body">
+
+					{% if form.translations.th.title.vars.errors is not empty %}
+						<div class="form-group has-error">
+							<span class="help-block">
+								<ul class="list-unstyled">
+									{% for error in form.translations.th.title.vars.errors %}
+										<li>
+											<span class="glyphicon glyphicon-exclamation-sign"></span>
+											{{error.message}} Th.
+										</li>
+									{% endfor %}
+								</ul>
+							</span>
+						</div>
+					{% endif %}
+
+					<div class="form-group">
+						<!-- <label for=""></label> -->
+						{{ form_widget(form.translations) }}
+					</div>
+				</div>
+			</div>
+
+			<div class="box">
+				<div class="box-header with-border">
+					<h3 class="box-title">Images</h3>
+					<div class="box-tools pull-right">
+						<input type="button" value="Add gallery images" onclick="BrowseServerGallery('gallery_canvas');" class="btn btn-link {#btn-sm#}"/>
+					</div>
+				</div>
+				<!-- /.box-header -->
+				<div class="box-body">
+					<div class="{#post#}">
+						<div class="row {#margin-bottom#}">
+							<div class="col-md-4">
+								<div class="form-control-static">
+									<!-- <label for="image"></label> -->
+									{{form_widget(form.image, {'id' : 'image'})}}
+									<a href="javascript:void(0)" onclick="selectFileWithCKFinder('image', 'image_thumbnail');" style="" >
+										{% if form.vars.value.image %}
+											<img id="image_thumbnail" class="img-responsive" src="{{asset(form.vars.value.image) | imagine_filter('img_150x150')}}" alt="{{form.vars.value.getTitle}}" />
+										{% else %}
+											<img id="image_thumbnail" class="img-responsive" src="https://placehold.it/150x100" width="150px;">
+										{% endif %}
+									</a>
+
+									{% if form.vars.value.image %}
+										<span>
+											<input type="checkbox" id="removefileimage" name="removefileimage" value="1">
+											<label class="control-label" for="removefileimage">  Remove</label>
+										</span>
+									{% endif %}
+									<!-- <p class="help-block">size image 800x800 px</p> -->
+								</div>
+							</div>
+							<div class="col-md-8">
+								<div class="form-control-static">
+									<div id="gallery_canvas">
+										<div id="data_gallery_remove"></div>
+
+										{% if gallery_images %}
+											{% for gallery_image in gallery_images %}
+												<div class="photo-gallery img-responsive">
+													<img src="{{asset(gallery_image.image) | imagine_filter('img_h_150')}}" alt="photo" data-fancybox="images" data-src="{{asset(gallery_image.image)}}" data-fancybox="group" />
+													<a class="removePhotoGalleryData" href="#" data-id="{{gallery_image.id}}" data-remove_elem_name="data_gallery_remove"></a>
+												</div>
+											{% endfor %}
+										{% endif %}
+
+										{% if post_gallery_image_path|length > 0 %}
+										{# for invalid data, still show selected image gallery #}
+											{% for post_gallery_image in post_gallery_image_path %}
+												<div class="photo-gallery img-responsive">
+													<img src="{{post_gallery_image}}" class="img-responsive" data-fancybox="images" data-src="{{post_gallery_image}}" data-data-fancybox="group">
+													<a href="#" class="removeTmpPhotoGalleryData"></a>
+													<input type="hidden" name="img_path[]" value="{{post_gallery_image}}">
+												</div>
+											{% endfor %}
+										{% endif %}
+
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="{#post#}">
+						<div class="row margin-bottom">
+							<div class="col-md-12">
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+			<div class="box {% if is_variant %}hidden{% endif %}">
+				<div class="box-header with-border">
+					<h3 class="box-title">Pricing</h3>
+				</div>
+				<!-- /.box-header -->
+				<div class="box-body">
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="price"><span class="require">*</span> Price</label>
+								{{form_widget(form.price, {'id' : 'price'})}}
+								<div class="error-form">{{form_errors(form.price)}}</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="compareAtPrice">Compare at price</label>
+								{{form_widget(form.compareAtPrice, {'id' : 'compareAtPrice'})}}
+								<div class="error-form">{{form_errors(form.compareAtPrice)}}</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="box {% if is_variant %}hidden{% endif %}">
+				<div class="box-header with-border">
+					<h3 class="box-title">Inventory</h3>
+				</div>
+				<!-- /.box-header -->
+				<div class="box-body">
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="sku"> SKU</label>
+								{{form_widget(form.sku, {'id' : 'sku'})}}
+								<div class="error-form">{{form_errors(form.sku)}}</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="inventoryPolicyStatus">Inventory policy</label>
+								{{form_widget(form.inventoryPolicyStatus, {'id' : 'inventoryPolicyStatus'})}}
+								<div class="error-form">{{form_errors(form.inventoryPolicyStatus)}}</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group" ng-show="glob_inventory_policy_status=='1'">
+								<label for="inventoryQuantity">Quantity</label>
+								{{form_widget(form.inventoryQuantity, {'id' : 'inventoryQuantity'})}}
+								<div class="error-form">{{form_errors(form.inventoryQuantity)}}</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="box {% if is_variant %}hidden{% endif %}">
+				<div class="box-header with-border">
+					<h3 class="box-title">Shipping</h3>
+				</div>
+				<!-- /.box-header -->
+				<div class="box-body">
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="weight"> Weight</label>
+								<div class="input-group">
+									{{form_widget(form.weight, {'id' : 'weight'})}}
+									<div class="btn-group">
+										{{form_widget(form.weightUnit, {'id' : 'weightUnit'})}}
+									</div><!-- /btn-group -->
+									<div class="error-form">{{form_errors(form.weight)}}</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Product variants -->
+			<div ng-controller="variantsCtrl" ng-init="init_variants()">
+				<div class="box" ng-cloak>
+
+					<div class="box-header with-border">
+						<h3 class="box-title">Variants</h3>
+						<img ng-if="products_variants_loading_icon" src="/images/bx_loader.gif" alt="loading" width="25px;">
+						<div class="box-tools pull-right">
+							<input type='hidden' name='is_variant_enable' value="{{'{{showVariants}}'}}">
+							<div ng-show="!showVariants">
+								<button type="button" ng-click="showVariants = !showVariants" class="btn btn-link">
+									<span ng-switch on="haveVariants">
+										<span ng-switch-when="true">
+											Edit options
+										</span>
+										<span ng-switch-default>
+											Add variants
+										</span>
+									</span>
+								</button>
+							</div>
+							<div ng-show="showVariants">
+								<button type="button" ng-click="showVariants = !showVariants; initVariantsData()" class="btn btn-link pull-right">Cancel</button>
+							</div>
+						</div>
+					</div>
+
+					<div class="box-body">
+
+						<div class="row">
+							<div class="col-md-12">
+								<div ng-if="!showVariants" style="overflow-y:auto;">
+									<span ng-switch on="haveVariants">
+										<span ng-switch-when="true">
+
+											<!-- view variant option -->
+											<input type='hidden' name='update_variant_sku_status' value="{{'{{update_variant_sku_status}}'}}">
+											<table ng-show="view_variant_options.length>0" class="table" role="grid">
+												<thead>
+													<tr role="row">
+														<th style="width: 30px"></th>
+														<th style="width: 57px"></th>
+														<th style="width: 20px" ng-repeat="vn in view_variants">{{'{{vn}}'}}</th>
+														<th ng-if="glob_inventory_policy_status=='1' || variant_is_inventory" style="width: 50px">Inventory</th>
+														<th style="width: 90px; {# background-color: rosybrown;#} ">Price</th>
+														<th style="width: 90px">Compare at price</th>
+														<th style="width: 90px">SKU</th>
+														<th style="width: 20px"></th>
+													</tr>
+												</thead>
+												<tbody style="overflow-y:auto;">
+													<tr ng-repeat="v in view_variant_options" ng-mouseover="open=true" ng-mouseleave="open=false" style="height: 52px;">
+														<td>
+															<input type='hidden' name='update_variant_sku[update_status][{{'{{$index}}'}}]' value="{{'{{v.update_sku_status}}'}}">
+															<input type='hidden' name='update_variant_sku[id][{{'{{$index}}'}}]' value='{{'{{v.id}}'}}'>
+
+															<input type='hidden' name='update_variant_sku[status][{{'{{$index}}'}}]' value='off'><!-- default status -->
+															<input ng-show="open || focus_sku" type="checkbox" name="update_variant_sku[status][{{'{{$index}}'}}]" ng-model="v.status" ng-change="setUpdateVariantSkuStatus(true);v.update_sku_status='true'" ng-true-value="'on'" ng-false-value="'off'">
+															<span ng-show="!open && !focus_price">
+																<span ng-switch on="v.status">
+																	<span ng-switch-when="on" class="{#text-green#}"><i class="fa fa-check-square-o"></i></span>
+																    <span ng-switch-default class="{#text-danger#}"><i class="fa fa-minus-square-o"></i></span>
+																</span>
+															</span>
+														</td>
+														<td>
+															<input type='hidden' name='update_variant_sku[image][{{'{{$index}}'}}]' id="update_variant_sku_image_{{'{{$index}}'}}" value="">
+															<a href="javascript:void(0)" dir-select-file dataindex="update_variant_sku_image_{{'{{$index}}'}}" datathumb="update_sku_image_thumbnail_{{'{{$index}}'}}" ng-click="setUpdateVariantSkuStatus(true);v.update_sku_status='true'">
+																<img id="update_sku_image_thumbnail_{{'{{$index}}'}}" ng-if="v.image_small" ng-src="{{'{{v.image_small}}'}}" width="50px;">
+																<img id="update_sku_image_thumbnail_{{'{{$index}}'}}" ng-if="!v.image_small" src="https://placehold.it/50x50" width="50px;">
+															</a>
+														</td>
+														<td ng-repeat="vv in v.option">
+															{{'{{vv}}'}}
+															&nbsp;&nbsp;<span ng-show="$last" ng-if="v.default_option" class="label label-default">DEFAULT</span>
+														</td>
+														<td ng-if="glob_inventory_policy_status=='1' || variant_is_inventory">
+															<div ng-show="!open && !focus_ips">
+																<span ng-show="v.inventory_policy_status=='1'">{{'{{v.inventory_quantity|number:0}}'}}</span>
+																<span ng-show="v.inventory_policy_status=='0'">N/A</span>
+															</div>
+															<input ng-show="open || focus_ips" name="update_variant_sku[inventory_quantity][{{'{{$index}}'}}]" ng-model="v.inventory_quantity" ng-focus="focus_ips=true" ng-blur="focus_ips=false" ng-change="setUpdateVariantSkuStatus(true);v.inventory_policy_status='1';v.update_sku_status='true'"  class="form-control input-sm" type="number" style="width:60px;" min="0" max="99999999">
+														</td>
+														<td>
+															<div ng-show="!open && !focus_price">{{'{{v.price|number:2}}'}}</div>
+															<input ng-show="open || focus_price" name="update_variant_sku[price][{{'{{$index}}'}}]" ng-model="v.price" ng-focus="focus_price=true" ng-blur="focus_price=false" ng-change="setUpdateVariantSkuStatus(true);v.update_sku_status='true'" class="form-control input-sm" type="number" step="any" style="width:70px;" min="0" max="99999999.99" required>
+														</td>
+														<td>
+															<div ng-show="!open && !focus_c_price">{{'{{v.compare_at_price|number:2}}'}}</div>
+															<input ng-show="open || focus_c_price" name="update_variant_sku[compare_at_price][{{'{{$index}}'}}]" ng-model="v.compare_at_price" ng-focus="focus_c_price=true" ng-blur="focus_c_price=false" ng-change="setUpdateVariantSkuStatus(true);v.update_sku_status='true'" class="form-control input-sm" type="number" step="any" style="width:70px;" min="0" max="99999999.99" >
+														</td>
+														<td>
+															<div ng-show="!open && !focus_sku">{{'{{v.sku}}'}}</div>
+															<input ng-show="open || focus_sku" name="update_variant_sku[sku][{{'{{$index}}'}}]" ng-model="v.sku" ng-focus="focus_sku=true" ng-blur="focus_sku=false" ng-change="setUpdateVariantSkuStatus(true);v.update_sku_status='true'" class="form-control input-sm" type="text" style="width:70px;">
+														</td>
+														<td>
+															<a ng-href="{{'{{getRouteSkuEdit(v.id)}}'}}">
+																<button type="button" class="btn btn-default btn-sm">Edit</button>
+															</a>
+														</td>
+													</tr>
+
+												</tbody>
+											</table>
+
+										</span>
+									</span>
+								</div>
+							</div>
+						</div><!-- end row -->
+
+						<div ng-show="showVariants">
+							<div class="row">
+								<div class="col-md-3">
+									<div class="form-group">
+										<label>Option name</label>
+									</div>
+								</div>
+								<div class="col-md-8">
+									<div class="form-group">
+										<label>Option values</label>
+									</div>
+								</div>
+								<div class="col-md-1">
+								</div>
+							</div>
+							<div class="row">
+								<fieldset data-ng-repeat="choice in choices">
+									<div class="col-md-3">
+										<div class="form-group">
+											<input type="text" name="variant_name[]" ng-model="choice.option_name" placeholder="">
+										</div>
+									</div>
+									<div class="col-md-8">
+										<div class="form-group">
+											<tags-input ng-model="choice.option_value" tabindex="1" min-length="1" max-length="45" use-strings="true" replace-spaces-with-dashes="flase" placeholder=" "></tags-input>
+											<input type='hidden' name="variant_value[{{'{{choice.option_name}}'}}]" value="{{'{{choice.option_value}}'}}">
+										</div>
+									</div>
+									<div class="col-md-1">
+										<div class="form-group">
+											<button type="button" class="remove" ng-click="removeChoice($index)"><i class="fa fa-trash"></i></button>
+										</div>
+									</div>
+						    	</fieldset>
+								<div class="col-md-12">
+									<br/>
+									{# <button type="button" class="remove" ng-show="$last" ng-click="removeLastChoice()">-</button> #}
+									<button type="button" class="addfields" ng-click="addNewChoice()">Add another option</button>
+								</div>
+							</div>
+
+
+							<!-- variant option -->
+							<br/><br/>
+							<div class="row">
+								<div class="col-md-12">
+									<div ng-if="showVariants"  class="icheckbox disabled" style="overflow-y:auto;">
+										<table ng-show="variant_option.length>0" class="table" role="grid">
+											<thead>
+												<tr role="row">
+													<th style="width: 30px"></th>
+													<th style="width: 57px"></th>
+													<th style="width: 50px">Variant</th>
+													<th ng-if="glob_inventory_policy_status=='1' || variant_is_inventory" style="width: 50px">Inventory</th>
+													<th style="width: 50px">Price</th>
+													<th style="width: 50px">Compare at price</th>
+													<th style="width: 50px">SKU</th>
+												</tr>
+											</thead>
+											<tbody style="overflow-y:auto;">
+												<tr ng-repeat="n in variant_option">
+													<td>
+														<input type='hidden' name='variant_sku[id][{{'{{$index}}'}}]' value='{{'{{n.id}}'}}'>
+														<input type='hidden' name='variant_sku[status][{{'{{$index}}'}}]' value='off'><!-- default status -->
+														<input type="checkbox" name="variant_sku[status][{{'{{$index}}'}}]" ng-model="n.status" ng-true-value="'on'" ng-false-value="'off'">
+													</td>
+													<td>
+														<input type='hidden' name='variant_sku[image][{{'{{$index}}'}}]' id="variant_sku_image_{{'{{$index}}'}}" value="{{'{{n.image}}'}}">
+														<a href="javascript:void(0)" dir-select-file dataindex="variant_sku_image_{{'{{$index}}'}}" datathumb="variant_sku_image_thumbnail_{{'{{$index}}'}}">
+															<img id="variant_sku_image_thumbnail_{{'{{$index}}'}}" ng-if="n.image_small" ng-src="{{'{{n.image_small}}'}}" width="50px;">
+															<img id="variant_sku_image_thumbnail_{{'{{$index}}'}}" ng-if="!n.image_small" src="https://placehold.it/75x50" width="50px;">
+														</a>
+													</td>
+													<td>
+														{{"{{n.option | join:' · '}}"}}
+														<span ng-if="n.default_option" class="label label-default">DEFAULT</span>
+														<input type="hidden" name="variant_sku[option][{{'{{$index}}'}}]" value="{{'{{n.option}}'}}">
+														<input type="hidden" name="variant_sku[default_option][{{'{{$index}}'}}]" value="{{'{{n.default_option}}'}}">
+													</td>
+													<td ng-if="glob_inventory_policy_status=='1' || variant_is_inventory">
+														<input style="width: 80px;" name="variant_sku[inventory_quantity][{{'{{$index}}'}}]" ng-model="n.inventory_quantity" class="form-control" type="number" min="0" max="99999999">
+													</td>
+													<td>
+														<input style="width: 80px;" name="variant_sku[price][{{'{{$index}}'}}]" ng-model="n.price" class="form-control" type="number" step="any" min="0" max="99999999.99" required>
+													</td>
+													<td>
+														<input style="width: 80px;" name="variant_sku[compare_at_price][{{'{{$index}}'}}]" ng-model="n.compare_at_price" class="form-control" type="number" step="any" min="0" max="99999999.99">
+													</td>
+													<td>
+														<input style="width: 80px;" name="variant_sku[sku][{{'{{$index}}'}}]" ng-model="n.sku" class="form-control" type="text">
+													</td>
+													{# <td>
+														<div class="input-group clearfix">
+															<input id="variant_sku_image_{{'{{$index}}'}}" name="variant_sku[images][{{'{{$index}}'}}]" ng-model="n.image" class="form-control" type="text">
+															<span class="input-group-btn">
+																<button ng-click="ngSelectFileWithCKFinder('variant_sku_image_'+$index);" class="btn btn-default" name="image_btn" type="button"><i class="fa fa-image"></i></button>
+															</span>
+														</div>
+													</td> #}
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div> <!-- /.col-md-12 -->
+							</div> <!-- /.row -->
+						</div> <!-- / ng-if showVariants -->
+
+						{#
+						<!-- // Debug -->
+						<div id="choicesDisplay">
+							<!-- {{ dump('{{choices|json}}') }} -->
+							{{ dump('{{variant_option|json}}') }}
+							Option length : {{'{{choices.length}}'}}
+						</div>
+						#}
+
+						{#
+						{{ dump('{{view_variant_options|json}}')}}
+						{{ dump('{{choices|json}}')}}
+						{{ dump('{{variant_option|json}}')}}
+						#}
+
+						{#
+						>>>{{'{{glob_inventory_policy_status}}'}}
+						>>>{{'{{variant_is_inventory}}'}}<<<
+						#}
+
+					</div> <!-- /.box-body -->
+				</div><!-- /.box -->
+			</div> <!-- /Product variants controller -->
+		</div> <!-- /.col-md-8 -->
+
+		<div class="col-md-4">
+			<div class="box">
+            <div class="box-header with-border">
+              <h3 class="box-title">Publishing</h3>
+			  <div class="box-tools pull-right">
+				  <button ng-click="publish_date_toggle=!publish_date_toggle" class="btn btn-link" type="button"><i class="fa fa-calendar"></i></button>
+			  </div>
+            </div>
+            <!-- /.box-header -->
+			<div class="box-body">
+				<div class="row">
+					<div class="col-md-7">
+						<!-- radio -->
+						<div class="form-group icheck">
+							<!-- <label for="status"></label> -->
+							<div class="radio-group">
+								{{form_widget(form.status, {'id' : 'status'})}}
+								<div class="error-form">{{form_errors(form.status)}}</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-5">
+						<div ng-show="publish_date_toggle" class="form-group" ng-cloak>
+							<label for="publishDate">Publish product on</label>
+							{{form_widget(form.publishDate, {'id' : 'publishDate'})}}
+							<div class="error-form">{{form_errors(form.publishDate)}}</div>
+						</div>
+
+					</div>
+				</div>
+
+			</div>
+            <!-- /.box-body -->
+          </div>
+		</div>
+
+		<div class="col-md-4">
+			<div class="box">
+            <div class="box-header with-border">
+              <h3 class="box-title">Organization</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+				<!-- select -->
+				<div class="form-group" ng-cloak>
+					<label for="productCategories" class=""> Category</label>
+					<div class="checkbox-group pre-scrollable" style="overflow: scroll;max-height: 250px;">
+						{{form_widget(form.productCategories, {'id' : 'productCategories'})}}
+						<div class="error-form">{{form_errors(form.productCategories)}}</div>
+					</div>
+				</div>
+
+				{#
+				<div class="form-group">
+					<label for="productCategory" class=""> Category</label>
+					{{form_widget(form.productCategory, {'id' : 'productCategory'})}}
+					<div class="error-form">{{form_errors(form.productCategory)}}</div>
+				</div>
+				#}
+				<script>
+				$(document).ready(
+					function(){
+						$('.level_2').closest("div").css({'padding-left':'15px'});
+						$('.level_3').closest("div").css({'padding-left':'30px'});
+						$('.level_4').closest("div").css({'padding-left':'45px'});
+						$('.level_5').closest("div").css({'padding-left':'60px'});
+						$('.level_6').closest("div").css({'padding-left':'75px'});
+						$('.level_7').closest("div").css({'padding-left':'90px'});
+						$('.level_8').closest("div").css({'padding-left':'105px'});
+						$('.level_1').closest("label").css('cssText', 'font-weight: bold !important');
+						$('.level_2').closest("label").css('cssText', 'font-weight: 400 !important');
+						$('.level_3').closest("label").css('cssText', 'font-weight: 250 !important');
+						$('.level_4').closest("label").css('cssText', 'font-weight: 250 !important');
+						$('.level_5').closest("label").css('cssText', 'font-weight: 250 !important');
+						$('.level_6').closest("label").css('cssText', 'font-weight: 250 !important');
+						$('.level_7').closest("label").css('cssText', 'font-weight: 250 !important');
+						$('.level_8').closest("label").css('cssText', 'font-weight: 250 !important');
+					}
+				);
+				/*
+				$(document).ready(
+					function(){
+						$('.level_2').each(function(){$(this).text('― '+$(this).text());});
+						$('.level_3').each(function(){$(this).text('―― '+$(this).text());});
+						$('.level_4').each(function(){$(this).text('――― '+$(this).text());});
+						$('.level_5').each(function(){$(this).text('―――― '+$(this).text());});
+						$('.level_6').each(function(){$(this).text('――――― '+$(this).text());});
+						$('.level_7').each(function(){$(this).text('―――――― '+$(this).text());});
+						$('.level_8').each(function(){$(this).text('――――――― '+$(this).text());});
+					}
+				);
+				*/
+				</script>
+
+				<div class="form-group">
+					<label for="brand" class="" ><span class="require">*</span> Brand</label>
+					{{form_widget(form.brand, {'id' : 'brand'})}}
+					<div class="error-form">{{form_errors(form.brand)}}</div>
+				</div>
+				{#
+                <div class="form-group">
+                	<label for="equipment">Equipment</label>
+					{{form_widget(form.equipment, {'id' : 'equipment'})}}
+  					<div class="error-form">{{form_errors(form.equipment)}}</div>
+                </div>
+				#}
+				<div class="form-group">
+                	<label for="power">Power Consumption</label>
+                	{{form_widget(form.power, {'id' : 'power'})}}
+  					<div class="error-form">{{form_errors(form.power)}}</div>
+                </div>
+				<div class="form-group">
+					<label for="userWeight"> User Weight</label>
+					<div class="">
+						<div class="input-group">
+							{{form_widget(form.userWeight, {'id' : 'userWeight'})}}
+							<span class="input-group-addon">kg</span>
+						</div>
+						<div class="error-form">{{form_errors(form.userWeight)}}</div>
+					</div>
+				</div><hr>
+
+                <!-- checkbox -->
+                <div class="form-group icheck">
+				  <label for="customer_groups">Customer Group</label>
+                  <div class="checkbox-group pre-scrollable" style="overflow: scroll;height: 150px;">
+					  <div class="checkbox">
+						  <label for="customer_select_all">
+						  	<input type="checkbox" id="customer_select_all" /> All
+						  </label>
+					  </div>
+					  {{form_widget(form.customer_groups, {'id' : 'customer_groups'})}}
+					  <div class="error-form">{{form_errors(form.customer_groups)}}</div>
+                  </div>
+                </div><hr>
+
+				<div class="form-group icheck">
+				  <label for="age_groups">Age Group</label>
+                  <div class="checkbox-group pre-scrollable" style="overflow: scroll;height: 200px;">
+					  <div class="checkbox">
+						  <label for="age_group_select_all">
+						  	<input type="checkbox" id="age_group_select_all" /> All
+						  </label>
+					  </div>
+					  {{form_widget(form.age_groups, {'id' : 'age_groups'})}}
+					  <div class="error-form">{{form_errors(form.age_groups)}}</div>
+                  </div>
+                </div><hr>
+
+				<div class="form-group icheck">
+				  <label for="muscles">Sport Science Training</label>
+                  <div class="checkbox-group pre-scrollable" style="overflow: scroll;height: 200px;">
+					  <div class="checkbox">
+						  <label for="muscle_select_all">
+						  	<input type="checkbox" id="muscle_select_all" /> All
+						  </label>
+					  </div>
+					  {{form_widget(form.muscles, {'id' : 'muscles'})}}
+					  <div class="error-form">{{form_errors(form.muscles)}}</div>
+                  </div>
+                </div><hr>
+
+				<div class="form-group icheck">
+				  <label for="showrooms">Showroom</label>
+                  <div class="checkbox-group pre-scrollable" style="overflow: scroll;height: 200px;">
+					  <div class="checkbox">
+						  <label for="showroom_select_all">
+						  	<input type="checkbox" id="showroom_select_all" /> All
+						  </label>
+					  </div>
+					  {{form_widget(form.showrooms, {'id' : 'showrooms'})}}
+					  <div class="error-form">{{form_errors(form.showrooms)}}</div>
+                  </div>
+                </div><hr>
+
+				<div ng-controller="hashTagCtrl" ng-init="init_hashtag()">
+					<div class="form-group">
+					  <label>Tags</label>
+	                  <div class="">
+						  <tags-input ng-model="tags" min-length="2" max-length="45" use-strings="true" replace-spaces-with-dashes="flase">
+							  <auto-complete source="loadTags($query)"></auto-complete>
+						  </tags-input>
+						  <input type="hidden" name="admin_product[tags]" value="{{'{{tags}}'}}">
+	                  </div>
+	                </div>
+				</div><hr>
+
+				<div ng-controller="hashTagCtrl">
+					<div class="form-group">
+					  <div class="form-group">
+	  					{{form_widget(form.isNew, {'id' : 'isNew'})}}
+	  					<div class="error-form">{{form_errors(form.isNew)}}</div>
+	  				  </div>
+	                </div>
+				</div>
+
+				<div>
+					<div class="form-group">
+					  <div class="form-group">
+	  					{{form_widget(form.isBestSeller, {'id' : 'isBestSeller'})}}
+	  					<div class="error-form">{{form_errors(form.isBestSeller)}}</div>
+	  				  </div>
+	                </div>
+				</div>
+
+            </div><!-- /.box-body -->
+          </div>
+		</div><!-- /.col-md-4 -->
+	</div><!-- /.row -->
+
+	<div class="row">
+		<div class="col-md-offset-2 col-md-9">
+			{{form_widget(form.save, {'id' : 'save', 'label': btn_label_save})}}
+			{{form_widget(form.save_and_add, {'id' : 'save_and_add', 'label': btn_label_save_add})}}
+			{{form_widget(form.save_and_edit, {'id' : 'save_and_edit', 'label': btn_label_save_edit})}}
+			<a href="{%if app.session.get('back_to_url')['admin_product'] is defined%}{{app.session.get('back_to_url')['admin_product']}}{%else%}{{path('admin_product')}}{%endif%}" class="btn btn-default">{{btn_label_close}} </a>
+		</div>
+	</div><!-- /.row -->
+</div><!-- /productApp controller -->
+
+<script>
+	$(function() {
+		$('.icheckbox input').iCheck('destroy');
+		$('.remove_icheck input').iCheck('destroy');
+		$('#weight').removeClass('form-control');
+
+		setGroupCheckAll('showroom_select_all', 'showroom_check_item');
+		setGroupCheckAll('muscle_select_all', 'muscle_check_item');
+		setGroupCheckAll('age_group_select_all', 'age_group_check_item');
+		setGroupCheckAll('customer_select_all', 'customer_check_item');
+
+		$('#publishDate').datetimepicker({
+			format: 'YYYY-MM-DD HH:mm',
+		});
+
+		$(".removeTmpPhotoGalleryData").click(function(e) {
+	        e.preventDefault();
+	        var link = $(this),
+	            photo_gallery_elem  = link.closest(".photo-gallery");
+	        photo_gallery_elem.remove();
+	    });
+
+		// $('#publishDate').datepicker({
+		// 	dateFormat: 'yy-mm-dd',
+		// 	autoclose: true,
+		// 	todayHighlight: true,
+		// });
+	});
+
+	var app = angular.module('productApp', ['ngTagsInput']);
+
+	app.factory('hashtag_data', ['$http', function hashtag_data($http) {
+		return {
+			getProductHashtags: function(token, product_id){
+	      		return $http({
+					method:'GET',
+					url: Routing.generate('api_1_get_product_tags',{'product_id':product_id}),
+					headers: {
+						'Authorization':'Bearer ' + token
+					}
+				});
+	    	}
+		}
+	}]);
+	app.factory('variant_data', ['$http', function variant_data($http) {
+		return {
+			getProductVariants: function(token, product_id){
+	      		return $http({
+					method:'GET',
+					url: Routing.generate('api_1_get_product_variants',{'product_id':product_id}),
+					headers: {
+						'Authorization':'Bearer ' + token
+					}
+				});
+	    	}
+		}
+	}]);
+
+	app.controller('mainCtrl', function($scope, $http) {
+		$scope.init = function(token, product_id, price, compare_at_price, sku, inventory_policy_status, inventory_quantity) {
+
+			$scope.glob_access_token = token;
+			$scope.glob_product_id = product_id;
+			$scope.glob_price = price;
+
+			if(compare_at_price){
+				$scope.glob_compare_at_price = compare_at_price;
+			}
+			if(sku){
+				$scope.glob_sku = sku;
+			}
+			if(inventory_policy_status){
+				$scope.glob_inventory_policy_status = inventory_policy_status;
+			}
+			if(inventory_quantity){
+				$scope.glob_inventory_quantity = inventory_quantity;
+			}else{
+				$scope.glob_inventory_policy_status = '0';
+			}
+		}
+	});
+
+	app.controller('variantsCtrl',  function($scope, $http, variant_data) {
+		$scope.init_variants = function() {
+
+			// debug choice value
+			// $scope.showVariants = true;
+			// $scope.choices = [
+			// 	{"id": 'choice1', "option_name": "Color", "option_value": ["White","Blue","Yellow"]},
+			// 	{"id": "choice2","option_name": "Size","option_value": ["S","M","L"]}
+			// ];
+
+			$scope.showVariants = false;
+			$scope.haveVariants = false;
+			$scope.variant_is_inventory = false;
+			$scope.products_variants_loading_icon = false;
+			$scope.setUpdateVariantSkuStatus(false);
+			$scope.initVariantsData();
+
+			if($scope.glob_product_id){
+				$scope.products_variants_loading_icon = true;
+				variant_data.getProductVariants($scope.glob_access_token, $scope.glob_product_id).then(function onSuccess(response){
+					if(response.data.variants.length>0){
+						$scope.haveVariants = true;
+						$scope.choices = response.data.variants;
+						$scope.variant_options = response.data.variant_options;
+						$scope.view_variants = response.data.view_variants;
+						$scope.view_variant_options = response.data.view_variant_options;
+						$scope.variant_is_inventory = JSON.parse(response.data.variant_is_inventory);
+					}
+
+					// // compare array or object
+					// var a = [ {a:["red","s","10lb"],b:[1,2,3]} ];
+					// var b = [ {a:["red","s","10lb"],b:[1,2,3]} ];
+					// if( _.isEqual(a.sort(), b.sort()) ){
+					// 	console.log('_equal');
+					// }else{
+					// 	console.log('_not_equal');
+					// }
+
+					$scope.addItemNo($scope.choices.length);
+
+					$scope.products_variants_loading_icon = false;
+				}).catch(function onError(response){
+					console.log('Error get variants data');
+					$scope.products_variants_loading_icon = false;
+				});
+			}
+		}
+
+		$scope.setUpdateVariantSkuStatus = function(data){
+			$scope.update_variant_sku_status = data;
+		}
+
+		$scope.initVariantsData = function() {
+			if($scope.haveVariants){
+				//reset data from database
+			}else{
+				$scope.choices = [ {"id": 'choice1', "option_name": "Size", "option_value": []} ];
+				$scope.variant_options = [];
+				$scope.view_variants = [];
+				$scope.view_variant_options = [];
+				$scope.itemNo=0; //init value
+				$scope.addItemNo($scope.choices.length);
+			}
+		}
+
+		$scope.addItemNo = function(itemNo) {
+			$scope.itemNo+=itemNo;
+		}
+
+		$scope.addNewChoice = function() {
+			$scope.addItemNo(1);
+			var newItemNo = $scope.itemNo;
+			$scope.choices.push({'id':'choice'+newItemNo});
+		};
+
+		$scope.removeChoice = function(index) {
+			$scope.choices.splice(index,1);
+		};
+
+		$scope.$watch('choices', function (newValue, oldValue, scope) {
+		    //Do anything with $scope.choices
+			$scope.setRangeVariants();
+		}, true);
+
+		$scope.setRangeVariants = function() {
+			$scope.variant_option = $scope.createRangeVariants();
+		};
+
+		$scope.createRangeVariants = function() {
+			var option_len = $scope.choices.length,
+				variants = [],
+				result = [],
+				cartesianProduct = [],
+				tmp_sku_variant_option = '',
+				tmp_key_name = '',
+				tmp_variant_options = [],
+				tmp_id = '',
+				tmp_price = '',
+				tmp_compare_at_price = '',
+				tmp_inventory_quantity = '',
+				tmp_sku = '',
+				tmp_status = '',
+				tmp_image = '',
+				tmp_image_small='',
+				tmp_default_option=false;
+
+			$scope.choices.forEach(function(choice){
+				if(choice.option_value){
+					variants.push(choice.option_value);
+				}
+			});
+
+			if(variants.length>0)
+			{
+				//get recursive variant options
+				cartesianProduct = $scope.cartesianProduct(variants);
+
+				//set variant options
+				cartesianProduct.forEach(function(data, index)
+				{
+					//prepare default input data
+					tmp_id = '';
+					tmp_price = parseFloat($scope.glob_price);
+					tmp_compare_at_price = parseFloat($scope.glob_compare_at_price);
+					tmp_inventory_quantity = parseInt($scope.glob_inventory_quantity);
+					tmp_status = "on";
+					tmp_default_option=false;
+					if($scope.glob_sku){
+						tmp_sku = $scope.glob_sku+'-'+(index+1);
+					}
+
+					if($scope.glob_product_id){
+						//edit mode
+						tmp_key_name = data.join('-');
+						tmp_key_name = tmp_key_name.toLowerCase();
+						if (tmp_key_name in $scope.variant_options){
+							//exist data
+							tmp_variant_options = $scope.variant_options[tmp_key_name];
+							tmp_id = tmp_variant_options['id'];
+							tmp_price = tmp_variant_options['price'];
+							tmp_compare_at_price = tmp_variant_options['compare_at_price'];
+							tmp_inventory_quantity = tmp_variant_options['inventory_quantity'];
+							tmp_sku = tmp_variant_options['sku'];
+							tmp_status = tmp_variant_options['status'];
+							tmp_image = tmp_variant_options['image'];
+							tmp_image_small = tmp_variant_options['image_small'];
+							tmp_default_option = tmp_variant_options['default_option'];
+						}
+					}
+
+					//set data
+					tmp_sku_variant_option = {'option':data, 'id':tmp_id, 'status':tmp_status, 'price':tmp_price, 'compare_at_price':tmp_compare_at_price, 'inventory_quantity':tmp_inventory_quantity, 'sku':tmp_sku, 'image':tmp_image, 'image_small':tmp_image_small, 'default_option':tmp_default_option};
+					result.push(tmp_sku_variant_option);
+				});
+			}
+
+			return result;
+		};
+
+		$scope.cartesianProduct = function(arr) {
+		    return arr.reduce(function(a,b){
+		        return a.map(function(x){
+		            return b.map(function(y){
+		                return x.concat(y);
+		            })
+		        }).reduce(function(a,b){ return a.concat(b) },[])
+		    }, [[]])
+		}
+
+		$scope.range = function(min, max, step) {
+		    step = step || 1;
+		    var input = [];
+		    for (var i = min; i <= max; i += step) {
+				input.push(i);
+		    }
+		    return input;
+		};
+
+		$scope.getRouteSkuEdit = function(id){
+			return Routing.generate('admin_sku_edit',{'id':id});
+		};
+
+		$scope.ngSelectFileWithCKFinder = function(ele_id){
+			// selectFileWithCKFinder(ele_id);
+			angular.element(selectFileWithCKFinder(ele_id));
+		};
+
+		// $scope.removeLastChoice = function() {
+		// 	var lastItem = $scope.choices.length-1;
+		// 	$scope.choices.splice(lastItem);
+		// };
+
+		/*
+		// only 2 dimention
+		$scope.generateVariants = function(data, prefix) {
+		    if (typeof prefix === 'undefined') {
+          		prefix = '';
+	        }
+	        var result = [];
+	        var attribute = data.shift();
+	        $.each(attribute, function(key,val) {
+	            if (data instanceof Array && data.length > 0) {
+					// Instead of passing the original array, clone it and pass the cloned array as argument.
+
+					_data = data.slice(0);
+
+					result = result.concat($scope.generateVariants(_data, val + ' '));
+	            } else {
+					result.push(prefix + val);
+	            }
+        	});
+        	return result;
+		}
+		*/
+
+	});
+
+	app.controller('hashTagCtrl', function($scope, $http, hashtag_data) {
+		$scope.init_hashtag = function() {
+			$scope.tags = [];
+
+			if($scope.glob_product_id){
+				hashtag_data.getProductHashtags($scope.glob_access_token, $scope.glob_product_id).then(function onSuccess(response){
+					$scope.tags = response.data.data;
+			    }).catch(function onError(response) {
+					console.log('Error get current hashtag');
+			    });
+			}else{
+				$scope.tags = [];
+			}
+		}
+        $scope.loadTags = function(query) {
+			return $http.get('{{path('api_1_get_tags')}}?query=' + query, {
+				headers: {
+					"Authorization": "Bearer " + $scope.glob_access_token
+				}
+			}).then(function (response) {
+				return response.data.data;
+			}, function(response) {
+				console.log('Error loading tag');
+			});
+        };
+		// $scope.tags = [{text:'just'}, {text:'some'}]; //option use-strings=false
+		// $scope.tags = ['just', 'some', 'cool', 'tags'];  //option use-strings=true
+	});
+
+	app.filter('join', function () {
+	    return function join(array, separator, prop) {
+	        if (!Array.isArray(array)) {
+				return array; // if not array return original - can also throw error
+	        }
+			return (!!prop ? array.map(function (item) {
+				return item[prop];
+			}) : array).join(separator);
+		};
+	});
+
+	app.directive('dirSelectFile', [function() {
+	    return {
+	        restrict: 'A',
+	        link: function(scope, element, attrs) {
+	            element.bind('click', function() {
+	                angular.element(selectFileWithCKFinder(attrs.dataindex, attrs.datathumb));
+	            });
+	        }
+	    };
+	}]);
+
+</script>

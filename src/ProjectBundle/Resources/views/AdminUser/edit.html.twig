@@ -1,0 +1,73 @@
+{% extends 'ProjectBundle::admin.html.twig'%}
+
+{% block stylesheets %}
+  {{ parent() }}
+  <style>
+  .ui-autocomplete-loading {
+    background: white url("/images/ui-anim_basic_16x16.gif") left center no-repeat;
+  }
+  .ui-autocomplete {
+    position: absolute;
+    z-index: 1000;
+    cursor: default;
+    padding: 0;
+    margin-top: 2px;
+    list-style: none;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    -webkit-border-radius: 5px;
+       -moz-border-radius: 5px;
+            border-radius: 5px;
+    -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+       -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    }
+    .ui-autocomplete > li {
+      padding: 3px 20px;
+    }
+    .ui-autocomplete > li.ui-state-focus {
+      background-color: #DDD;
+    }
+    .ui-helper-hidden-accessible {
+      display: none;
+    }
+  </style>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <script src="{{asset('bundles/fosjsrouting/js/router.js')}}"></script>
+  <script src="{{path('fos_js_routing_js', {'callback': 'fos.Router.setData'})}}"></script>
+  <script>
+    $(document).ready(function(){
+      $( "#position").autocomplete({
+            source: Routing.generate('api_1_get_public_user_positions'),
+            minLength: 1
+        });
+    })
+  </script>
+{% endblock %}
+
+{% use "ProjectBundle:AdminUser:blocks.html.twig" %}
+{% use "ProjectBundle::flash_message.html.twig" %}
+{% block breadcrumb_sub %}
+	{{ parent() }}
+	<li class="active">Edit</li>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+	<div class="col-md-12">
+	  <div class="box box-primary">
+	    <div class="box-header">
+	      <h3 class="box-title">Edit</h3>
+	    </div><!-- /.box-header -->
+	    <!-- form start -->
+      <form id="data_form" action="{{path('admin_user_update', {'id': form.vars.value.id})}}" method="post" role="form" enctype="multipart/form-data" class="form-horizontal">
+	      {{form_widget(form._token)}}
+	      {%include 'ProjectBundle:AdminUser:_form.html.twig'%}
+	    </form>
+	  </div><!-- /.box -->
+	</div>
+</div>
+{% endblock %}

@@ -1,0 +1,64 @@
+admin_layout_shop:
+  path: /
+  defaults: {_controller: ProjectBundle:AdminLayoutShop:index}
+  requirements:
+    _method: get
+
+admin_layout_shop_new:
+  path: /new
+  defaults: {_controller: ProjectBundle:AdminLayoutShop:new}
+
+admin_layout_shop_create:
+  path: /create
+  defaults: {_controller: ProjectBundle:AdminLayoutShop:create}
+  requirements:
+    _method: post
+
+admin_layout_shop_edit:
+  path: /{id}/edit
+  defaults: {_controller: ProjectBundle:AdminLayoutShop:edit}
+  requirements:
+    id: \d+
+
+admin_layout_shop_update:
+  path: /{id}
+  defaults: {_controller: ProjectBundle:AdminLayoutShop:update}
+  requirements:
+    _method: post
+    id: \d+
+
+admin_layout_shop_delete:
+  path: /{id}/delete
+  defaults: {_controller: ProjectBundle:AdminLayoutShop:delete}
+  requirements:
+    _method: get
+
+admin_layout_shop_group_delete:
+  path: /group-delete
+  defaults: {_controller: ProjectBundle:AdminLayoutShop:group_delete}
+  requirements:
+    _method: post
+
+admin_layout_shop_group_enable:
+  path: /group-enable
+  defaults: {_controller: ProjectBundle:AdminLayoutShop:group_enable}
+  requirements:
+    _method: post
+
+admin_layout_shop_group_disable:
+  path: /group-disable
+  defaults: {_controller: ProjectBundle:AdminLayoutShop:group_disable}
+  requirements:
+    _method: post
+
+admin_layout_shop_sort:
+  path: /sort
+  defaults: {_controller: ProjectBundle:AdminLayoutShop:sort}
+  requirements:
+    _method: get
+
+admin_layout_shop_sort_prosess:
+  path: /sort-prosess
+  defaults: {_controller: ProjectBundle:AdminLayoutShop:sort_prosess}
+  requirements:
+    _method: post

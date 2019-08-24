@@ -1,0 +1,56 @@
+{% extends "ProjectBundle:"~ view_layout ~":layout_member.html.twig" %}
+
+{% block title %}{% trans %}member.address.book{% endtrans %} | {{ parent() }}{% endblock %}
+{% block member_home_active %}active{% endblock %}
+{% block member_header %}{% trans %}member.address.book{% endtrans %}{% endblock %}
+
+{% block member_address_active %}active{% endblock %}
+{% block breadcrumb_sub %}
+    {{ parent() }}
+    <li class="active">{% trans %}member.address.book{% endtrans %}</li>
+{% endblock %}
+
+{% block content_member %}
+<p class="text-right">
+    <a href="{{path('address_create')}}" class="thm-btn tt-up"><span><i class="fa fa-plus"></i> {% trans %}member.new.address{% endtrans %}</span></a>
+</p>
+<div class="member-box">
+    <div class="row row-title">
+        <div class="col-md-3"><b>{% trans %}member.personal.fullname{% endtrans %} #</b></div>
+        <div class="col-md-5"><b>{% trans %}member.address{% endtrans %}</b></div>
+        <div class="col-sm-2"><b>{% trans %}member.personal.phone{% endtrans %}</b></div>
+        <div class="col-sm-2"></div>
+    </div>
+    {% for user_data in delivery_address %}
+        <div class="row row-list">
+            <div class="col-md-3">
+                <b>{% trans %}member.personal.fullname{% endtrans %}</b>
+                {{user_data.firstName}}  {{user_data.lastName}}
+            </div>
+            <div class="col-md-5">
+                <b>{% trans %}member.address{% endtrans %}</b>
+                <div>
+                    {{user_data.address}}, {{user_data.district}}, {{user_data.amphure}},
+                    {{user_data.province}}
+                    {#, {% if user_data.countryCode %}{{user_data.countryCode.country}}{% endif %}#}
+                    {{user_data.postCode}}
+                </div>
+                {% if user_data.defaultShipping == 1 %}
+                    <div class="default-addr">{% trans %}member.default.shipping.address{% endtrans %}</div>
+                {% endif %}
+                {% if user_data.defaultTax == 1 %}
+                    <div class="default-addr">{% trans %}member.default.billing.address{% endtrans %}</div>
+                {% endif %}
+            </div>
+            <div class="col-sm-2">
+                <b>{% trans %}member.personal.phone{% endtrans %}</b>
+                {{user_data.phone}}
+            </div>
+            <div class="col-sm-2 link-ed">
+                <a href="{{path('address_edit',{'id':user_data.id})}}">{% trans %}edit{% endtrans %}</a>
+                <a href="{{path('address_delete',{'id':user_data.id})}}" onclick="return confirm('{% trans %}confirm.delete{% endtrans %}');">{% trans %}remove{% endtrans %}</a>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

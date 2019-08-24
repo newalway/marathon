@@ -1,0 +1,400 @@
+{% extends "ProjectBundle:"~ view_layout ~":layout.html.twig" %}
+
+{% block title %}{% trans %}menu.product{% endtrans %} | {{ parent() }}{% endblock %}
+{% block product_active %}active{% endblock %}
+{% block m_product_active %}active{% endblock %}
+
+{% block breadcrumb_title1 %}{% trans %}menu.product{% endtrans %}{% endblock %}
+
+{% block breadcrumb_sub %}
+    {{ parent() }}
+    <li class="active">{% trans %}menu.product{% endtrans %}</li>
+{% endblock %}
+
+{% block content %}
+{#<link rel="stylesheet" href="{{ asset('css/frontend_complied/marathon-product.min.css') }}">#}
+<section class="sidebar-pages popular-shop-item product-border-item">
+    <div class="container ">
+        <div class="row">
+            <form class="" id="formSearch" action="{{path('product')}}" method="get" ng-app="searchApp" ng-controller="searchCtrl" >
+                <div class="col-lg-9 col-sm-8 col-xs-12">
+                    <div class="sidebar-page-content section-padding pb0">
+                        <div class="inner-page-wrapper section-padding pt0">
+                            <div class="row meta-info">
+                                <div class="col-md-12">
+                                    {% set view = app.request.get('view') %}
+                                    {% if paginated.getNbResults %}
+                                    <p class="number-of-product pull-left">Showing {{paginated.getCurrentPage}}-{{paginated.getNbPages}} of {{paginated.getNbResults}} Results</p>
+                                    {% endif %}
+                                    <div class="product-view">
+                                        <span>{% trans %}product.view{% endtrans %}:</span>
+                                        <a href="{{path('product')}}" class="{% if view != 'list' %}active{% endif %}"><i class="glyphicon glyphicon-th-large"></i></a>
+                                        <a href="{{path('product')}}?view=list" class="{% if view == 'list' %}active{% endif %}"><i class="glyphicon glyphicon-th-list"></i></a>
+                                    </div>
+                                    <div class="select-box product-sort-by">
+                                        {{ form_label(form.ddlPriceSort,'product.sort_by')}}
+                                        {{ form_widget(form.ddlPriceSort) }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row clear-both {% if view == 'list' %}product-list{% endif %}">
+                                {% for rs in paginated.currentpageresults %}
+                                {% set data = rs[0] %}
+                                {# price_data return price check  #}
+                                {% set price_data = getPriceData(rs) %}
+                                <div class="{% if view == 'list' %} col-sm-12 clear-both {% else %} col-md-6 col-sm-6 {% if loop.index0 is divisible by(2) %}clear-both{% endif %}{% endif %}">
+                                    <a href="{{path('product_detail',{'id':data.id,'slug':data.getSlug})}}">
+                                        <div class="single-product-item text-center product-border">
+                                            <div class="img-holder productZoom">
+                                                {% if price_data.price and price_data.price > 0 %}
+                                                    {% if (price_data.compare_at_price > price_data.price) %}
+                                                        <div class="offer-product"><p> -{{ rs|getPercentProductDiscount }}%</p></div>
+                                                    {% endif %}
+                                                {% endif %}
+
+                                                {% if data.image %}
+                                                    {% set image = asset(data.image)|imagine_filter('img_480x480') %}
+                                                    {% set image_zoom = asset(data.image)|imagine_filter('img_1000x1000') %}
+                                                {% else %}
+                                                    {% set image = 'https://placehold.it/480x480' %}
+                                                    {% set image_zoom = 'https://placehold.it/1000x1000' %}
+                                                {% endif %}
+                                                <img src="{{image}}" alt="{{data.getTitle}}" class="img-responsive" data-zoom-image="{{image_zoom}}" />
+                                                {# <div class="overlay">
+                                                    <div class="icon-holder">
+                                                        <ul>
+                                                            <!-- <li><a href="{{path('product_detail',{'id':data.id,'slug':data.getSlug})}}"><i class="fa fa-shopping-cart"></i></a></li> -->
+                                                            <!-- <li><a href="{{path('product_detail',{'id':data.id,'slug':data.getSlug})}}"><i class="fa fa-heart"></i></a></li> -->
+                                                            <li><a href="{{path('product_detail',{'id':data.id,'slug':data.getSlug})}}"><i class="fa fa-search-plus"></i></a></li>
+                                                        </ul>
+                                                    </div>
+                                                <!-- /.icon-holder -->
+                                                </div> #}
+                                                <!-- /.overlay -->
+                                            </div>
+                                            <!-- /.img-holder -->
+                                            <div class="title">
+                                                <a href="{{path('product_detail',{'id':data.id,'slug':data.getSlug})}}"><h3>{{data.getTitle}}</h3></a>
+                                                {% if view == 'list' %}
+                                                <p class="short-desc">{{ data.getShortDesc|nl2br }}</p>
+                                                {% endif %}
+                                                <h2>
+                                                    {% if price_data.price and price_data.price > 0 %}
+                                                        {% if (price_data.compare_at_price > price_data.price) %}
+                                                            <del class="before-rate">
+                                                                ฿{{ price_data.compare_at_price|number_format(2, '.', ',') }}
+                                                            </del>
+                                                        {% endif %}
+                                                        ฿{{ price_data.price|number_format(2, '.', ',') }}
+                                                    {% else %}
+                        								&nbsp;
+                                                    {% endif %}
+                                                </h2>
+                                            </div>
+                                            <!-- /.title -->
+                                        </div>
+                                        <!-- /.single-product-item text-center -->
+                                    </a>
+                                </div>
+                                {% else %}
+                                <div class="row col-md-12 text-center">No data </div>
+                                {% endfor %}
+                            </div>
+                            <!-- /.row -->
+
+                            {% if paginated.havetopaginate %}
+                            {{pagerfanta(paginated,'twitter_bootstrap3_translated_template')}}
+                            {% endif %}
+                        </div>
+                        <!-- /.inner-page-wrapper -->
+                    </div>
+                    <!-- /.sidebar-page-content -->
+                </div>
+                <!-- /.col-md-9 -->
+
+                <div class="col-lg-3 col-sm-4 col-xs-12 ">
+                    <div class="sidebar-wrapper section-padding">
+                        <div class="panel">
+                            <div class="input-group ">
+                                {{ form_widget(form.searchBox, { 'attr': {'placeholder': 'Search', 'class':'form-control'}})}}
+                                <span class="input-group-btn">
+                                    <button type="submit" id="btnSearch"class="btn btn-marathon" {#ng-click="trySearch()"#}><i class="fa fa-search" aria-hidden="true"></i></button>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="panel-group single-sidebar category-widget" id="accordion" role="tablist" aria-multiselectable="true">
+
+                            <div class="panel panel-default">
+                                <div class="panel-heading active" role="tab" id="headingProductCategories">
+                                    <h4 class="panel-title ">
+                                        <a role="button" data-toggle="collapse"  href="#collapseProductCategories" aria-expanded="true" aria-controls="collapseProductCategories">
+                                            {% trans %}product.category{% endtrans %}
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapseProductCategories" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingProductCategories">
+                                    <div class="panel-body" ng-cloak>
+                                        <ul class="checkbox-group-container">
+                                            {% for product_category in form.productCategories %}
+                                            <li>
+                                                <div class="custom-checkbox">
+                                                    {{ form_widget(product_category)}}
+                                                </div>
+                                                {{ form_label(product_category)}}
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="panel panel-default">
+                                <div class="panel-heading active" role="tab" id="headingCustomerGroups">
+                                    <h4 class="panel-title ">
+                                        <a role="button" data-toggle="collapse"  href="#collapseCustomerGroups" aria-expanded="true" aria-controls="collapseCustomerGroups">
+                                            {% trans %}product.customer_group{% endtrans %}
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapseCustomerGroups" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingCustomerGroups">
+                                    <div class="panel-body">
+                                        <ul class="checkbox-group-container">
+                                            {% for customer_group in form.customerGroups %}
+                                            <li>
+                                                <span class="custom-checkbox">
+                                                    {{ form_widget(customer_group)}}
+                                                    <label for=""></label>
+                                                </span>
+                                                {{ form_label(customer_group)}}
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="panel panel-default">
+                                <div class="panel-heading active" role="tab" id="headingBrands">
+                                    <h4 class="panel-title ">
+                                        <a role="button" data-toggle="collapse"  href="#collapseBrands" aria-expanded="true" aria-controls="collapseBrands">
+                                            {% trans %}product.brand{% endtrans %}
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapseBrands" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingBrands">
+                                    <div class="panel-body">
+                                        <ul class="checkbox-group-container">
+                                            {% for brand in form.brands %}
+                                            <li>
+                                                <span class="custom-checkbox">
+                                                    {{ form_widget(brand)}}
+                                                    <label for=""></label>
+                                                </span>
+                                                {{ form_label(brand)}}
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="panel panel-default">
+                                <div class="panel-heading {#active#}" role="tab" id="headingAgeGroups">
+                                    <h4 class="panel-title ">
+                                        <a role="button" data-toggle="collapse"  href="#collapseAgeGroups" aria-expanded="true" aria-controls="collapseAgeGroups">
+                                            {% trans %}product.age_group{% endtrans %}
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapseAgeGroups" class="panel-collapse collapse {#in#}" role="tabpanel" aria-labelledby="headingAgeGroups">
+                                    <div class="panel-body">
+                                        <ul class="checkbox-group-container">
+                                            {% for age in form.age_groups %}
+                                            <li>
+                                                <span class="custom-checkbox">
+                                                    {{ form_widget(age)}}
+                                                    <label for=""></label>
+                                                </span>
+                                                {{ form_label(age)}}
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="panel panel-default">
+                                <div class="panel-heading" role="tab" id="heading-power">
+                                    <h4 class="panel-title ">
+                                        <a role="button" data-toggle="collapse"  href="#collapsePower" aria-expanded="true" aria-controls="collapsePower">
+                                            {% trans %}product.power{% endtrans %}
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapsePower" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-power">
+                                    <div class="panel-body">
+                                        <ul class="checkbox-group-container">
+                                            {% for  power in form.power %}
+                                            <li>
+                                                <span class="custom-checkbox">
+                                                    {{ form_widget(power)}}
+                                                    <label for=""></label>
+                                                </span>
+                                                {{ form_label(power)}}
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="panel panel-default">
+                                <div class="panel-heading" role="tab" id="headingMuscles">
+                                    <h4 class="panel-title">
+                                        <a class="collapsed" role="button" data-toggle="collapse"  href="#collapseMuscles" aria-expanded="true" aria-controls="collapseTwo">
+                                            {% trans %}product.sport_science_training{% endtrans %}
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapseMuscles" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingMuscles">
+                                    <div class="panel-body">
+                                        <ul class="checkbox-group-container">
+                                            {% for  muscle in form.muscles %}
+                                            <li>
+                                                <span class="custom-checkbox">
+                                                    {{ form_widget(muscle)}}
+                                                </span>
+                                                {{ form_label(muscle)}}
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {#
+                            <div class="panel panel-default">
+                                <div class="panel-heading" role="tab" id="headingEquipment">
+                                    <h4 class="panel-title">
+                                        <a class="collapsed" role="button" data-toggle="collapse"  href="#collapseEquipment" aria-expanded="true" aria-controls="collapseEquipment">
+                                            {% trans %}product.equipment{% endtrans %}
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapseEquipment" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingEquipment">
+                                    <div class="panel-body">
+                                        <ul class="checkbox-group-container">
+                                            {% for  equipment in form.equipment %}
+                                            <li>
+                                                <span class="custom-checkbox">
+                                                    {{ form_widget(equipment)}}
+                                                </span>
+                                                {{ form_label(equipment)}}
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            #}
+
+                        </div>
+
+                    </div>
+                    <!-- /.sidebar-wrapper -->
+                </form>
+            </div>
+            <!-- /.col-md-3 -->
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container -->
+</section>
+
+{% endblock %}
+
+{% block javascripts_body %}
+	{{ parent() }}
+    <script>
+
+    $(function() {
+        if ($('.productZoom').length) {
+            $(".productZoom").each(function(arg, el){
+                var image = $(el).find("img").data("zoomImage");
+                $(el).zoom({
+                    on: 'mouseover',
+                    url: image
+                });
+            });
+        }
+
+        // indent product category
+        $('.level_2').closest("div").css({'padding-left':'15px'});
+        $('.level_3').closest("div").css({'padding-left':'30px'});
+        $('.level_4').closest("div").css({'padding-left':'45px'});
+        $('.level_5').closest("div").css({'padding-left':'60px'});
+        $('.level_6').closest("div").css({'padding-left':'75px'});
+        $('.level_7').closest("div").css({'padding-left':'90px'});
+        $('.level_8').closest("div").css({'padding-left':'105px'});
+    });
+
+    $('.panel-collapse').on('show.bs.collapse', function () {
+        $(this).siblings('.panel-heading').addClass('active');
+    });
+
+    $('.panel-collapse').on('hide.bs.collapse', function () {
+        $(this).siblings('.panel-heading').removeClass('active');
+    });
+
+    // $('.sidebar-pages.popular-shop-item.product-border-item').delegate('input[type=checkbox]', 'change', function() {
+    //     var $checked = $('input:checked');
+    //     if ($checked.length) {
+    //         var selector = '';
+    //         $($checked).each(function(index, element){
+    //             if(selector === '') {
+    //                 selector += "[data-category~='" + element.name + "']";
+    //             } else {
+    //                 selector += ",[data-category~='" + element.name + "']";
+    //             }
+    //         });
+    //     }
+    // });
+
+    $('.sidebar-pages.popular-shop-item.product-border-item').delegate('input[type=checkbox]', 'change', function() {
+        var $checked = $('input:checked');
+        if ($checked.length) {
+            $("#formSearch").submit();
+        }else{
+            $("#formSearch").submit();
+        }
+    });
+    function chkSeclectForCollapse(id){
+        $(id).find("input:checked").each(function (i,ob) {
+            $(id).addClass('in');
+        });
+    }
+
+    chkSeclectForCollapse('#collapsePower');
+    chkSeclectForCollapse('#collapseMuscles');
+    chkSeclectForCollapse('#collapseEquipment');
+
+    $('#product_search_ddlPriceSort').on('change', function() {
+        $("#formSearch").submit();
+    });
+
+    // $('.collapseMuscles')
+
+    var app = angular.module('searchApp', []);
+    app.controller('searchCtrl', function($scope, $http) {
+
+        $scope.trySearch = function() {
+            $http.get('{{path('product')}}')
+            .then(function(response) {
+                // $scope.dataSearch = response.data;
+            });
+        };
+    });
+
+    </script>
+{% endblock %}

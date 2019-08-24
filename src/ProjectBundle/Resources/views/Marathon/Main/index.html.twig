@@ -1,0 +1,252 @@
+{% extends "ProjectBundle:"~ view_layout ~":layout.html.twig" %}
+
+{% block stylesheets %}
+	{{ parent() }}
+    <style>
+        .shop-cta-content {
+            top: 15%;
+            left: 42%;
+            position: absolute;
+            right: 1%;
+        }
+        .single-shop-cta .img-holder .shop-cta-content h1 {
+            color: #222;
+            font-size: 30px;
+            font-weight: 700;
+            line-height: 40px;
+            margin: 0 0 16px;
+            text-transform: uppercase;
+        }
+        .single-shop-cta .img-holder .shop-cta-content h1 span {
+            color: #ffc013;
+        }
+        .single-shop-cta .img-holder .shop-cta-content h2 {
+            color: #222;
+            font-family: "Oregano",cursive;
+            font-size: 36px;
+            font-style: italic;
+            font-weight: 400;
+            text-transform: none;
+            padding-left: 0%;
+            margin-top: -5px;
+            /* margin: 0px 0 0; */
+        }
+        .single-shop-cta .img-holder .shop-cta-content h3 {
+            color: #ffc013;
+            font-family: "Oswald",sans-serif;
+            font-size: 48px;
+            font-weight: 700;
+            margin: 0 0 8px;
+        }
+        .single-shop-cta .img-holder .shop-cta-content h4 {
+            color: #222;
+            font-family: "Raleway",sans-serif;
+            font-size: 30px;
+            font-weight: 800;
+            line-height: 45px;
+            margin: 0 0 20px;
+            text-transform: uppercase;
+        }
+        .single-shop-cta .img-holder .shop-cta-content a.btn-right {
+            left: 18%;
+            position: relative;
+            margin-top: 5%;
+        }
+        .shop-cta-content-left {
+            position: relative;
+            margin-top: -25px;
+            margin-left: -125px;
+        }
+
+    </style>
+{% endblock %}
+
+{% block title %}{% trans %}menu.home{% endtrans %} | {{ parent() }}{% endblock %}
+{% block home_active %}active{% endblock %}
+{% block m_home_active %}active{% endblock %}
+
+{% block main_class %}{% endblock %}
+
+{% block breadcrumb %}{% endblock %}
+
+{% block content %}
+
+	<!-- Start For banner -->
+	{% include 'ProjectBundle:'~ view_main ~':_home_banner.html.twig' %}
+	<!-- End For banner -->
+
+    <section class="shop-cta section-padding">
+		<div class="">
+			<!-- Start For best seller -->
+			{% include 'ProjectBundle:'~ view_main ~':_home_best_seller_choose_products.html.twig' %}
+			<!-- End For best seller -->
+
+			<!-- Start For layout_shops -->
+			{% include 'ProjectBundle:'~ view_main ~':_home_layout_shops.html.twig' %}
+			<!-- End For layout_shops -->
+        </div>
+    </section>
+
+	<!-- Start For product categories -->
+	{% include 'ProjectBundle:'~ view_main ~':_home_product_categories.html.twig' %}
+	<!-- End For product categories -->
+
+    <!-- Start For product section -->
+    {# {% include 'ProjectBundle:'~ view_main ~':_home_products_section.html.twig' %} #}
+    <!-- End For product section -->
+
+    <!-- /.popular-shop-item -->
+	{# {% include 'ProjectBundle:'~ view_main ~':_home_static_content.html.twig' %} #}
+
+    <!-- Start For best seller -->
+        {#{% include 'ProjectBundle:'~ view_main ~':_home_item_best_seller.html.twig' %}#}
+    <!-- End For best seller -->
+
+    <!-- Start For distributor -->
+        {% include 'ProjectBundle:'~ view_main ~':_home_distributor.html.twig' %}
+    <!-- End For distributor -->
+
+    <section class="subscribe-area" ng-app="subscriberApp" ng-controller="subscriberController">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-5 col-sm-12 col-xs-12 hidden-sm">
+                    <div class="img-holder">
+                        <img src="{{asset('images/marathon/banner/man-women370x410.png')}}" alt="Subscribe us for Offers & Health Tips">
+                    </div>
+                </div>
+                <div class="col-md-7 col-sm-12 col-xs-12">
+                    <div class="subscribe-form">
+                        <h1 class="title">{% trans %}subscribe.us{% endtrans %}</h1>
+                        <form class="subscribe" ng-submit="processForm()" method="post" enctype="multipart/form-data">
+                            {{form_widget(subscriber_form._token)}}
+
+                            <div class="alert ng-cloak" role="alert" ng-show="message" ng-class="success ? 'alert-success' : 'alert-danger'" style="border-radius:0;">
+                                <div class="close" ng-click="message=false"><span style="font-family: Roboto;">&times;</span></div>
+                                <span class="message-text" ng-bind="message"></span>
+                            </div>
+
+                            {{form_widget(subscriber_form.name, { 'attr': {'ng-model':'formData.name', 'placeholder': 'Your Name', 'class':'name'}})}}
+                            <div class="text-error" ng-show="errors.name" ng-bind="errors.name"></div>
+
+                            {{form_widget(subscriber_form.email, { 'attr': {'ng-model':'formData.email', 'placeholder': 'Your Email', 'class':'email'}})}}
+                            <div class="text-error" ng-show="errors.email" ng-bind="errors.email"></div>
+
+                            <button class="thm-btn arrow-push-out-right" type="submit" ng-disabled="getDataLoading()"><span>Subscribe  Now <i class="fa fa-caret-right"></i></span></button>
+                            <i ng-show="getDataLoading()" class="fa fa-circle-o-notch fa-spin fa-2x ng-cloak"></i>
+
+                        </form>
+                        <h1 class="title-call">{% trans %}give.us.a.call{% endtrans %}  : <span>+66 (0) 2433 7992-4</span></h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+	<!-- Start For product categories -->
+	 {#{% include 'ProjectBundle:'~ view_main ~':_home_events.html.twig' %} #}
+	 {{ render(controller('ProjectBundle:Event:index')) }}
+	<!-- End For product categories -->
+
+{% endblock %}
+
+{% block javascripts_body %}
+	{{ parent() }}
+
+    <script>
+
+        var app = angular.module('subscriberApp',[]);
+        app.factory('subscriber_data', ['$http', function subscriber_data($http){
+          return {
+            subscriber_create: function(dataObj){
+              return $http({
+                method:'POST',
+                url:Routing.generate('subscriber_create', true),
+                data: $.param(dataObj),
+                headers: {'Content-Type':'application/x-www-form-urlencoded'
+              } });
+            }
+          };
+        }]);
+
+        app.controller('subscriberController', ['$scope', 'subscriber_data', function($scope, subscriber_data){
+
+            $scope.processForm = function(){
+                $scope.setDataLoading(true);
+                $scope.formData._token = angular.element('#subscriber__token').val();
+                subscriber_data.subscriber_create($scope.formData).then(function onSuccess(response) {
+                	var data = response.data;
+                    if(!data.success){
+						$scope.message = data.message;
+						$scope.errors = data.errors;
+						$scope.success = data.success;
+                    }else{
+						$scope.message = data.message;
+						$scope.success = data.success;
+						//reset data
+						$scope.formData = {};
+						$scope.errors = {};
+                    }
+                    $scope.setDataLoading(false);
+
+                }).catch(function onError(response) {
+                });
+            };
+
+            $scope.getDataLoading = function() {
+				return $scope.data_loaded;
+            };
+            $scope.setDataLoading = function(value) {
+				$scope.data_loaded = value;
+            };
+
+            $scope.formData = {};
+            $scope.errors = {};
+            $scope.message = undefined;
+            $scope.setDataLoading(false);
+        }]);
+
+        $(function() {
+
+            if ($('.product-carousel-loop').length) {
+                $('.product-carousel-loop').owlCarousel({
+                    loop: true,
+                    margin: 30,
+                    nav: true,
+                    navText: [
+                        '<i class="fa fa-angle-left"></i>',
+                        '<i class="fa fa-angle-right"></i>'
+                    ],
+                    dots: false,
+                    autoplay: true,
+                    autoplayHoverPause: true,
+                    responsive: {
+                        0: {
+                            items: 1
+                        },
+                        480: {
+                            items: 1
+                        },
+                        600: {
+                            items: 2
+                        },
+                        1000: {
+                            items: 3
+                        }
+                    }
+                });
+            }
+
+            if ($('.productZoom').length) {
+                $(".productZoom").each(function(arg, el){
+                    var image = $(el).find("img").data("zoomImage");
+                    $(el).zoom({
+                        on: 'mouseover',
+                        url: image
+                    });
+                });
+			}
+        });
+    </script>
+
+	<script src="{{ asset('javascripts/jquery.matchHeight.js')}}"></script>
+{% endblock %}

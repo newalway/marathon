@@ -1,0 +1,99 @@
+{#
+{{dump(arr_cart_data)}}
+#}
+
+<li class="shopping-cart">
+    <a class="flip-flop-btn button-icon">
+        <i class="fc-icon ftc-icon-shopping-bag2" id="cart_summary_item_count">
+            {% if arr_cart_data.summary|length > 0 %}
+                <span class="cart-item">
+                    {{arr_cart_data.summary.item_count}}
+                </span>
+            {% endif %}
+        </i>
+
+        <span class="text">Cart (
+            {% if arr_cart_data.summary|length > 0 %}
+                <text id="cart_summary_item_count_sub">{{arr_cart_data.summary.item_count}}</text>
+            {% endif %}
+            )
+        </span>
+    </a>
+
+    <div id="cart_list_products" class="megamenu shopping-cart-box">
+        <ul class="header-cart-box">
+
+            <div id="cart_list_products_item">
+                {% if arr_cart_data.products|length > 0 %}
+                    {% for product in arr_cart_data.products %}
+                        <li>
+                            <div class="img-box">
+                                {% if product.image_small %}
+                                    <img src="{{product.image_small}}" alt="{{product.title}}" />
+                                {% else %}
+                                    <img src="{{ asset('template/img/resources/header-cart-1.jpg')}}" alt="{{product.title}}" />
+                                {% endif %}
+                            </div>
+                            <div class="text-box">
+                                {% if  product.variant_option|length > 0 %}
+                                    {% set str_variant = product.variant_option|join('-') %}
+                                    {% set link_product_detail = path('product_detail', {'id':product.product_id, 'slug':product.slug, 'v':str_variant }) %}
+                                {% else %}
+                                    {% set link_product_detail = path('product_detail', {'id':product.product_id, 'slug':product.slug}) %}
+                                {% endif %}
+
+                                <a href="{{link_product_detail}}">
+                                    <h3>{{product.title}}</h3>
+                                    {% if  product.variant_option|length > 0 %}
+                                        {{ product.variant_option|join(' · ')}}
+                                    {% endif %}
+                                </a>
+
+                                {% if is_granted('ROLE_CLIENT') %}
+                                    <span class="price"></span>
+                                    <div class="review-box">
+                                        <i>Qty: {{product.quantity}}</i>
+                                    </div>
+                                {% else %}
+                                    <span class="price">฿{{product.amount|number_format(2, '.', ',')}}</span>
+                                    <div class="review-box">
+                                        {% if product.quantity > 1 %}
+                                            <i>฿{{product.price|number_format(2, '.', ',')}} (Qty: {{product.quantity}})</i>
+                                        {% endif %}
+                                        {#
+                                        <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+                                        #}
+                                    </div>
+                                    {#
+                                    <a href="#" class="remove-box"><i class="fa fa-times-circle"></i></a>
+                                    #}
+                                {% endif %}
+                            </div>
+                        </li>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <li class="clearfix cart-bottom">
+                <div class="mt-3 total-text pull-left">
+                    <span>
+                        Total <text id="cart_summary_total">
+                            {% if is_granted('ROLE_CLIENT') %}
+                            {% else %}
+                                {% if arr_cart_data.summary|length > 0 %}
+                                    - ฿{{arr_cart_data.summary.total|number_format(2, '.', ',')}}
+                                {% endif %}
+                            {% endif %}
+                        </text>
+                    </span>
+                </div>
+                <div class="checkout-btn pull-right">
+                    <a href="{{path('cart')}}"><span data-hover="GO TO CART">GO TO CART<i class="fa fa-caret-right"></i></span></a>
+                    {# <a href="{{path('checkout')}}"><span data-hover="Checkout">Checkout<i class="fa fa-caret-right"></i></span></a> #}
+                </div>
+            </li>
+        </ul>
+    </div>
+
+{# style="display: block;" #}
+</li>

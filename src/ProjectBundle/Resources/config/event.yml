@@ -1,0 +1,34 @@
+event:
+  path: /
+  defaults: {_controller: ProjectBundle:Event:index}
+  requirements:
+    _method: get
+  options:
+    expose: true
+
+event_category_list:
+  path: /category/{id}/{slug}
+  defaults: {_controller: ProjectBundle:Event:category}
+  requirements:
+    _method: get
+    id: \d+
+  options:
+    expose: true
+
+
+event_detail:
+  path: /category/detail/{id}/{slug}
+  defaults: {_controller: ProjectBundle:Event:detail}
+  requirements:
+    _method: get
+    id: \d+
+  options:
+    expose: true
+
+# event_category_list:
+#   path: /category
+#   defaults: {_controller: ProjectBundle:Event:category}
+#   requirements:
+#     _method: get
+#   options:
+#     expose: true

@@ -1,0 +1,169 @@
+<style media="screen">
+/* .box-event{padding: 0 3px 15px 3px;} */
+.box-event.slick-slide {margin: 0px 3px 0 3px;}
+.inner-image {width: 100%;height: 100%;float: left;overflow: hidden;position: relative;text-align: center;cursor: default;}
+.inner-image .title-category {width: 100%;height: 100%;position: absolute;overflow: hidden;bottom: 0;left: 0;right: 0;}
+.inner-image img,iframe.wh {display: block;width: 100%;position: relative;}
+/* //.inner-image iframe {display: block;width: 100%;position: relative;height: auto;} */
+.inner-image h2.title-category-position {width: 100%;bottom: 0;text-transform: uppercase;color: #ffc013;text-align: center;position: absolute;font-size: 17px;padding: 10px;background-color: #482b0f;}
+</style>
+<section id="event-cat" class="popular-shop-item mixit-gallery section-padding home-product">
+	<div class="container">
+		<div class="clearfix">
+			<div class="section-title text-left">
+				<h1><span>{% trans %}EVENTS{% endtrans %}</span></h1>
+
+				<ul class="gallery-filter list-inline text-left">
+					{% for evc in event_category %}
+						{% if (loop.index0 == 0) %}
+							<li id="e{{loop.index0}}" class="filters e{{loop.index0}} active" data-filter=".{{evc.id}}"><span>{{evc.getTitle}}</span></li>
+						{% else %}
+							<li id="e{{loop.index0}}" class="filters e{{loop.index0}}" data-filter=".{{evc.id}}"><span>{{evc.getTitle}}</span></li>
+						{% endif %}
+					{% endfor %}
+				</ul>
+			</div>
+		</div>
+		<!-- /.clearfix -->
+			<div class="row event-category  slider">
+			{% for evc2  in event_category %}
+
+				<div class="box-event">
+					<div class="inner-image">
+						{% if evc2.getVideo %}
+							<a data-fancybox href="{{evc2.video}}">
+								<img class="wh img-responsive" src="{{evc2.thumbnailUrlPlayButton}}" alt="">
+								<div class="title-category">
+									<h2 class="title-category-position">{{evc2.getTitle}}</h2>
+								</div>
+							</a>
+						{% else %}
+							<a href="{{path('event_category_list',{'id':evc2.id,'slug':evc2.getTitle|slug})}}">
+								{% if evc2.getImage|length > 0 %}
+									<img class="wh img-responsive" src="{{evc2.getImage|imagine_filter('img_480x360')}}" alt="">
+								{% else %}
+									<img class="wh img-responsive" src="//placehold.it/480x360" alt="">
+								{% endif %}
+								<div class="title-category">
+									<h2 class="title-category-position">{{evc2.getTitle}}</h2>
+								</div>
+							</a>
+						{% endif %}
+
+					</div> {#.inner-image#}
+				</div>{#.box-event#}
+			{% endfor %}
+		</div>
+		<!-- /.row -->
+	</div>
+	<!-- /.container -->
+</section>
+<script type="text/javascript">
+
+function MatchHeight() {
+    $('.wh').matchHeight({});
+	$('.inner-image').matchHeight({});
+}
+$( document ).ready(function() {
+	// MatchHeight();
+	$(".event-category").slick({
+	  infinite: true,
+	  slidesToScroll: 1,
+	  dots: false,
+	  centerMode: false,
+	  slidesToShow: 5,
+	  //initialSlide:0,
+	  autoplay: false,
+	  autoplaySpeed: 5000,
+	  infinite: true,
+	  arrows: true,
+	  nextArrow: '<div class="tp-rightarrow tparrows"></div>',
+	  prevArrow: '<div class="tp-leftarrow tparrows"></div>',
+	  mobileFirst:true,//add this one
+		//asNavFor: '.bullets',
+	  responsive: [
+		{
+			breakpoint: 1200,
+			settings: {
+				slidesToShow: 4,
+				slidesToScroll: 1,
+			}
+		},
+		{
+			breakpoint: 1024,
+			settings: {
+				slidesToShow: 4,
+				slidesToScroll: 1,
+			}
+		},
+		{
+			breakpoint: 600,
+			settings: {
+				slidesToShow: 3,
+				slidesToScroll: 1
+			}
+		},
+		{
+			breakpoint: 480,
+			settings: {
+				slidesToShow: 2,
+				slidesToScroll: 1
+			}
+		},
+		{
+			breakpoint: 380,
+			settings: {
+				slidesToShow: 1,
+				slidesToScroll: 1
+			}
+		},
+		{
+			breakpoint: 320,
+			settings: {
+				slidesToShow: 1,
+				slidesToScroll: 1
+			}
+		},
+		{
+			breakpoint: 300,
+			settings: {
+				slidesToShow: 1,
+				slidesToScroll: 1
+			}
+		},
+	  ],
+
+	});
+
+	// $('.tp-rightarrow').on('click', function(){
+	//    $('.regular').slick('slickNext');
+	// });
+	// $('.tp-leftarrow').on('click', function(){
+	//   $('.regular').slick('slickPrev');
+	// });
+	if ($('.event-category .box-event').length <= 4) {
+		$(".box-event.slick-current").css({"border-top": "none"});
+		$("li.filters").removeClass('active');
+	}
+
+	$('.filters').click(function() {
+	  var slideIndex = this.getAttribute('id').replace('e','');
+	  if ($('.event-category .box-event').length > 4) {
+		  $('.event-category').slick('slickGoTo', parseInt(slideIndex), false);
+	  }
+	});
+
+
+	$('.event-category').on('afterChange', function(event, slick, currentSlide, nextSlide){
+	//debugger;
+	  if ($('.event-category .box-event').length > 4) {
+		  //alert(slick.currentSlide);
+		  $("li.filters").removeClass('active');
+		  $('li.filters.e' +slick.currentSlide).addClass('active');
+	  }
+	});
+
+});
+
+
+</script>

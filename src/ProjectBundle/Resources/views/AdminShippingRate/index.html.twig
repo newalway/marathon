@@ -1,0 +1,116 @@
+{% extends 'ProjectBundle::admin.html.twig'%}
+
+{% block stylesheets %}
+{{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+{% endblock %}
+
+{% use "ProjectBundle:AdminShippingRate:blocks.html.twig" %}
+{% use "ProjectBundle::flash_message.html.twig" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 margin-10-0">
+        <a href="{{path('admin_shipping_rates_new')}}" class="btn btn-instagram" title="Add"><i class="fa fa-plus"></i> Add</a>
+        {# <a href="{{path('admin_shipping_rates_delivery_date_setting')}}" class="btn bg-purple" title="setting"><i class="fa fa-cogs"></i> Order Delivery Date Setting</a> #}
+    </div>
+</div>
+
+<br class="clearBoth">
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box" style="min-height: 1000px;">
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <button type="button" class="btn bg-red" data-form_id="data_group" id="group_delete">
+                            <i class="fa fa-trash-o"></i> Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <form action="#" method="post" id="data_group" data-delete_path="{{path('admin_shipping_rates_group_delete')}}">
+                <div class="box-body icheck">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th width="19"><input type="checkbox" id="select_all" /></th>
+                                <th>Name</th>
+                                <th>Rate Type</th>
+                                <th>Minimum</th>
+                                <th>Maximum</th>
+                                <th>Fixed Cost</th>
+                                <th>Cost Per Distance</th>
+                                <th class="text-center" width="50">Edit</th>
+                                <th class="text-center" width="50">Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for data in paginated.currentpageresults %}
+                                {% if data.ratetype == 'distance_based_rate' %}
+                                    {% set type_title = 'Distance'%}
+                                    {% set postfix = 'km' %}
+                                {% elseif data.ratetype == 'weight_based_rate' %}
+                                    {% set type_title = 'Weight'%}
+                                    {% set postfix = 'g' %}
+                                {% elseif data.ratetype == 'price_based_rate' %}
+                                    {% set type_title = 'Price'%}
+                                    {% set postfix = '฿' %}
+                                {% endif %}
+                                <tr class="odd gradeX">
+                                    <td>
+                                        <input type="checkbox" name="data_ids[]" class="check_all" value="{{data.id}}"/>
+                                    </td>
+                                    <td class="">{{data.title}}</td>
+
+                                    <td class="">{{type_title}}</td>
+                                    <td class="">
+                                        {{data.minimumrange|number_format}} {{postfix}}
+                                    </td>
+                                    <td class="">
+                                        {% if data.maximumrange == 0 %}
+                                        No limit
+                                        {% else %}
+                                        {{data.maximumrange|number_format}} {{postfix}}
+                                        {% endif %}
+                                    </td>
+                                    <td class="">
+                                        {{data.rateamount|number_format}} ฿
+                                    </td>
+                                    <td>
+                                        {% if data.ratetype == 'distance_based_rate' and data.variableCost > 0 %}
+                                            {{data.variableCost|number_format}} ฿
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center"><a href="{{path('admin_shipping_rates_edit', {'id' : data.id})}}" title="Edit"><i class="fa fa-pencil-square-o fa-2x"></i></a></td>
+                                    <td class="text-center"><a href="{{path('admin_shipping_rates_delete', {'id' : data.id})}}" onclick="return confirm('Are you sure you want to delete?');" title="Delete"><i class="fa fa-trash fa-2x"></i></a></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div><!-- /.box-body -->
+
+                <div class="box-footer clearfix">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="margin">Total : {{paginated.getNbResults}}</div>
+                        </div>
+                        <div class="col-md-9">
+                            {% if paginated.havetopaginate %}
+                                {{pagerfanta(paginated,'twitter_bootstrap3_translated')}}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div><!-- /.box -->
+    </div>
+</div>
+
+{% endblock %}

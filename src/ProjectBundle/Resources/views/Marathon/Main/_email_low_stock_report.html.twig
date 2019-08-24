@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <meta name="x-apple-disable-message-reformatting">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="telephone=no" name="format-detection">
+    <title></title>
+
+    <!--[if (mso 16)]>
+<style type="text/css">
+a {text-decoration: none;}
+</style>
+<![endif]-->
+<!--[if gte mso 9]><style>sup { font-size: 100% !important; }</style><![endif]-->
+<!--[if !mso]><!-- -->
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i" rel="stylesheet">
+<!--<![endif]-->
+
+</head>
+<style media="screen">
+    .container{max-width: 650px;position:relative;margin:0 auto;}
+    .panel {
+    margin-bottom: 20px;
+    background-color: #fff;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    box-shadow: 0 1px 1px rgba(0,0,0,.05);
+}
+.panel-body {
+    padding: 15px;
+}
+.panel-default {
+    border-color: #ddd;
+}
+.col-left {
+    float: left;
+    width: 49%;
+}
+.col-right {
+    float: right;
+    width: 49%;
+}
+.group:after {
+    content:"";
+    display: table;
+    clear: both;
+}
+img {
+    max-width: 100%;
+    height: auto;
+}
+@media screen and (max-width: 480px) {
+    .col-left,
+    .col-right {
+        float: none;
+        width: auto;
+    }
+}
+</style>
+<body>
+    <div class="container">
+        <!--[if gte mso 9]>
+			<v:background xmlns:v="urn:schemas-microsoft-com:vml" fill="t">
+				<v:fill type="tile" color="#eeeeee"></v:fill>
+			</v:background>
+		<![endif]-->
+
+        <table class="es-wrapper" width="100%" cellspacing="0" cellpadding="0" border="0">
+            <tbody>
+                <tr>
+                    <td colspan="5" class="esd-stripe" style="background-color: #523112;text-align:center;" height="75" >
+                        <a href="#" class="menuzord-brand"><img src="http://18.219.50.166/images/marathon/logo-marathon.png" alt="Marathon (Thailand)" /> </a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="5" class="esd-block-text es-p15t es-p20b" align="left">
+                        <h4>
+
+                        </h4>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="5" class="esd-block-text es-p15t es-p20b" align="left">
+                        <p>
+                            Hello Admin,<br/>
+                            <br/>
+                            Here is a list of Product(s) which may go out of stock. This messages is a reminder.<br/>
+                            Inventory should be updated so customers may purchase these products from you shop.
+
+                            {#{{no_low_stock}}#}
+                            <br/><br/>
+                        </p>
+                    </td>
+                </tr>
+
+                <tr style="background-color:#D3D3D3;">
+                    <td></td>
+                    <td>
+                        <h4>Products</h4>
+                    </td>
+                    <td>
+                        <h4>Variant</h4>
+                    </td>
+                    <td>
+                        <h4>SKU</h4>
+                    </td>
+                    <td>
+                        <h4>Quantity</h4>
+                    </td>
+                </tr>
+
+                {% for data in arr_data %}
+                    <tr>
+                        <td width="16%" style="padding: 5px 10px 5px 0" >
+                            <p>
+                                {% if data.image_s %}
+                                    <img src="{{host_scheme}}:{{data.image_s}}" alt="" style="" width="50px;"/>
+                                {% endif %}
+                            </p>
+                        </td>
+                        <td align="left">
+                            <p>
+                                {{data.title}}
+                            </p>
+                        </td>
+                        <td>
+                            {% if data.varient %}
+                                {{data.varient}}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {{data.sku}}
+                        </td>
+                        <td>
+                            {{data.qty}} left
+                        </td>
+                    </tr>
+                {% endfor %}
+
+                <tr>
+                    <td colspan="5" class="esd-block-text es-p15t es-p20b" align="left">
+                        <p><br/>
+                            We will notify you again when products which may go out of stock.
+                            <br/><br/><br/>
+
+                            Thank you,<br/>
+                            Automatically generated email <br/>
+                        </p>
+                    </td>
+                </tr>
+
+            </tbody>
+            <tfoot>
+
+                <tr style="background-color:#523112;color:#ffffff;">
+                    <td colspan="5" style="background-color:#523112;color:#ffffff;" align="center" height="75">
+                        <p><strong>Pinklao 149, Baromrat-Chonnanee Rd.,Arun Amarin</strong></p>
+                        <p><strong>Bangkoknoi, Bangkok 10700</strong></p>
+                    </td>
+                </tr>
+
+            </tfoot>
+        </table>
+    </div>
+</body>
+
+</html>

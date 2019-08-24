@@ -1,0 +1,148 @@
+<div class="row">
+	<div class="col-md-10">
+		<div class="box">
+			<div class="box-header with-border">
+				<h3 class="box-title">Delivery date</h3>
+				<div class="box-tools pull-right"></div>
+			</div>
+			<!-- /.box-header -->
+			<div class="box-body">
+
+				<div class="row ">
+					<div class="col-md-6">
+						<div class="form-group icheck">
+							<label class="" for="place_order_time">Placed order before</label>
+							{{form_widget(form.place_order_time, {'id' : 'place_order_time'})}}
+							<div class="error-form">{{form_errors(form.place_order_time)}}</div>
+						</div>
+					</div>
+					<div class="col-md-6"></div>
+				</div>
+
+				<div class="row ">
+					<div class="col-md-6">
+						<div class="form-group icheck">
+							<label class="" for="before_set_date">will be delivered on</label>
+							{{form_widget(form.before_set_date, {'id' : 'before_set_date'})}}
+							<div class="error-form">{{form_errors(form.before_set_date)}}</div>
+						</div>
+					</div>
+					<div class="col-md-6"></div>
+				</div>
+
+				<div class="row ">
+					<div class="col-md-6">
+						<div class="form-group icheck">
+							<label class="" for="after_set_date">after <span id="display_hour"></span>:<span id="display_minute"></span> will be delivered on</label>
+							{{form_widget(form.after_set_date, {'id' : 'after_set_date'})}}
+							<div class="error-form">{{form_errors(form.after_set_date)}}</div>
+						</div>
+					</div>
+					<div class="col-md-6"></div>
+				</div>
+
+				<div class="row ">
+					<div class="col-md-6">
+						<div class="form-group icheck">
+							<label class="" for="non_delivery_date">Blackout delivery days</label>
+							<ul style="list-style: none;">
+								{% for non_delivery_date in form.non_delivery_date %}
+									<li>
+										{{ form_widget(non_delivery_date) }}
+										{{ form_label(non_delivery_date) }}
+									 </li>
+								{% endfor %}
+							</ul>
+						</div>
+					</div>
+					<div class="col-md-6"></div>
+				</div>
+
+				<div class="row ">
+					<div class="col-md-9">
+						<div class="form-group icheck">
+							<label class="" for="non_delivery_date">Next Holiday</label>
+							{% if holidays|length>0 %}
+
+									<table class="table table-bordered">
+										<tbody>
+											<tr>
+												<th style="width: 100px">Day</th>
+												<th style="width: 80px">Date</th>
+												<th style="width: 80px">Year</th>
+												<th style="width: 80px">Holiday</th>
+											</tr>
+											{% for holiday in holidays %}
+												<tr>
+													<td>
+														{{holiday.holidaydate|date('l')}}
+													</td>
+													<td>{{holiday.holidaydate|date('d F')}}</td>
+													<td>{{holiday.holidaydate|date('Y')}}</td>
+													<td>{{holiday.title}}</td>
+												</tr>
+											{% endfor %}
+										</tbody>
+									</table>
+
+							{% endif %}
+						</div>
+					</div>
+					<div class="col-md-3">
+						<a href="{{path('admin_holiday_new')}}" class="btn" title="Add"><i class="fa fa-plus"></i> Add</a>
+					</div>
+				</div>
+
+				<div class="row ">
+					<div class="col-md-6">
+						<div class="form-group icheck">
+							<label class="" for="status">Status</label>
+							{{form_widget(form.status, {'id' : 'status'})}}
+							<div class="error-form">{{form_errors(form.status)}}</div>
+							<!-- <p class="help-block">Customers will enter this discount code at checkout.</p> -->
+						</div>
+					</div>
+					<div class="col-md-6"></div>
+				</div>
+			</div>
+		</div>
+
+	</div> <!-- /.col-md-10 -->
+
+	<div class="col-md-2">
+	</div>
+
+	<div class="row">
+		<div class="col-md-offset-2 col-md-9">
+			{{form_widget(form.save, {'id' : 'save', 'label': btn_label_save})}}
+			<a href="{%if app.session.get('back_to_url')['admin_shipping_rate'] is defined%}{{app.session.get('back_to_url')['admin_shipping_rate']}}{%else%}{{path('admin_shipping_rate')}}{%endif%}" class="btn btn-default">{{btn_label_close}} </a>
+		</div>
+	</div>
+
+</div>
+
+
+<script>
+$(document).ready(function(){
+	function assignVal(id, val){
+		$("#"+id).text(val);
+	}
+
+	var time_hour = $("#admin_delivery_method_place_order_time_hour").val();
+	var time_minute = $("#admin_delivery_method_place_order_time_minute").val();
+	time_minute=pad2(time_minute);
+
+	assignVal('display_hour',time_hour);
+	assignVal('display_minute',time_minute);
+	$('#admin_delivery_method_place_order_time_hour').on('change', function (e) {
+		//var optionSelected = $("option:selected", this);
+		var valueHourSelected = this.value;
+		assignVal('display_hour',valueHourSelected);
+	});
+	$('#admin_delivery_method_place_order_time_minute').on('change', function (e) {
+		//var optionSelected = $("option:selected", this);
+		var valueMinuteSelected = pad2(this.value);
+		assignVal('display_minute',valueMinuteSelected);
+	});
+});
+</script>

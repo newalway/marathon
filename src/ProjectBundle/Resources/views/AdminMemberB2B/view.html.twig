@@ -1,0 +1,150 @@
+{% extends 'ProjectBundle::admin.html.twig'%}
+
+{% block stylesheets %}
+  {{ parent() }}
+{% endblock %}
+
+{% use "ProjectBundle:AdminMemberB2B:blocks.html.twig" %}
+{% use "ProjectBundle::flash_message.html.twig" %}
+{% block breadcrumb_sub %}
+	{{ parent() }}
+	<li class="active">{{member.firstname}} {{member.lastname}}</li>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12 margin-10-0">
+        <a href="{%if app.session.get('back_to_url')['admin_member_b2b'] is defined%}{{app.session.get('back_to_url')['admin_member_b2b']}}{%else%}{{path('admin_member_b2b')}}{%endif%}" class="btn btn-default"><i class="fa fa-angle-left"></i> Back </a>
+    </div>
+
+    <div class="col-md-6">
+        <div class="box box-success">
+            <div class="box-header with-border">
+                <i class="fa fa-user-circle"></i>
+                <h3 class="box-title">INFORMATION</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body" style="height: 250px;">
+                <div class="form-group">
+                    <label for="">FirstName :</label>
+                    {% if member.firstname %}
+                    {{member.firstname}}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="">LastName :</label>
+                    {% if member.lastname %}
+                    {{member.lastname}}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="">Company Name :</label>
+                    {% if member.companyname %}
+                    {{member.companyname}}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="">Phone :</label>
+                    {% if member.phonenumber %}
+                    <a href="tel:{{member.phonenumber}}">{{member.phonenumber}}</a>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="">Email :</label>
+                    {% if member.email %}
+                    <a href="mailto:{{member.email}}">{{member.email}}</a>
+                    {% endif %}
+                </div>
+
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+    </div>
+
+    <div class="col-md-6">
+        <div class="box box-success">
+            <div class="box-header with-border">
+                <!-- <i class="fa fa-book"></i> -->
+                <i class="fa fa-address-book"></i>
+                <h3 class="box-title">BOOK ADDRESS</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body" style="height: 250px;">
+
+                {% if  default_shipping_address %}
+                <h5><b>Default Shipping</b></h5>
+                {% if default_shipping_address.companyName %} {{default_shipping_address.companyName}}<br/>{% endif %}
+                {{ default_shipping_address.address }}, {{default_shipping_address.district}}, {{default_shipping_address.amphure}},
+                {{default_shipping_address.province}} {#,{% if default_shipping_address.countryCode %}{{default_shipping_address.countryCode.country}}{% endif %}#}
+                {{default_shipping_address.postCode}}<br />{{default_shipping_address.phone}}
+                {% else %}
+                Not set Default Shipping
+                {% endif %}
+
+                {% if  default_billing_address %}
+                <h5><b>Default Billing</b></h5>
+                {% if default_billing_address.companyName %} {{default_billing_address.companyName}}<br/>{% endif %}
+                {{ default_billing_address.address }}, {{default_billing_address.district}}, {{default_billing_address.amphure}},
+                {{default_billing_address.province}} {#,{% if default_billing_address.countryCode %}{{default_billing_address.countryCode.country}}{% endif %}#}
+                {{default_billing_address.postCode}}<br />{{default_billing_address.phone}}
+                {% if default_billing_address.taxPayerId %}
+                <br/>{% trans %}member.taxpayerid{% endtrans %} {{default_billing_address.taxPayerId}}
+                {% endif %}
+
+                {% else %}
+                Not set Default Billing
+                {% endif %}
+            </div>
+            <!-- /.box-body -->
+        </div>
+    </div>
+
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="box box-success">
+            <div class="box-header with-border">
+                <i class="fa fa-shopping-cart"></i>
+                <h3 class="box-title">RFQ History</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body" style="">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th class="text-center">#Quotation Number</th>
+                            <th class="text-center">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in paginated.currentpageresults %}
+                        <tr>
+                            <td class="text-center">
+                                <a href="{{path('admin_quotation_view', {'id' : order.id})}}">{{order.orderNumber}}</a>
+                            </td>
+                            <td class="text-center">{{order.orderDate|date('j F Y')}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div><!-- /.box-body -->
+
+            <div class="box-footer clearfix">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="margin">Total : {{paginated.getNbResults}}</div>
+                    </div>
+                    <div class="col-md-9">
+                        {% if paginated.havetopaginate %}
+                        {{pagerfanta(paginated,'twitter_bootstrap3_translated')}}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- /.box-body -->
+    </div>
+</div>
+{% endblock %}

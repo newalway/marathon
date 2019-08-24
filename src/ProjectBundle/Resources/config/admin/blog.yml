@@ -1,0 +1,64 @@
+admin_blog:
+  path: /
+  defaults: {_controller: ProjectBundle:AdminBlog:index}
+  requirements:
+    _method: get
+
+admin_blog_new:
+  path: /new
+  defaults: {_controller: ProjectBundle:AdminBlog:new}
+
+admin_blog_create:
+  path: /create
+  defaults: {_controller: ProjectBundle:AdminBlog:create}
+  requirements:
+    _method: post
+
+admin_blog_edit:
+  path: /{id}/edit
+  defaults: {_controller: ProjectBundle:AdminBlog:edit}
+  requirements:
+    id: \d+
+
+admin_blog_update:
+  path: /{id}
+  defaults: {_controller: ProjectBundle:AdminBlog:update}
+  requirements:
+    _method: post
+    id: \d+
+
+admin_blog_delete:
+  path: /{id}/delete
+  defaults: {_controller: ProjectBundle:AdminBlog:delete}
+  requirements:
+    _method: get
+
+admin_blog_group_delete:
+  path: /group-delete
+  defaults: {_controller: ProjectBundle:AdminBlog:group_delete}
+  requirements:
+    _method: post
+
+admin_blog_group_enable:
+  path: /group-enable
+  defaults: {_controller: ProjectBundle:AdminBlog:group_enable}
+  requirements:
+    _method: post
+
+admin_blog_group_disable:
+  path: /group-disable
+  defaults: {_controller: ProjectBundle:AdminBlog:group_disable}
+  requirements:
+    _method: post
+
+admin_blog_sort:
+  path: /sort
+  defaults: {_controller: ProjectBundle:AdminBlog:sort}
+  requirements:
+    _method: get
+
+admin_blog_sort_prosess:
+  path: /sort-prosess
+  defaults: {_controller: ProjectBundle:AdminBlog:sort_prosess}
+  requirements:
+    _method: post

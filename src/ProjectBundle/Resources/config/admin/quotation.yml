@@ -1,0 +1,25 @@
+admin_quotation:
+  path: /
+  defaults: {_controller: ProjectBundle:AdminQuotation:index}
+  methods:   [GET, POST]
+
+admin_quotation_view:
+  path: /{id}/view
+  defaults: {_controller: ProjectBundle:AdminQuotation:view}
+  methods:   [GET]
+  requirements:
+    id: \d+
+
+admin_quotation_update_status:
+  path: /{id}/update
+  defaults: {_controller: ProjectBundle:AdminQuotation:updateStatus}
+  methods:   [GET]
+  requirements:
+    id: \d+
+
+admin_quotation_payment_dowload:
+    path: /{id}/customer_order_payment_dowload
+    defaults: {_controller: ProjectBundle:AdminQuotation:rfq_payment_download}
+    methods:   [GET, POST]
+    requirements:
+      id: \d+

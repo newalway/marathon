@@ -1,0 +1,51 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="box box-default">
+			<div class="box-header">
+				<h3 class="box-title">{{group_data.grouptype}}</h3>
+			</div><!-- /.box-header -->
+
+				<div class="box-body">
+					{% for data in datas %}
+						<div class="form-group">
+							<label class="control-label col-md-3" for="status">{{data.optiontitle}}</label>
+							<div class="col-md-7 form-control-static">
+							{% if data.optiontype == 'password' %}
+								 <input type="password" value="{{data.optionvalue}}" name="data[{{data.optionname}}]" id="{{data.optionname}}" class="form-control">
+							{% elseif data.optiontype == 'text' %}
+								<input type="text" value="{{data.optionvalue}}" name="data[{{data.optionname}}]" id="{{data.optionname}}" class="form-control">
+							{% elseif data.optiontype == 'boolean' %}
+								<input type="radio" name="data[{{data.optionname}}]" value="true" {% if data.optionvalue == 'true' %}checked{% endif %}> True &nbsp;&nbsp;
+								<input type="radio" name="data[{{data.optionname}}]" value="false" {% if data.optionvalue == 'false' %}checked{% endif %}> False &nbsp;&nbsp;
+							{% elseif data.optiontype == 'textarea' %}
+								<textarea rows="6" cols="50" name="data[{{data.optionname}}]" id="{{data.optionname}}" class="form-control">{{data.optionvalue}}</textarea>
+								{% if data.optionname == 'fos_resetting_email_message' %}
+									{% if data.param %}
+										Parameters :
+										<span class="tags_select">
+											{% for param in data.param %}
+												<a href="#">{{param}}</a>
+											{% endfor %}
+										</span>
+										<script type="text/javascript">
+											$(function() {
+												$('.tags_select a').click(function() {
+													var caretPos = document.getElementById("{{data.optionname}}").selectionStart;
+													var textAreaTxt = $("#{{data.optionname}}").val();
+													var txtToAdd = $(this).text();
+													$("#{{data.optionname}}").val(textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos) );
+													return false;
+												});
+											});
+										</script>
+									{% endif %}
+								{% endif %}
+							{% endif %}
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+
+		</div><!-- /.box -->
+	</div>
+</div>

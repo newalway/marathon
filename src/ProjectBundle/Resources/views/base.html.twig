@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="{{app.request.locale}}">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}Marathon{% endblock %}</title>
+  <meta name="description" content="{% block html_description %}{% endblock %}">
+  <meta name="keywords" content="{% block html_keywords %}{% endblock %}">
+
+  <meta property="fb:app_id" content="2036722976373215" />
+  <meta property="og:url" content="{% block og_url %}{% endblock %}" />
+  <meta property="og:title" content="{% block og_title %}{% endblock %}" />
+  <meta property="og:description" content="{% block og_description %}{% endblock %}" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="{% block og_image %}{% endblock %}" />
+
+  {% block html_meta %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="{{ app.request.getSchemeAndHttpHost() ~ asset('favicon.ico') }}">
+  {% endblock %}
+  {% block stylesheets %}{% endblock %}
+  {% block javascripts %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}" {% block body_attr %}{% endblock %}>
+  {% block body %}{% endblock %}
+  {% block javascripts_body %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,466 @@
+<div class="remove_icheck" ng-app="discountApp" ng-controller="discountCtrl" ng-init="init('{{acctoken}}', '{{form.vars.value.id}}')">
+<div class="row">
+	<div class="col-md-10">
+		<div class="box">
+			<div class="box-header with-border">
+				<h3 class="box-title">Discount code</h3>
+				<div class="box-tools pull-right"></div>
+			</div>
+			<!-- /.box-header -->
+			<div class="box-body">
+				<div class="row ">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label class="" for="discountCode"><span class="require">*</span> Discount code</label>
+							{{form_widget(form.discountCode, {'id' : 'discountCode'})}}
+							<div class="error-form">{{form_errors(form.discountCode)}}</div>
+							<p class="help-block">Customers will enter this discount code at checkout.</p>
+						</div>
+					</div>
+					<div class="col-md-6"></div>
+				</div>
+			</div>
+		</div>
+
+		<div class="box">
+			<div class="box-header with-border">
+				<h3 class="box-title">Options</h3>
+				<div class="box-tools pull-right"></div>
+			</div>
+			<!-- /.box-header -->
+			<div class="box-body">
+				<div class="row ">
+					<div class="col-md-6">
+						<label for="discountType"><span class="require">*</span> Discount type</label><br/>
+						<div class="form-group">
+							{{form_widget(form.discountType, {'id' : 'discountType', 'attr':{'ng-model':'cp.discountType', 'ng-change':'changeDiscountType()'}} )}}
+							<div class="error-form">{{form_errors(form.discountType)}}</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<label for="discountValue"><span class="require">*</span> Discount value</label>
+
+						<div class="input-group" ng-cloak>
+							{{form_widget(form.discountValue, {'attr':{'ng-model':'cp.discountValue', 'id' : 'discountValue'}} )}}
+							<span class="input-group-addon">{{'{{getDiscountValueIcon()}}'}}</span>
+						</div>
+						<div class="error-form">{{form_errors(form.discountValue)}}</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="box">
+			<div class="box-header with-border">
+				<h3 class="box-title">Applies to</h3>
+				<div class="box-tools pull-right"></div>
+			</div>
+			<!-- /.box-header -->
+			<div class="box-body">
+				<div class="row ">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="appliesTo"><span class="require">*</span> Applies to</label>
+							<ul class="list-style-none" style="list-style-type: none;">
+								{% for appliesTo in form.appliesTo %}
+						           <li>{{ form_widget(appliesTo, { 'attr': {'ng-model' : 'cp.appliesTo' }} ) }} {{ form_label(appliesTo) }}</li>
+						        {% endfor %}
+							</ul>
+							<div class="error-form">{{form_errors(form.appliesTo)}}</div>
+						</div>
+
+						<div class="" ng-show="cp.appliesTo=='{{cons_discount_applies_specific_products}}'">
+							<div class="form-group">
+								{{form_widget(form.onlyAppliesOnceItemPerProduct, { 'attr': {'ng-model' : 'cp.onlyAppliesOnceItemPerProduct', 'ng-true-value':"'1'", 'ng-false-value':"'0'" }} )}}
+								{{form_label(form.onlyAppliesOnceItemPerProduct,  'Only apply discount once item per product', {
+									'label_attr': {}
+								}) }}
+								<div class="error-form">{{form_errors(form.onlyAppliesOnceItemPerProduct)}}</div>
+							</div>
+
+						</div>
+					</div>
+					<div class="col-md-6" ng-cloak>
+						<div class="" ng-show="cp.appliesTo=='{{cons_discount_applies_specific_products}}'">
+							<div style="padding-bottom: 8px;">
+								<input type="text" name="" value="" ng-model="textSearchProducts" placeholder="Search products">
+								<button type="button" name="button" ng-click="searchProducts(textSearchProducts);isSearchSpecificProducts=true">Browse</button>
+								<img ng-if="search_loading_icon" src="/images/bx_loader.gif" alt="loading" width="25px;">
+							</div>
+
+							<div ng-show="searchSpecificProducts.length>0" style="padding-bottom: 8px;">
+
+								<div class="row" ng-repeat="product in searchSpecificProducts">
+									  <div class="col-md-1">
+										  <input ng-hide="checkIsSelectedProduct(product)" ng-model="product.selected" id="specificProduct_{{'{{product.id}}'}}" type="checkbox" name="specificProducts[]" value="{{'{{product.id}}'}}">
+									  </div>
+									  <div class="col-md-2">
+										  <label for="specificProduct_{{'{{product.id}}'}}">
+											  <img ng-if="!product.image" src="https://placehold.it/50x50" width="50px;">
+											  <img ng-src="{{'{{product.image}}'}}" alt="" ng-show="product.image">
+										  </label>
+									  </div>
+									  <div class="col-md-7">
+										  <label for="specificProduct_{{'{{product.id}}'}}"> {{'{{product.title}}'}} </label>
+										  <div ng-show="checkIsSelectedProduct(product)">
+												Item already added
+											</div>
+									  </div>
+									  	<div class="col-md-2 text-right">
+									  	{{'{{product.price}}'}}฿
+
+										</div>
+									</div>
+								<div class="row">
+									<div class="col-md-12 text-left" style="padding-top:8px">
+										<button type="button" name="button" ng-click="addSpecificProducts(searchSpecificProducts)">Add</button>
+									</div>
+								</div>
+
+							</div>
+							<hr/>
+
+							<img ng-if="specific_products_loading_icon" src="/images/bx_loader.gif" alt="loading" width="25px;">
+							<div ng-show="specificProductsSelectedObject.length>0">
+								<div style="padding-bottom: 8px;" >
+									Specific products
+								</div>
+
+								<div class="row" ng-repeat="selectedProduct in specificProductsSelectedObject" style="padding-bottom: 8px;">
+									<div class="col-md-1">
+									</div>
+									<div class="col-md-2">
+										<img ng-if="!selectedProduct.image" src="https://placehold.it/50x50" width="50px;">
+										<img ng-src="{{'{{selectedProduct.image}}'}}" alt="" ng-show="selectedProduct.image">
+									</div>
+									<div class="col-md-5">
+										{{'{{selectedProduct.title}}'}}
+									</div>
+									<div class="col-md-4 text-right">
+										<input type="hidden" name="admin_discount[appliesToSpecificProducts][]" value="{{'{{selectedProduct.id}}'}}">
+										<button type="button" name="button" ng-click="removeSpecificProducts($index)">X</button>
+									</div>
+								</div>
+
+							</div>
+
+							<div ng-repeat="removeSelectedProduct in removeSpecificProductsSelectedObject">
+								<input type="hidden" name="admin_discount[removeAppliesToSpecificProducts][]" value="{{'{{removeSelectedProduct.id}}'}}">
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="box">
+			<div class="box-header with-border">
+				<h3 class="box-title">Minimum requirement</h3>
+				<div class="box-tools pull-right"></div>
+			</div>
+			<!-- /.box-header -->
+			<div class="box-body">
+				<div class="row ">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label > Minimum requirement </label>
+							<ul>
+								{% for minimumRequirement in form.minimumRequirement %}
+									<li>
+										{{ form_widget(minimumRequirement, { 'attr': {'ng-model' : 'cp.minimumRequirement' }} ) }}
+										{{ form_label(minimumRequirement) }}
+									</li>
+						        {% endfor %}
+							</ul>
+							<div class="error-form">{{form_errors(form.minimumRequirement)}}</div>
+						</div>
+					</div>
+
+					<div class="col-md-6" ng-show="cp.minimumRequirement=='{{cons_discount_minimum_requirement_amount}}'">
+						<label><span class="require">*</span> amount </label>
+						<div class="input-group">
+							{{form_widget(form.minimumRequirementAmountValue, {'id' : 'minimumRequirementAmountValue'})}}
+							<span class="input-group-addon">฿</span>
+							<div class="error-form">{{form_errors(form.minimumRequirementAmountValue)}}</div>
+						</div>
+					</div>
+
+					<div class="col-md-6" ng-show="cp.minimumRequirement=='{{cons_discount_minimum_requirement_quantity}}'">
+						<div class="form-group">
+							<label><span class="require">*</span> quantity of items </label>
+							{{form_widget(form.minimumRequirementQuantityValue, {'id' : 'minimumRequirementQuantityValue'})}}
+							<div class="error-form">{{form_errors(form.minimumRequirementQuantityValue)}}</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="box">
+			<div class="box-header with-border">
+				<h3 class="box-title">Usage limits</h3>
+				<div class="box-tools pull-right"></div>
+			</div>
+			<!-- /.box-header -->
+			<div class="box-body">
+				<div class="row ">
+					<div class="col-md-6">
+						<div class="form-group">
+							{{form_widget(form.usageLimitDiscountTotal, {'attr': {'ng-model' : 'cp.usageLimitDiscountTotal', 'ng-true-value':"'1'", 'ng-false-value':"'0'"}})}}
+							{{form_label(form.usageLimitDiscountTotal,  'Limit number of times this discount can be used in total', {
+								'label_attr': {}
+							}) }}
+							<div class="error-form">{{form_errors(form.usageLimitDiscountTotal)}}</div>
+						</div>
+						<div class="form-group" ng-show="cp.usageLimitDiscountTotal=='1'">
+							{{form_widget(form.usageLimitDiscountTotalValue, {'id' : 'usageLimitDiscountTotalValue'})}}
+							<div class="error-form">{{form_errors(form.usageLimitDiscountTotalValue)}}</div>
+						</div>
+
+						<div class="form-group">
+							{{form_widget(form.usageLimitDiscountOnePerCustomer, {'class' : ''})}}
+							{{form_label(form.usageLimitDiscountOnePerCustomer,  'Limit to one use per customer', {
+								'label_attr': {}
+							}) }}
+							<div class="error-form">{{form_errors(form.usageLimitDiscountOnePerCustomer)}}</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="box">
+			<div class="box-header with-border">
+				<h3 class="box-title">Active dates</h3>
+				<div class="box-tools pull-right"></div>
+			</div>
+			<!-- /.box-header -->
+			<div class="box-body">
+				<div class="row ">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label><span class="require">*</span> Start date </label>
+							{{form_widget(form.startDate, {'id' : 'startDate'})}}
+							<div class="error-form">{{form_errors(form.startDate)}}</div>
+						</div>
+
+						<div class="form-group">
+							{{form_widget(form.isEndDate, { 'attr': {'ng-model':'cp.isEndDate', 'ng-true-value':"'1'", 'ng-false-value':"'0'"}} )}}
+							{{form_label(form.isEndDate,  'Set end date', {
+								'label_attr': {}
+							}) }}
+							<div class="error-form">{{form_errors(form.isEndDate)}}</div>
+						</div>
+
+						{#
+						<div class="form-group icheck">
+							<label for="status"><span class="require">*</span> Status </label>
+							<div class="radio-group">
+								{{form_widget(form.status, {'id' : 'status'})}}
+								<div class="error-form">{{form_errors(form.status)}}</div>
+							</div>
+						</div>
+						#}
+
+					</div>
+					<div class="col-md-6" ng-show="cp.isEndDate=='1'">
+						<div class="form-group">
+							<label > End date </label>
+							{{form_widget(form.endDate, {'id' : 'endDate'})}}
+							<div class="error-form">{{form_errors(form.endDate)}}</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+	</div> <!-- /.col-md-10 -->
+
+	<div class="col-md-2">
+	</div>
+
+	<div class="row">
+		<div class="col-md-offset-2 col-md-9">
+			{{form_widget(form.save, {'id' : 'save', 'label': btn_label_save})}}
+			{{form_widget(form.save_and_add, {'id' : 'save_and_add', 'label': btn_label_save_add})}}
+			{{form_widget(form.save_and_edit, {'id' : 'save_and_edit', 'label': btn_label_save_edit})}}
+			<a href="{%if app.session.get('back_to_url')['admin_discount'] is defined%}{{app.session.get('back_to_url')['admin_discount']}}{%else%}{{path('admin_discount')}}{%endif%}" class="btn btn-default">{{btn_label_close}} </a>
+		</div>
+	</div>
+
+</div>
+</div>
+
+<script>
+	$(function() {
+		//html5 date for safari and other browser not support html5 date
+		webshims.setOptions('forms-ext', {types: 'date'});
+		webshims.polyfill('forms forms-ext');
+		//$('.remove_icheck input').iCheck('destroy');
+
+		$('#startDate').datetimepicker({
+			format: 'YYYY-MM-DD HH:mm',
+		});
+		$('#endDate').datetimepicker({
+			format: 'YYYY-MM-DD HH:mm',
+		});
+	});
+
+	var app = angular.module('discountApp', []);
+
+	app.factory('product_data', ['$http', function product_data($http) {
+		return {
+			getPublicSearchProducts: function(text){
+				return $http({
+					method:'GET',
+					url: Routing.generate('api_1_get_public_search_products', {'text':text}),
+					headers: {
+						// 'Authorization':'Bearer ' + token
+					}
+				});
+			},
+			getProductsDiscounts: function(token, discount_id){
+	      		return $http({
+					method:'GET',
+					url: Routing.generate('api_1_get_products_discounts',{'discount_id':discount_id}),
+					headers: {
+						'Authorization':'Bearer ' + token
+					}
+				});
+	    	}
+		}
+	}]);
+
+	app.controller('discountCtrl', ['$scope', '$http', 'product_data',  function($scope, $http, product_data) {
+
+		$scope.init = function(token, discount_id){
+
+			$scope.glob_access_token = token;
+			$scope.glob_discount_id = discount_id;
+
+			$scope.cp = {};
+			$scope.cp.discountType = '{{form.vars.value.discountType}}';
+			$scope.cp.discountValue = '{{form.vars.value.discountValue}}';
+			$scope.cp.appliesTo = '{{form.vars.value.appliesTo}}';
+			$scope.cp.onlyAppliesOnceItemPerProduct = '{{form.vars.value.onlyAppliesOnceItemPerProduct}}';
+			$scope.cp.minimumRequirement = '{{form.vars.value.minimumRequirement}}';
+			$scope.cp.usageLimitDiscountTotal = '{{form.vars.value.usageLimitDiscountTotal}}';
+			$scope.cp.isEndDate = '{{form.vars.value.isEndDate}}';
+
+			// $scope.formData = {};
+			$scope.searchSpecificProducts = [];
+			$scope.specificProductsSelectedObject = [];
+			$scope.removeSpecificProductsSelectedObject = [];
+			/* {# $scope.json_data = JSON.parse('{{form.vars.value}}'); #} */
+
+			// constant value
+			$scope.cons_discount_applies_specific_products = '{{cons_discount_applies_specific_products}}';
+			$scope.cons_discount_type_percentage = '{{cons_discount_type_percentage}}';
+			$scope.cons_discount_type_fixed_amount = '{{cons_discount_type_fixed_amount}}';
+			$scope.search_loading_icon = false;
+			$scope.specific_products_loading_icon = false;
+
+			if($scope.glob_discount_id){
+				if($scope.cp.appliesTo==$scope.cons_discount_applies_specific_products){
+					$scope.specific_products_loading_icon = true;
+					product_data.getProductsDiscounts($scope.glob_access_token, $scope.glob_discount_id).then(function onSuccess(response){
+						$scope.specificProductsSelectedObject = response.data.arr_products;
+						$scope.specific_products_loading_icon = false;
+				    }).catch(function onError(response) {
+						console.log('Error get current hashtag');
+						$scope.specific_products_loading_icon = false;
+				    });
+				}
+			}
+		}
+
+		$scope.changeDiscountType = function(){
+			$scope.cp.discountValue = '';
+			// console.log(JSON.stringify($scope.cp));
+		}
+
+		$scope.getDiscountValueIcon = function(){
+			if($scope.cp.discountType == $scope.cons_discount_type_percentage){
+				return '%';
+			}else if($scope.cp.discountType == $scope.cons_discount_type_fixed_amount){
+				return '฿';
+			}
+		}
+
+		$scope.searchProducts = function(text)
+		{
+			$scope.search_loading_icon = true;
+			// $scope.searchSpecificProducts = [{'id':1, 'title':'T-shirt', 'price':500, 'selected':''}, {'id':2, 'title':'Petan', 'price':1000, 'selected':''}, {'id':3, 'title':'Dumbbell', 'price':800, 'selected':''}];
+
+			product_data.getPublicSearchProducts(text).then(function onSuccess(response){
+				// $scope.tags = response.data.data;
+				$scope.searchSpecificProducts = response.data.arr_products;
+				$scope.search_loading_icon = false;
+			}).catch(function onError(response) {
+				console.log('Error get search product');
+				$scope.search_loading_icon = false;
+			});
+		}
+
+		$scope.addSpecificProducts = function(data)
+		{
+		    for(var i in data){
+				if(data[i].selected==true){
+
+					//find object
+					var index = $scope.specificProductsSelectedObject.find(x => x.id === data[i].id);
+					if (index === undefined){
+						//push data to specificProductsSelectedObject
+						$scope.specificProductsSelectedObject.push(data[i]);
+					}
+
+					//remove this data if exist in removeSpecificProductsSelectedObject
+					var obj_remove = $scope.removeSpecificProductsSelectedObject.find(x => x.id === data[i].id);
+					if (obj_remove){
+						var index_remove = $scope.removeSpecificProductsSelectedObject.findIndex(x => x.id === obj_remove.id);
+						//remove from removeSpecificProductsSelectedObject
+						$scope.removeSpecificProductsSelectedObject.splice(index_remove,1);
+					}
+
+					//find array
+					// $scope.specificProductsSelected.indexOf(data[i].id) === -1 ? $scope.specificProductsSelected.push(data[i].id) : console.log("This item already exists");
+		       }
+		    }
+
+			//reset search result
+			$scope.searchSpecificProducts = [];
+		}
+
+		$scope.checkIsSelectedProduct = function(data)
+		{
+			//find object
+			var index = $scope.specificProductsSelectedObject.find(x => x.id === data.id);
+			if (index === undefined){
+				return false;
+			}else{
+				return true;
+			}
+		}
+
+		$scope.removeSpecificProducts = function(index)
+		{
+			//remove data from specificProductsSelectedObject
+			var removeObj = $scope.specificProductsSelectedObject.splice(index,1);
+			var data = removeObj[0];
+
+			//push data to removeSpecificProductsSelectedObject
+			var index = $scope.removeSpecificProductsSelectedObject.find(x => x.id === data.id);
+			if (index === undefined){
+				$scope.removeSpecificProductsSelectedObject.push(data);
+			}
+		}
+
+	}]);
+
+</script>

@@ -1,0 +1,37 @@
+{% extends 'ProjectBundle::admin.html.twig' %}
+
+{% block stylesheets %}
+  {{ parent() }}
+  <link href="{{asset('bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css')}}" rel="stylesheet"/>
+  <style media="screen">
+    ul {
+        list-style: none;
+    }
+  </style>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <script src="{{asset('bundles/fosjsrouting/js/router.js')}}"></script>
+  <script src="{{path('fos_js_routing_js', {'callback': 'fos.Router.setData'})}}"></script>
+  <script src="{{asset('moment/moment.js')}}"></script>
+  <script src="{{asset('bootstrap-datetimepicker/js/bootstrap-datetimepicker.js')}}" type="text/javascript"></script>
+{% endblock %}
+
+{% use "ProjectBundle:AdminShippingRate:blocks_delivery_date_setting.html.twig" %}
+{% use "ProjectBundle::flash_message.html.twig" %}
+
+{% block content %}
+<div class="row">
+	<div class="col-md-8 margin-10-0">
+		<a href="{{path('admin_holiday')}}" class="btn btn-instagram" title="Holidays"><i class="fa fa-sun-o"></i> Holidays</a>
+	</div>
+</div>
+
+<br class="clearBoth">
+
+<form id="data_form" action="{{path('admin_shipping_rates_delivery_date_setting')}}" method="post" role="form" enctype="multipart/form-data">
+    {{form_widget(form._token)}}
+    {% include 'ProjectBundle:AdminShippingRate:_form_delivery_date_setting.html.twig'%}
+</form>
+{% endblock %}

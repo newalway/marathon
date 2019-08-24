@@ -1,0 +1,12 @@
+admin_social_network:
+  path:  /
+  defaults: { _controller: ProjectBundle:AdminSocialNetwork:index }
+  requirements:
+    _method: get
+
+admin_social_network_update:
+  path: /update
+  defaults: {_controller: ProjectBundle:AdminSocialNetwork:update}
+  requirements:
+    _method: post
+    id: \d+

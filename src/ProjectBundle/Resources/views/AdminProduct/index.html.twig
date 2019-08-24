@@ -1,0 +1,253 @@
+{% extends 'ProjectBundle::admin.html.twig'%}
+
+{% block stylesheets %}
+  {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+{% endblock %}
+
+{% use "ProjectBundle:AdminProduct:blocks.html.twig" %}
+{% use "ProjectBundle::flash_message.html.twig" %}
+{% block content %}
+<style media="screen">
+/*** css for icon newproduct and best-seller ****/
+.offer-product {background: #f38020;float: left;}
+.offer-new-product {background: #ffc013;float: left;}
+.offer-new-product,.offer-product {border-radius: 50%;top: 20px;z-index: 9;width: 25px;height: 25px; margin-left:5px; /* margin: 0 5px 5px 5px; */ }
+.best-seller,.new-product {color: #ffffff;}
+.text-format{position:absolute;font-size: 8px;margin-left:2px;}
+.text-format-2{position:absolute;font-size: 8px;margin-left:3px;}
+</style>
+<div class="row">
+	<div class="col-md-8 margin-10-0">
+		<a href="{{path('admin_product_new')}}" class="btn btn-instagram" title="Add"><i class="fa fa-plus"></i> Add Product</a>
+        <a href="{{path('admin_import_excel')}}" class="btn btn-success" title="importexcel"><i class="fa fa-file-excel-o"></i> Import Data</a>
+        <a href="{{path('admin_product_sort')}}" class="btn bg-purple" title="sort"><i class="fa fa-list-ol"></i> Products Sort</a>
+        <a href="{{path('admin_product_sort_best_seller')}}" class="btn bg-purple" title="sort"><i class="fa fa-list-ol"></i> Bestseller Sort</a>
+	</div>
+</div>
+<br class="clearBoth">
+
+<div class="row" ng-app="adminProductApp" ng-controller="adminProductController">
+    <div class="col-xs-12">
+        <div class="box" style="min-height: 1000px;">
+
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-6" {# style="background-color:wheat;" #}>
+                        <button type="button" class="btn btn-sm bg-red" data-form_id="data_group" id="group_delete">
+                            <i class="fa fa-trash-o"></i> Delete
+                        </button>
+                        <button type="button" class="btn btn-sm bg-olive" data-form_id="data_group" id="group_enable">
+                            <i class="fa fa-unlock"></i> Available
+                        </button>
+                        <button type="button" class="btn btn-sm bg-gray" data-form_id="data_group" id="group_disable">
+                            <i class="fa fa-lock"></i> Unavailable
+                        </button>
+
+                        <button type="button" class="btn btn-sm bg-orange" data-form_id="data_group" id="group_bestseller">
+                            <i class="fa fa-star"></i> Bestseller
+                        </button>
+                        <button type="button" class="btn btn-sm bg-yellow" data-form_id="data_group" id="group_new">
+                            <i class="fa fa-tag"></i> New Product
+                        </button>
+                    </div>
+                    <div class="col-md-6" {# style="background-color:honeydew;" #}>
+                        <form id="data_form_search" action="{{path('admin_product')}}" method="get" role="form" enctype="multipart/form-data" class="form-horizontal"
+                            data-search_data_path="{{path('admin_product')}}">
+                            {% include 'ProjectBundle:AdminProduct:_form_search.html.twig' %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <form action="#" method="post" id="data_group"
+                data-delete_path="{{path('admin_product_group_delete')}}"
+                data-enable_path="{{path('admin_product_group_enable')}}"
+                data-disable_path="{{path('admin_product_group_disable')}}"
+                data-bestseller_path="{{path('admin_product_group_bestseller')}}"
+                data-new_path="{{path('admin_product_group_new')}}">
+
+                <div class="box-body icheck">
+                    <table id="dtbrole" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th width="19"> <input type="checkbox" id="select_all" /> </th>
+                                <th width="130"></th>
+                                <th width="280">Product</th>
+                                <th width="250">Inventory</th>
+                                <!-- <th>Brand</th> -->
+                                <th>Category</th>
+                                <th>Customer Group</th>
+                                <th>Price</th>
+                                <th class="text-center" width="50">Edit</th>
+                                <th class="text-center" width="50">Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for rs in paginated.currentpageresults %}
+                                {% set data = rs[0] %}
+
+                                {# {{ rs.v_count }}
+                                {{ rs.v_inventory_quantity }}
+                                {{ rs.v_is_default_option}}
+                                {{ rs.v_default_price}}
+                                {{ rs.v_default_compare_at_price}}
+                                -   {{ rs.v_price }}
+                                {{ rs.v_compare_at_price }}
+                                <br/> #}
+
+                                <a href="{{path('admin_product_edit', {'id' : data.id})}}"></a>
+                                <tr class="odd gradeX">
+                                    <td>
+                                        <input type="checkbox" name="data_ids[]" class="check_all" value="{{data.id}}"/>
+                                    </td>
+
+                                    <td>
+                                        <a href="{{path('admin_product_edit', {'id' : data.id})}}">
+                                            {% if data.image %}
+                                                <img src="{{asset(data.image) | imagine_filter('img_small_thumb')}}" alt="{{data.getTitle}}" style="float:left;"/>
+                                                {#<a href="{{asset(data.image)}}" data-fancybox="group" class="pull-left" style="margin-right: 10px;margin-bottom: 10px;" >#}
+                                            {% else %}
+                                                <img src="https://placehold.it/50x50" width="50px;"  style="float:left;">
+                                            {% endif %}
+                                            {% if data.getIsBestSeller == 1 %}
+                                                <div class="offer-product best-seller"><h6 class="text-format"><b>BEST</b></h6></div>
+                                                {#<img src="{{asset('images/icon/best.png')}}" alt="Best Seller" width="24px"/>#}
+                                            {% endif %}
+
+                                            {% if data.getIsNew == 1 %}
+                                                <div class="offer-new-product new-product"><h6 class="text-format-2"><b>NEW</b></h6></div>
+                                                {#<img src="{{ asset('images/icon/new.png')}}" alt="New" width="24px"/>#}
+                                            {% endif %}
+                                        </a>
+                                    </td>
+
+                                    <td>
+                                        <a href="{{path('admin_product_edit', {'id' : data.id})}}">
+                                            {{data.getTitle}}
+                                            {{ data|statusAvailable|raw }}
+                                            <br/>
+                                        </a>
+                                    </td>
+
+                                    <td>
+                                        {% if data.inventorypolicystatus == 1 %}
+                                            {% if rs.v_count > 0 %}
+                                                {% if rs.v_inventory_quantity > 0 %}
+                                                    {{rs.v_inventory_quantity}} in stock
+                                                    for {{rs.v_count}} variants
+                                                {% endif %}
+                                            {% else %}
+                                                {{data.inventoryquantity}} in stock
+                                            {% endif %}
+                                        {% else %}
+                                            <h5><small class="text-secondary">N/A</small></h5>
+                                        {% endif %}
+                                    </td>
+
+                                    {#<td>
+                                        {% if data.brand %}
+                                            {{data.brand.getTitle}}
+                                        {% endif %}
+                                    </td>#}
+
+                                    <td>
+                                        {% for product_category in data.productCategories %}
+                                            <div class="">
+                                                {{product_category.getTitle}}
+                                            </div>
+                                            {#{% if not loop.last %}, {% endif %}#}
+                                        {% endfor %}
+                                    </td>
+
+                                    <td>
+                                        {% for customer_group in data.customerGroups %}
+                                            <div class="">
+                                                {{customer_group.getTitle}}
+                                            </div>
+                                        {% endfor %}
+                                    </td>
+
+                                    <td>
+                                        {% set arr_price = getPriceData(rs) %}
+                                        {{arr_price.price}}
+                                        {% if arr_price.compare_at_price %}
+                                            <small><del>{{arr_price.compare_at_price}}</del></small>
+                                        {% endif %}
+
+                                        {#
+                                        {% if rs.v_count > 0 %}
+                                            {% if rs.v_default_price %}
+                                                {{rs.v_default_price}}
+                                                {% if rs.v_default_compare_at_price %}
+                                                    <small><del>{{rs.v_default_compare_at_price}}</del></small>
+                                                {% endif %}
+                                            {% else %}
+                                                {{rs.v_price}}
+                                                {% if rs.v_compare_at_price %}
+                                                    <small><del>{{rs.v_compare_at_price}}</del></small>
+                                                {% endif %}
+                                            {% endif %}
+                                        {% else %}
+                                            {{data.price}}
+                                            {% if data.compareAtPrice %}
+                                                <small><del>{{data.compareAtPrice}}</del></small>
+                                            {% endif %}
+                                        {% endif %}
+                                        #}
+                                    </td>
+
+                                    <td class="text-center">
+                                        <a href="{{path('admin_product_edit', {'id' : data.id})}}" title="Edit"><i class="fa fa-pencil-square-o fa-2x"></i></a>
+                                    </td>
+
+                                    <td class="text-center">
+                                        <a href="{{path('admin_product_delete', {'id' : data.id})}}" onclick="return confirm('Are you sure you want to delete?');" title="Delete"><i class="fa fa-trash fa-2x"></i></a>
+                                    </td>
+                                </tr>
+
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div><!-- /.box-body -->
+
+                <div class="box-footer clearfix">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="margin">Total : {{paginated.getNbResults}}</div>
+                        </div>
+                        <div class="col-md-9">
+                            {% if paginated.havetopaginate %}
+                                {{pagerfanta(paginated,'twitter_bootstrap3_translated')}}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </div><!-- /.box -->
+    </div>
+</div>
+
+<script>
+    var app = angular.module('adminProductApp',[]);
+
+    app.controller('adminProductController',['$scope','$http',function($scope, $http){
+
+        $scope.search_status = '{{arr_query_data['search_status']}}';
+
+        $scope.data_status = [
+            {id: 'all', name: 'All Products'},
+            {id: 'available', name: 'Available'},
+            {id: 'unavailable', name: 'Unavailable'},
+            {id: 'bestseller', name: 'Bestseller'},
+            {id: 'new_product', name: 'New Product'}
+        ];
+
+    }]);
+</script>
+{% endblock %}

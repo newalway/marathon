@@ -1,0 +1,29 @@
+<div class="form-group">
+	<label class="control-label col-md-2" for="parent">Position </label>
+	<div class="col-md-6 form-control-static">
+		<select id="moveto" name="product_cat[moveto]">
+			<option value="nextsibling">Next Sibling</option>
+			<option value="prevsibling">Prev Sibling</option>
+			<option value="lastchild">Last Child</option>
+			<option value="firstchild">First Child</option>
+		</select>
+		&nbsp;&nbsp;of&nbsp;&nbsp;
+		<select id="parent" name="product_cat[parent]">
+			{{option_tree|raw}}
+		</select>
+		&nbsp;&nbsp;node
+	</div>
+</div>
+<script>
+$(document).ready(
+	function(){
+		$('.level_2').each(function(){$(this).text('― '+$(this).text());});
+		$('.level_3').each(function(){$(this).text('―― '+$(this).text());});
+		$('.level_4').each(function(){$(this).text('――― '+$(this).text());});
+		$('.level_5').each(function(){$(this).text('―――― '+$(this).text());});
+		$('.level_6').each(function(){$(this).text('――――― '+$(this).text());});
+		$('.level_7').each(function(){$(this).text('―――――― '+$(this).text());});
+		$('.level_8').each(function(){$(this).text('――――――― '+$(this).text());});
+	}
+);
+</script>

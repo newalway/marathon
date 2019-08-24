@@ -1,0 +1,638 @@
+imports:
+    - { resource: parameters.yml }
+    - { resource: security.yml }
+    - { resource: services.yml }
+    - { resource: "@ProjectBundle/Resources/config/services.yml" }
+    - { resource: project_global_variables.yml }
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+    locale: en
+
+framework:
+    #esi: ~
+    translator: { fallbacks: ['%locale%'] }
+    secret: '%secret%'
+    router:
+        resource: '%kernel.project_dir%/app/config/routing.yml'
+        strict_requirements: ~
+    form: ~
+    csrf_protection: ~
+    validation: { enable_annotations: true }
+    serializer: { enable_annotations: true }
+    templating:
+        engines: ['twig']
+    default_locale: '%locale%'
+    trusted_hosts: ~
+    session:
+        # https://symfony.com/doc/current/reference/configuration/framework.html#handler-id
+        handler_id: session.handler.native_file
+        save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
+    fragments: ~
+    http_method_override: true
+    assets: ~
+    php_errors:
+        log: true
+
+# Twig Configuration
+twig:
+    debug: '%kernel.debug%'
+    strict_variables: '%kernel.debug%'
+
+# Doctrine Configuration
+doctrine:
+    dbal:
+        driver: pdo_mysql
+        host: '%database_host%'
+        port: '%database_port%'
+        dbname: '%database_name%'
+        user: '%database_user%'
+        password: '%database_password%'
+        charset: UTF8
+        # if using pdo_sqlite as your database driver:
+        #   1. add the path in parameters.yml
+        #     e.g. database_path: '%kernel.project_dir%/var/data/data.sqlite'
+        #   2. Uncomment database_path in parameters.yml.dist
+        #   3. Uncomment next line:
+        #path: '%database_path%'
+    orm:
+        auto_generate_proxy_classes: '%kernel.debug%'
+        entity_managers:
+            default:
+                mappings:
+                    gedmo_tree:
+                        type: annotation
+                        prefix: Gedmo\Tree\Entity
+                        dir: "%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Tree/Entity"
+                        alias: GedmoTree # (optional) it will default to the name set for the mapping
+                        is_bundle: false
+                    #gedmo_translatable:
+                    #    type: annotation
+                    #    prefix: Gedmo\Translatable\Entity
+                    #    dir: "%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Translatable/Entity"
+                    #    alias: GedmoTranslatable # (optional) it will default to the name set for the mapping
+                    #    is_bundle: false
+                    #gedmo_translator:
+                    #    type: annotation
+                    #    prefix: Gedmo\Translator\Entity
+                    #    dir: "%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Translator/Entity"
+                    #    alias: GedmoTranslator # (optional) it will default to the name set for the mapping
+                    #    is_bundle: false
+                #For multiple entity managers
+                naming_strategy: doctrine.orm.naming_strategy.underscore
+                auto_mapping: true
+                dql:
+                    datetime_functions:
+                        DATE_FORMAT: DoctrineExtensions\Query\Mysql\DateFormat
+                        YEAR: DoctrineExtensions\Query\Mysql\Year
+                        MONTH: DoctrineExtensions\Query\Mysql\Month
+                        TIME: DoctrineExtensions\Query\Mysql\Time
+                        NOW: DoctrineExtensions\Query\Mysql\Now
+                    numeric_functions:
+                        DEGREES: DoctrineExtensions\Query\Mysql\Degrees
+                        ACOS: DoctrineExtensions\Query\Mysql\Acos
+                        SIN: DoctrineExtensions\Query\Mysql\Sin
+                        RADIANS: DoctrineExtensions\Query\Mysql\Radians
+                        COS: DoctrineExtensions\Query\Mysql\Cos
+
+# Swiftmailer Configuration
+swiftmailer:
+    transport: '%mailer_transport%'
+    host: '%mailer_host%'
+    username: '%mailer_user%'
+    password: '%mailer_password%'
+    spool: { type: memory }
+    encryption: null
+    auth_mode:  login
+    port:       587
+
+# Doctrine Database Migrations
+doctrine_migrations:
+    dir_name: "%kernel.root_dir%/DoctrineMigrations"
+    namespace: Application\Migrations
+    table_name: migration_versions
+    name: Application Migrations
+    organize_migrations: false # Version >=1.2 Possible values are: "BY_YEAR", "BY_YEAR_AND_MONTH", false
+
+# STOF Doctrine Extensions
+stof_doctrine_extensions:
+    #default_locale: %locale%
+    #translation_fallback: true
+    #persist_default_translation: true
+    orm:
+        default:
+            tree: true
+            timestampable: false # not needed: listeners are not enabled by default
+            #translatable: true
+
+# Doctrine2 Behaviors
+knp_doctrine_behaviors:
+    translatable:   true
+    sluggable:      true
+    #blameable:      false
+    #geocodable:     ~     # Here null is converted to false
+    #loggable:       ~
+    #soft_deletable: true
+    # All others behaviors are disabled
+
+# A2lixTranslationFormBundle
+a2lix_translation_form:
+    locale_provider: default       # [1]
+    locales: [en, th]              # [1-a]
+    default_locale: %locale%       # [1-b]
+    required_locales: []           # [1-c]
+    manager_registry: doctrine     # [2]
+    templating: "ProjectBundle::translate_form.html.twig"             # [3]
+    #templating: "ProjectBundle::translate_form_macros.html.twig"     # [3]
+    #templating: "A2lixTranslationFormBundle::default.html.twig"      # [3]
+
+# Assetic Configuration
+assetic:
+    debug:          '%kernel.debug%'
+    use_controller: '%kernel.debug%'
+    bundles:        [ ProjectBundle ]
+    filters:
+        cssrewrite: ~
+    assets:
+        jquery_and_ui:
+            inputs:
+                - '@ProjectBundle/Resources/public/js/jquery-3.2.1/jquery-3.2.1.min.js'
+                - '@ProjectBundle/Resources/public/js/jquery-ui-1.12.custom/jquery-ui.min.js'
+        jquery_1_12_4_and_ui:
+            inputs:
+                - '@ProjectBundle/Resources/public/js/jquery-1.12.4/jquery.js'
+                - '@ProjectBundle/Resources/public/js/jquery-ui-1.12.custom/jquery-ui.min.js'
+        bootstrap:
+            inputs:
+                - '@ProjectBundle/Resources/public/js/bootstrap-3.3.7-dist/bootstrap.min.js'
+        angular:
+            inputs:
+                - '@ProjectBundle/Resources/public/js/angular-1.6.6/angular.min.js'
+                - '@ProjectBundle/Resources/public/js/angular-1.6.6/angular-animate.min.js'
+                - '@ProjectBundle/Resources/public/js/angular-1.6.6/angular-route.min.js'
+                - '@ProjectBundle/Resources/public/js/angular-1.6.6/angular-aria.min.js'
+                - '@ProjectBundle/Resources/public/js/angular-1.6.6/angular-messages.min.js'
+        datatables:
+            inputs:
+                - '@ProjectBundle/Resources/public/js/datatables-1.10.16/jquery.dataTables.min.js'
+        adminlte:
+            inputs:
+                - '@ProjectBundle/Resources/public/js/AdminLTE-2.4.2/bower_components/jquery-slimscroll/jquery.slimscroll.min.js'
+                - '@ProjectBundle/Resources/public/js/AdminLTE-2.4.2/bower_components/fastclick/lib/fastclick.js'
+                - '@ProjectBundle/Resources/public/js/AdminLTE-2.4.2/dist/js/adminlte.min.js'
+                - '@ProjectBundle/Resources/public/js/AdminLTE-2.4.2/plugins/iCheck/icheck.min.js'
+                - '@ProjectBundle/Resources/public/js/AdminLTE-2.4.2/dist/js/demo.js'
+        domwindow:
+            inputs:
+                - '@ProjectBundle/Resources/public/js/jquery.DOMWindow/jquery.DOMWindow.js'
+        admin:
+            inputs:
+                - '@ProjectBundle/Resources/public/js/admin/base.js'
+        web_custom:
+            inputs:
+                - '@ProjectBundle/Resources/public/js/web/custom.js'
+        numeral:
+            inputs:
+                - '@ProjectBundle/Resources/public/js/numeral/numeral.min.js'
+        smoothscroll:
+            inputs:
+                - '@ProjectBundle/Resources/public/js/smoothscroll/smoothscroll.js'
+        isotope:
+            inputs:
+                - '@ProjectBundle/Resources/public/js/isotope/isotope.js'
+        imagesloaded:
+            inputs:
+                - '@ProjectBundle/Resources/public/js/imagesloaded/imagesloaded.min.js'
+        nivo_lightbox:
+            inputs:
+                - '@ProjectBundle/Resources/public/js/nivo-lightbox/nivo-lightbox.min.js'
+        highcharts:
+            inputs:
+                - '@ProjectBundle/Resources/public/js/Highcharts-6.0.2/code/highcharts.js'
+                - '@ProjectBundle/Resources/public/js/Highcharts-6.0.2/code/js/highcharts-more.js'
+                - '@ProjectBundle/Resources/public/js/Highcharts-6.0.2/code/modules/exporting.js'
+        rateyo:
+            inputs:
+                - '@ProjectBundle/Resources/public/js/rateyo-2.3.2/jquery.rateyo.min.js'
+        custom_web:
+            inputs:
+                - '@ProjectBundle/Resources/public/js/web/custom.js'
+        fancybox:
+            inputs:
+                - '@ProjectBundle/Resources/public/js/fancybox/dist/jquery.fancybox.min.js'
+        owl_carousel:
+            inputs:
+                - '@ProjectBundle/Resources/public/js/OwlCarousel2-2.2.1/dist/owl.carousel.min.js'
+        masonry:
+            inputs:
+                - '@ProjectBundle/Resources/public/js/masonry/masonry.pkgd.min.js'
+        isotope_v3:
+            inputs:
+                - '@ProjectBundle/Resources/public/js/isotope-v3.0.4/isotope.pkgd.min.js'
+        scrollbar_gh_pages:
+            inputs:
+                - '@ProjectBundle/Resources/public/js/jquery.scrollbar-gh-pages/jquery.scrollbar.min.js'
+        selectboxit:
+            inputs:
+                - '@ProjectBundle/Resources/public/js/selectBoxIt/jquery-ui.js'
+                - '@ProjectBundle/Resources/public/js/selectBoxIt/jquery.selectBoxIt.min.js'
+        zoom:
+            inputs:
+                - '@ProjectBundle/Resources/public/js/jqueryZoom/jquery.zoom.min.js'
+        marathon_template:
+            inputs:
+                - '@ProjectBundle/Resources/public/js/template/assets/bootstrap/js/bootstrap.min.js'
+                - '@ProjectBundle/Resources/public/js/template/assets/owl.carousel-2/owl.carousel.min.js'
+                - '@ProjectBundle/Resources/public/js/template/assets/jquery-validation/dist/jquery.validate.min.js'
+                #- '@ProjectBundle/Resources/public/js/template/assets/gmap.js'
+                - '@ProjectBundle/Resources/public/js/template/assets/jquery.mixitup.min.js'
+                - '@ProjectBundle/Resources/public/js/template/assets/jquery.fitvids.js'
+                - '@ProjectBundle/Resources/public/js/template/assets/revolution/js/jquery.themepunch.tools.min.js'
+                - '@ProjectBundle/Resources/public/js/template/assets/revolution/js/jquery.themepunch.revolution.min.js'
+                - '@ProjectBundle/Resources/public/js/template/assets/revolution/js/extensions/revolution.extension.actions.min.js'
+                - '@ProjectBundle/Resources/public/js/template/assets/revolution/js/extensions/revolution.extension.carousel.min.js'
+                - '@ProjectBundle/Resources/public/js/template/assets/revolution/js/extensions/revolution.extension.kenburn.min.js'
+                - '@ProjectBundle/Resources/public/js/template/assets/revolution/js/extensions/revolution.extension.layeranimation.min.js'
+                - '@ProjectBundle/Resources/public/js/template/assets/revolution/js/extensions/revolution.extension.migration.min.js'
+                - '@ProjectBundle/Resources/public/js/template/assets/revolution/js/extensions/revolution.extension.navigation.min.js'
+                - '@ProjectBundle/Resources/public/js/template/assets/revolution/js/extensions/revolution.extension.parallax.min.js'
+                - '@ProjectBundle/Resources/public/js/template/assets/revolution/js/extensions/revolution.extension.slideanims.min.js'
+                - '@ProjectBundle/Resources/public/js/template/assets/revolution/js/extensions/revolution.extension.video.min.js'
+                #- '@ProjectBundle/Resources/public/js/template/assets/fancyapps-fancyBox/source/jquery.fancybox.pack.js'
+                - '@ProjectBundle/Resources/public/js/template/assets/Polyglot-Language-Switcher-master/js/jquery.polyglot.language.switcher.js'
+                - '@ProjectBundle/Resources/public/js/template/assets/nouislider/nouislider.js'
+                - '@ProjectBundle/Resources/public/js/template/assets/bootstrap-touch-spin/jquery.bootstrap-touchspin.js'
+                - '@ProjectBundle/Resources/public/js/template/assets/jquery-appear/jquery.appear.js'
+                - '@ProjectBundle/Resources/public/js/template/assets/jquery.countTo.js'
+                - '@ProjectBundle/Resources/public/js/template/assets/menuzord/js/menuzord.js'
+                - '@ProjectBundle/Resources/public/js/template/assets/bootstrap-select/dist/js/bootstrap-select.min.js'
+                - '@ProjectBundle/Resources/public/js/template/assets/jquery.isotope.js'
+                - '@ProjectBundle/Resources/public/js/template/assets/waypoint.js'
+                #- '@ProjectBundle/Resources/public/js/template/js/default-map.js'
+                - '@ProjectBundle/Resources/public/js/template/js/custom.js'
+
+# HWIOAuthBundle Configuration
+hwi_oauth:
+    # list of names of the firewalls in which this bundle is active, this setting MUST be set
+    firewall_names: [main]
+    connect:
+        account_connector: my.oauth_aware.user_provider.service
+    fosub:
+        #username_iterations: 30
+        properties:
+            # these properties will be used/redefined later in the custom FOSUBUserProvider service.
+            facebook: facebook_id
+            google: google_id
+    resource_owners:
+        facebook:
+            type:                facebook
+            client_id:           %facebook_client_id%
+            client_secret:       %facebook_client_secret%
+            scope:               "email, public_profile"
+            #infos_url:           "https://graph.facebook.com/me?fields=id,name,email,picture.type(large)"
+            #paths:
+            #    email: email
+            options:
+                display: page
+        google:
+            type:                google
+            client_id:           %google_client_id%
+            client_secret:       %google_client_secret%
+            scope:              "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile"
+            paths:
+                email: email
+
+
+# FOSUser Configuration
+fos_user:
+    db_driver: orm # other valid values are 'mongodb' and 'couchdb'
+    firewall_name: main
+    user_class: ProjectBundle\Entity\User
+    from_email:
+        address: "%default_sender_mail_address%"
+        sender_name: "%default_sender_mail_name%"
+    registration:
+        confirmation:
+            enabled: true
+        form:
+            type: ProjectBundle\Form\Type\RegistrationType
+    profile:
+        form:
+            type: ProjectBundle\Form\Type\ProfileType
+    #service:
+    #    mailer: app.custom_fos_user_mailer
+
+# Security Configuration
+jms_security_extra:
+    # Whether you want to secure all services (true), or only secure specific
+    # services (false); see also below
+    secure_all_services: false
+
+    # Enabling this setting will add an additional special attribute "ROLE_IDDQD".
+    # Anybody with this attribute will effectively bypass all security checks.
+    enable_iddqd_attribute: false
+
+    # Enables expression language
+    expressions: false
+
+    # Allows you to disable some, or all built-in voters
+    voters:
+        disable_authenticated: false
+        disable_role:          false
+        disable_acl:           false
+
+    # Allows you to specify access control rules for specific methods, such
+    # as controller actions
+    method_access_control: { }
+
+# FOSRest Configuration
+fos_rest:
+    routing_loader:
+        default_format: json
+    format_listener:
+        rules:
+            - { path: ^/, priorities: [ html, json, xml ], fallback_format: ~, prefer_extension: true }
+    view:
+        view_response_listener: 'force'
+        formats:
+            xml: true
+            json : true
+        templating_formats:
+            html: true
+        force_redirects:
+            html: true
+        failed_validation: HTTP_BAD_REQUEST
+        default_engine: twig
+    body_listener:
+        decoders:
+            json: fos_rest.decoder.json
+
+fos_oauth_server:
+    db_driver: orm       # Drivers available: orm, mongodb, or propel
+    client_class:        ProjectBundle\Entity\Client
+    access_token_class:  ProjectBundle\Entity\AccessToken
+    refresh_token_class: ProjectBundle\Entity\RefreshToken
+    auth_code_class:     ProjectBundle\Entity\AuthCode
+    service:
+        user_provider: fos_user.user_provider.username_email
+        options:
+            access_token_lifetime: 94670778 # 3 year
+            refresh_token_lifetime: 189341556 # 6 year
+            supported_scopes: user customer client admin
+
+# CORS Configuration
+nelmio_cors:
+    paths:
+        '^/api/':
+            allow_origin: ['*']
+            allow_headers: ['*']
+            allow_methods: ['POST', 'PUT', 'GET', 'DELETE']
+            max_age: 3600
+
+# API Documentation Configuration
+nelmio_api_doc: ~
+
+# JMS i18n Configuration
+jms_i18n_routing:
+    default_locale: %locale%
+    locales: [en, th]
+    strategy: prefix_except_default
+
+# Pagerfanta
+services:
+    pagerfanta.view.default:
+        class: Pagerfanta\View\DefaultView
+        public: false
+        tags: [{ name: pagerfanta.view, alias: default }]
+    pagerfanta.view.project_view:
+        class: Pagerfanta\View\OptionableView
+        arguments:
+            - "@pagerfanta.view.default"
+            - { proximity: 2, previous_message: <i class="fa fa-angle-left"></i>, next_message: <i class="fa fa-angle-right"></i> }
+        public: false
+        tags: [{ name: pagerfanta.view, alias: project_view }]
+    pagerfanta.view.twitter_bootstrap3_translated:
+        class: Pagerfanta\View\OptionableView
+        arguments:
+            - "@pagerfanta.view.twitter_bootstrap3"
+            - { proximity: 2, css_container_class: pagination pagination-sm no-margin pull-right  }
+        public: false
+        tags: [{ name: pagerfanta.view, alias: twitter_bootstrap3_translated }]
+    pagerfanta.view.twitter_bootstrap3_translated_web:
+        class: Pagerfanta\View\OptionableView
+        arguments:
+            - "@pagerfanta.view.twitter_bootstrap3"
+            - { proximity: 2, css_container_class: pagination , prev_message: <i class="ion-arrow-left-b"></i>, next_message: <i class="ion-arrow-right-b"></i>, css_disabled_class: disabled}
+        public: false
+        tags: [{ name: pagerfanta.view, alias: twitter_bootstrap3_translated_web }]
+    pagerfanta.view.twitter_bootstrap3_translated_template:
+        class: Pagerfanta\View\OptionableView
+        arguments:
+            - "@pagerfanta.view.twitter_bootstrap3"
+            - { proximity: 2, css_container_class: post-pagination list-inline text-center, prev_message: <i class="fa fa-caret-left"></i>, next_message: <i class="fa fa-caret-right"></i>  }
+        public: false
+        tags: [{ name: pagerfanta.view, alias: twitter_bootstrap3_translated_template }]
+
+# Ivory CKEditor Configuration
+ivory_ck_editor:
+    # Use your own CKEditor
+    base_path: "ckeditor"
+    js_path:   "ckeditor/ckeditor.js"
+    # Basic Configuration
+    default_config: my_config
+    configs:
+        my_config:
+            #toolbar: full
+            toolbar: standard
+            #toolbar: basic
+            filebrowserBrowseUrl: '/ckfinder/ckfinder.html'
+            filebrowserUploadUrl: '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images'
+            customConfig: '/javascripts/custom/ckeditor_config.js'
+            #toolbar: [ ["Source", "Preview", "-", "Templates", "Save"], "/", ["Anchor"], "/", ["Maximize"] ]
+    toolbars:
+        items:
+            full.forms: [  ]
+            full.insert: ['Image','HorizontalRule','SpecialChar']
+            #full.insert: ['Image','Table','HorizontalRule','SpecialChar']
+            full.colors: [  ]
+            full.about: [  ]
+
+# LiipImagine Configuration
+liip_imagine:
+    resolvers:
+        default:
+            web_path:
+                web_root:  %kernel.root_dir%/../web
+                cache_prefix:  uploads/cache
+    driver:               gd
+    filter_sets:
+        cache: ~
+        img_small_thumb:
+            quality: 90
+            filters:
+                thumbnail: { size: [50, 50], mode: inset }
+        img_small_thumb_ob:
+            quality: 90
+            filters:
+                thumbnail: { size: [50, 50], mode: outbound }
+        img_thumb:
+            quality: 90
+            filters:
+                thumbnail: { size: [120, 90], mode: inset }
+        img_thumb_1_5:
+            quality: 90
+            filters:
+                thumbnail: { size: [120, 80], mode: inset }
+        img_thumb_medium:
+            quality: 90
+            filters:
+                thumbnail: { size: [133, 100], mode: inset }
+        img_thumb_medium_1_5:
+            quality: 90
+            filters:
+                thumbnail: { size: [150, 100], mode: inset }
+        img_h_50:
+            quality: 90
+            filters:
+                relative_resize: { heighten: 50 }
+        img_h_60:
+            quality: 100
+            filters:
+                relative_resize: { heighten: 60 }
+        img_h_70:
+            quality: 100
+            filters:
+                relative_resize: { heighten: 70 }
+        img_h_100:
+            quality: 100
+            filters:
+                relative_resize: { heighten: 100 }
+        img_h_120:
+            quality: 100
+            filters:
+                relative_resize: { heighten: 120 }
+        img_h_150:
+            quality: 100
+            filters:
+                relative_resize: { heighten: 150 }
+        img_w_480:
+            quality: 90
+            filters:
+                relative_resize: { widen: 480 }
+        img_w_500:
+            quality: 90
+            filters:
+                relative_resize: { widen: 500 }
+        img_w_600:
+            quality: 90
+            filters:
+                relative_resize: { widen: 600 }
+        img_w_800:
+            quality: 90
+            filters:
+                relative_resize: { widen: 800 }
+        img_w_1000:
+            quality: 90
+            filters:
+                relative_resize: { widen: 1000 }
+        img_w_1280:
+            quality: 80
+            filters:
+                relative_resize: { widen: 1280 }
+        img_w_1300:
+            quality: 80
+            filters:
+                relative_resize: { widen: 1300 }
+        img_w_1920:
+            quality: 80
+            filters:
+                relative_resize: { widen: 1920 }
+        img_75x75:
+            quality: 90
+            filters:
+                thumbnail: { size: [75, 75], mode: outbound }
+        img_100x100:
+            quality: 90
+            filters:
+                thumbnail: { size: [100, 100], mode: inset }
+        img_133x100:
+            quality: 90
+            filters:
+                thumbnail: { size: [133, 100], mode: inset }
+        img_150x150:
+            quality: 90
+            filters:
+                thumbnail: { size: [150, 150], mode: inset }
+        img_350x200:
+            quality: 90
+            filters:
+                thumbnail: { size: [350, 200], mode: outbound }
+        img_250x250:
+            quality: 90
+            filters:
+                thumbnail: { size: [250, 250], mode: outbound }
+        img_320x180:
+            quality: 90
+            filters:
+                thumbnail: { size: [320, 180], mode: outbound }
+        img_370x250:
+            quality: 90
+            filters:
+                thumbnail: { size: [370, 250], mode: outbound }
+        img_370x246:
+            quality: 90
+            filters:
+                thumbnail: { size: [370, 246], mode: outbound }
+        img_480x270:
+            quality: 90
+            filters:
+                thumbnail: { size: [480, 270], mode: outbound }
+        img_480x360:
+            quality: 90
+            filters:
+                thumbnail: { size: [480, 360], mode: outbound }
+        img_480x480:
+            quality: 90
+            filters:
+                thumbnail: { size: [480, 480], mode: outbound }
+        img_520x275:
+            quality: 90
+            filters:
+                thumbnail: { size: [520, 275], mode: outbound }
+        img_640x360:
+            quality: 90
+            filters:
+                thumbnail: { size: [640, 360], mode: outbound }
+        img_720x486:
+            quality: 90
+            filters:
+                thumbnail: { size: [720, 486], mode: outbound }
+        img_737x275:
+            quality: 90
+            filters:
+                thumbnail: { size: [737, 275], mode: outbound }
+        img_1000x1000:
+            quality: 90
+            filters:
+                thumbnail: { size: [1000, 1000], mode: outbound }
+        img_product_thumb:
+            quality: 90
+            filters:
+                thumbnail: { size: [50, 50], mode: inset }
+        img_product_small:
+            quality: 90
+            filters:
+                thumbnail: { size: [110, 110], mode: inset }
+        img_product_medium:
+            quality: 90
+            filters:
+                thumbnail: { size: [240, 240], mode: inset }
+        img_product_large:
+            quality: 90
+            filters:
+                thumbnail: { size: [480, 480], mode: inset }
+        img_promotion_large:
+            quality: 90
+            filters:
+                thumbnail: { size: [600, 600], mode: inset }

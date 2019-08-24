@@ -1,0 +1,77 @@
+{% extends 'ProjectBundle::admin.html.twig'%}
+
+{% block stylesheets %}
+  {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+{% endblock %}
+
+{% use "ProjectBundle:AdminContact:blocks.html.twig" %}
+{% use "ProjectBundle::flash_message.html.twig" %}
+{% block breadcrumb_sub %}
+	{{ parent() }}
+	<li class="active">View</li>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+	<div class="col-md-12">
+	  <div class="box box-primary">
+	    <div class="box-header">
+	      <h3 class="box-title">View Contact</h3>
+	    </div><!-- /.box-header -->
+
+      <div class="form-horizontal">
+        <div class="box-body">
+          <div class="form-group">
+        		<label class="control-label col-md-3">Created At</label>
+        		<div class="col-md-6 form-control-static">
+              {{data.CreatedAt|date('d/m/Y H:i:s')}}
+        		</div>
+        	</div>
+
+        	<div class="form-group">
+        		<label class="control-label col-md-3">Name</label>
+        		<div class="col-md-6 form-control-static">
+              {{data.name}}
+        		</div>
+        	</div>
+
+          <div class="form-group">
+        		<label class="control-label col-md-3">Email</label>
+        		<div class="col-md-6 form-control-static">
+              <a href="mailto:{{data.email}}">{{data.email}}</a>
+        		</div>
+        	</div>
+
+          <div class="form-group">
+        		<label class="control-label col-md-3">Telephone Number</label>
+        		<div class="col-md-6 form-control-static">
+              {{data.telephoneNumber}}
+        		</div>
+        	</div>
+
+          <div class="form-group">
+        		<label class="control-label col-md-3">Message</label>
+        		<div class="col-md-6 form-control-static">
+              {{data.message|nl2br}}
+        		</div>
+        	</div>
+
+        </div>
+
+        <div class="box-footer">
+        	<div class="row">
+        		<div class="col-md-offset-3 col-md-6">
+        			<a href="{%if app.session.get('back_to_url')['admin_contact'] is defined%}{{app.session.get('back_to_url')['admin_contact']}}{%else%}{{path('admin_contact')}}{%endif%}" class="btn btn-default">{{btn_label_close}} </a>
+        		</div>
+        	</div>
+        </div>
+      </div>
+
+  	</div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% if our_clients|length > 0%}
+	<section class="suppliments-partners-area section-padding home-5 home-client">
+		<div class="container">
+			<div class="section-title text-center">
+				<h1><span>{% trans %}distributor{% endtrans %}</span></h1>
+			</div>
+			<div class="row">
+				{% for our_client in our_clients %}
+					<div class="col-md-3 col-sm-4 col-xs-12">
+						<div class="single-item">
+							<div class="img-holder">
+								{% if our_client.image %}
+									<img src="{{asset(our_client.image) | imagine_filter('img_h_60') }}" alt="{{our_client.getTitle}}">
+								{% endif %}
+								<div class="overlay-content">
+									<div class="tb tb-100">
+										<div class="td">{{our_client.getTitle}}</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	</section>
+{% endif %}

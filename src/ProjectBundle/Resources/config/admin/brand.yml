@@ -1,0 +1,52 @@
+admin_brand:
+  path: /
+  defaults: {_controller: ProjectBundle:AdminBrand:index}
+  requirements:
+    _method: get
+
+admin_brand_new:
+  path: /new
+  defaults: {_controller: ProjectBundle:AdminBrand:new}
+
+admin_brand_create:
+  path: /create
+  defaults: {_controller: ProjectBundle:AdminBrand:create}
+  requirements:
+    _method: post
+
+admin_brand_edit:
+  path: /{id}/edit
+  defaults: {_controller: ProjectBundle:AdminBrand:edit}
+  requirements:
+    id: \d+
+
+admin_brand_update:
+  path: /{id}
+  defaults: {_controller: ProjectBundle:AdminBrand:update}
+  requirements:
+    _method: post
+    id: \d+
+
+admin_brand_delete:
+  path: /{id}/delete
+  defaults: {_controller: ProjectBundle:AdminBrand:delete}
+  requirements:
+    _method: get
+
+admin_brand_group_delete:
+  path: /group-delete
+  defaults: {_controller: ProjectBundle:AdminBrand:group_delete}
+  requirements:
+    _method: post
+
+admin_brand_sort:
+  path: /sort
+  defaults: {_controller: ProjectBundle:AdminBrand:sort}
+  requirements:
+    _method: get
+
+admin_brand_sort_prosess:
+  path: /sort-prosess
+  defaults: {_controller: ProjectBundle:AdminBrand:sort_prosess}
+  requirements:
+    _method: post

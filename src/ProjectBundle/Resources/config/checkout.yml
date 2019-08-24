@@ -1,0 +1,45 @@
+checkout:
+  path: /
+  defaults: {_controller: ProjectBundle:Checkout:index}
+  methods:  [GET]
+
+checkout_success:
+  path: /checkout-success
+  defaults: {_controller: ProjectBundle:Checkout:checkout_success}
+  methods:  [GET,POST]
+
+checkout_cybersource_resp:
+  path: /cybersource-resp
+  defaults: {_controller: ProjectBundle:Checkout:checkout_cybersource_resp}
+  methods:  [GET,POST]
+
+checkout_cybersource_cancel:
+  path: /cybersource-cancel
+  defaults: {_controller: ProjectBundle:Checkout:checkout_cybersource_cancel}
+  methods:  [GET,POST]
+
+checkout_update_delivery_address:
+    path: /updatedeliveryaddress
+    defaults: {_controller: ProjectBundle:Checkout:updateDeliveryAddress}
+    methods:  [GET]
+    options:
+        expose: true
+
+checkout_add_delivery_address:
+    path: /adddeliveryaddress
+    defaults: {_controller: ProjectBundle:Checkout:addDeliveryAddress}
+    methods:  [POST]
+    options:
+        expose: true
+
+checkout_set_payment_option:
+    path: /setpaymentoption
+    defaults: {_controller: ProjectBundle:Checkout:setPaymentOption}
+    methods:  [GET]
+    options:
+        expose: true
+
+checkout_place_order:
+    path: /placeorder
+    defaults: {_controller: ProjectBundle:Checkout:placeOrder}
+    methods:  [POST]

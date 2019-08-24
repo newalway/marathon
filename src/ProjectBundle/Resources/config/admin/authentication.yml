@@ -1,0 +1,12 @@
+admin_authentication:
+  path:  /
+  defaults: { _controller: ProjectBundle:AdminAuthentication:index }
+  requirements:
+    _method: get
+
+admin_authentication_update:
+  path: /update
+  defaults: {_controller: ProjectBundle:AdminAuthentication:update}
+  requirements:
+    _method: post
+    id: \d+

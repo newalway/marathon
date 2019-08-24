@@ -1,0 +1,167 @@
+{% extends "ProjectBundle:"~ view_layout ~":layout.html.twig" %}
+
+{% block title %} {{promotion.getTitle}}| {% trans %}menu.promotion{% endtrans %} | {{ parent() }}{% endblock %}
+{% block promotion_active %}active{% endblock %}
+{% block m_promotion_active %}active{% endblock %}
+{% block breadcrumb_title1 %}{% trans %}menu.promotion{% endtrans %}{% endblock %}
+{% block breadcrumb_sub %}
+    {{ parent() }}
+    <li><a href="{{path('promotion')}}">{% trans %}menu.promotion{% endtrans %}</a></li>
+    <li class="active">{{promotion.getTitle}}</li>
+{% endblock %}
+
+{% block content %}
+
+<div ng-app="promotionApp" ng-controller="promotionController" ng-init="init('{{promotion.id}}')" class="container">
+    <h2>{{promotion.getTitle}}</h2>
+
+    {% if promotion.getImage %}
+        <div class="img" style="margin-bottom: 10px;">
+            <img src="{{asset(promotion.getImage) | imagine_filter('img_promotion_large')}}" alt="{{promotion.getTitle}}" class="img-responsive"/>
+        </div>
+    {% endif %}
+
+    {% if promotion.getDescription %}
+        <div class="description">
+            {{promotion.getDescription|raw}}
+        </div>
+    {% endif %}
+
+    {% if promotion.filepath %}
+        <div ng-click="setPromotionDownloadCreate()" class="download">
+            <a href="{{path('promotion_download_content',{'id':promotion.id})}}" class="thm-btn arrow-push-out-right">
+                <span> {% trans %}promotion.download{% endtrans %}  {#&nbsp;<i class="fa fa-download"></i>#}</span>
+            </a>&nbsp;
+            {% if promotion.filesize %}<br/>
+                <small>{{promotion.filesize}} KB</small>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    <div class="clear-both share">
+        <div class="l">{% trans %}promotion.share{% endtrans %} :</div>
+        <div class="r">
+            <!-- Go to www.addthis.com/dashboard to customize your tools -->
+            <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5a8b867cd09da536"></script>
+            <div class="addthis_inline_share_toolbox"></div>
+        </div>
+
+    </div>
+
+    <div class="row">
+        {% for product_has_promotion in paginated.currentpageresults %}
+            {% set products = product_has_promotion[0] %}
+            {# products_price return price check  #}
+            {% set products_price = getPriceData(product_has_promotion) %}
+
+            <div class="col-md-4 col-sm-6 mix {{products.brand.id}} {{loop.index0 % 3 == 0 ? "lg-clear"}} {{loop.index0 % 3 == 0 ? "md-clear"}} {{loop.index0 % 2 == 0 ? "sm-clear"}}">
+                <div class="single-product-item text-center">
+                    <div class="img-holder productZoom">
+                        <!-- <div class="new-product"><p>new</p></div> -->
+                        {% if products_price.price and products_price.price > 0 %}
+                            {% if (products_price.compare_at_price > products_price.price) %}
+                                <div class="offer-product"><p> -{{ product_has_promotion|getPercentProductDiscount }}%</p></div>
+                            {% endif %}
+                        {% endif %}
+
+                        {% if products.image %}
+                        {% set image = asset(products.image)|imagine_filter('img_480x480') %}
+                        {% set image_zoom = asset(products.image)|imagine_filter('img_1000x1000') %}
+                        {% else %}
+                        {% set image = 'https://placehold.it/480x480' %}
+                        {% set image_zoom = 'https://placehold.it/1000x1000' %}
+                        {% endif %}
+                        <img src="{{image}}" alt="{{products.getTitle}}" class="img-responsive" data-zoom-image="{{image_zoom}}" />
+                        {#<div class="overlay">
+                        <div class="icon-holder">
+                        <ul>
+                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                        <li><a href="#"><i class="fa fa-heart"></i></a></li>
+                        <li><a href="#"><i class="fa fa-search-plus"></i></a></li>
+                        </ul>
+                        </div>
+                        <!-- /.icon-holder -->
+                        </div>#}
+                        <!-- /.overlay -->
+                    </div>
+                    <!-- /.img-holder -->
+                    <div class="title">
+                        <a href="{{path('product_detail',{'id':products.id,'slug':products.getSlug})}}"><h3>{{products.getTitle}}</h3></a>
+                        <h2>
+                            {% if products_price.price and products_price.price > 0 %}
+                                {% if (products_price.compare_at_price > products_price.price) %}
+                                <del class="before-rate">
+                                    ฿{{ products_price.compare_at_price|number_format(0, '', ',') }}
+                                </del>
+                                {% endif %}
+                                ฿{{ products_price.price|number_format(0, '', ',') }}
+                            {% else %}
+								&nbsp;
+							{% endif %}
+
+                        </h2>
+                    </div>
+                    <!-- /.title -->
+                </div>
+                <!-- /.single-product-item text-center -->
+            </div><!-- /.col-md-4 -->
+        {% else %}
+            <div class="col-md-12 text-center">No Data</div>
+        {% endfor %}
+    </div>
+    <!-- /.row -->
+
+    {% if paginated.havetopaginate %}
+    {{pagerfanta(paginated,'twitter_bootstrap3_translated_template')}}
+    {% endif %}
+
+</div>{# end container div #}
+<script>
+    $(function() {
+        if ($('.productZoom').length) {
+            $(".productZoom").each(function(arg, el){
+                var image = $(el).find("img").data("zoomImage");
+                $(el).zoom({
+                    on: 'mouseover',
+                    url: image
+                });
+            });
+        }
+    });
+
+    var app = angular.module('promotionApp', []);
+
+    app.factory('promotion_download_data', ['$http', function promotion_download_data($http) {
+        return {
+            setPromotionDownload: function(promotion_id){
+                return $http({
+                    method:'GET',
+                    cache: false,
+                    url: Routing.generate('promotion_download_create',{'id':promotion_id}) + '?hash_id=' + Math.random(),
+                    headers: {
+                        'Content-Type':'application/x-www-form-urlencoded'
+                    }
+                });
+            }
+        }
+    }]);
+
+    app.controller('promotionController', function($scope, $http, promotion_download_data) {
+
+        $scope.promotion_id = '';
+        $scope.init = function(promotion_id) {
+            $scope.promotion_id = promotion_id;
+        }
+
+        $scope.setPromotionDownloadCreate = function() {
+            if($scope.promotion_id){
+                promotion_download_data.setPromotionDownload($scope.promotion_id).then(function onSuccess(response){
+                    // console.log(response.data.data);
+                }).catch(function onError(response) {
+                });
+            }
+        };
+
+    });
+</script>
+{% endblock %}

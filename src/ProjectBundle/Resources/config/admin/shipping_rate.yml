@@ -1,0 +1,44 @@
+admin_shipping_rate:
+  path: /
+  defaults: {_controller: ProjectBundle:AdminShippingRate:index}
+  requirements:
+    _method: get
+
+admin_shipping_rates_new:
+  path: /new
+  defaults: {_controller: ProjectBundle:AdminShippingRate:new}
+  requirements:
+    _method: get
+
+admin_shipping_rates_create:
+  path: /create
+  defaults: {_controller: ProjectBundle:AdminShippingRate:create}
+  requirements:
+    _method: post
+
+admin_shipping_rates_edit:
+  path: /{id}/edit
+  defaults: {_controller: ProjectBundle:AdminShippingRate:edit}
+  requirements:
+    _method: get
+    id: \d+
+
+
+admin_shipping_rates_delete:
+  path: /{id}/delete
+  defaults: {_controller: ProjectBundle:AdminShippingRate:delete}
+  requirements:
+    _method: get
+    id: \d+
+
+admin_shipping_rates_group_delete:
+  path: /group-delete
+  defaults: {_controller: ProjectBundle:AdminShippingRate:group_delete}
+  requirements:
+    _method: post
+
+admin_shipping_rates_delivery_date_setting:
+  path: /delivery_date
+  defaults: {_controller: ProjectBundle:AdminShippingRate:delivery_date_setting}
+  requirements:
+    _method: get, post

@@ -1,0 +1,35 @@
+{% extends 'ProjectBundle::admin.html.twig'%}
+
+{% block stylesheets %}
+  {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <script src="{{ asset('ckfinder/ckfinder.js') }}"></script>
+  <script src="{{ asset('javascripts/ckfinder_popups.js') }}"></script>
+{% endblock %}
+
+{% use "ProjectBundle:AdminBankAccount:blocks.html.twig" %}
+{% use "ProjectBundle::flash_message.html.twig" %}
+{% block breadcrumb_sub %}
+	{{ parent() }}
+	<li class="active">Edit</li>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+	<div class="col-md-12">
+	  <div class="box box-primary">
+	    <div class="box-header">
+	      <h3 class="box-title">Edit</h3>
+	    </div><!-- /.box-header -->
+        <!-- form start -->
+        <form id="data_form" action="{{path('admin_bank_account_edit', {'id': form.vars.value.id})}}" method="post" role="form" enctype="multipart/form-data" class="form-horizontal">
+        	{{form_widget(form._token)}}
+        	{% include 'ProjectBundle:AdminBankAccount:_form.html.twig'%}
+        </form>
+      </div><!-- /.box -->
+  	</div>
+  </div>
+{% endblock %}

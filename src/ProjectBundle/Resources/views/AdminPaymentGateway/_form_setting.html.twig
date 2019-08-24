@@ -1,0 +1,39 @@
+
+<div class="row">
+	<div class="col-md-12">
+		<div class="box">
+			<div class="box-header with-border">
+				<h3 class="box-title">Setting</h3>
+				<div class="box-tools pull-right"></div>
+			</div>
+			<!-- /.box-header -->
+			<div class="box-body">
+				<div class="row ">
+					<div class="col-md-12 form-control-static">
+						<div class="form-group icheck">
+							<!-- <label class="" for="status"><span class="require">*</span> Status</label> -->
+							{{form_widget(form.gateway, {'id' : 'gateway'})}}
+							<div class="error-form">{{form_errors(form.gateway)}}</div>
+							<!-- <p class="help-block">Customers will enter this discount code at checkout.</p> -->
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+	</div> <!-- /.col-md-10 -->
+
+	{#
+	<div class="col-md-2">
+	</div>
+	#}
+
+	<div class="row">
+		<div class="col-md-offset-2 col-md-9">
+			{{form_widget(form.save, {'id' : 'save', 'label': btn_label_save})}}
+			<a href="{%if app.session.get('back_to_url')['admin_payment_gateway_setting'] is defined%}{{app.session.get('back_to_url')['admin_payment_gateway_setting']}}{%else%}{{path('admin_payment_gateway_setting')}}{%endif%}" class="btn btn-default">{{btn_label_close}} </a>
+		</div>
+	</div>
+
+</div>

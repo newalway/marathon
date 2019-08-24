@@ -1,0 +1,106 @@
+<section class="popular-shop-item mixit-gallery section-padding home-product">
+	<div class="container">
+		<div class="clearfix">
+			<div class="section-title text-left">
+				<h1><span>{% trans %}products{% endtrans %}</span></h1>
+				<ul class="gallery-filter list-inline text-left">
+					<li class="filter" data-filter="all"><span>{% trans %}show.all{% endtrans %}</span></li>
+					<!-- <li class="filter" data-filter=".featured"><span>{% trans %}featured{% endtrans %}</span></li> -->
+
+					{% for brand in brands %}
+						<li class="filter" data-filter=".{{brand.id}}"><span>{{ brand.title}}</span></li>
+					{% endfor %}
+					<!-- <li class="filter" data-filter=".new-arrival"><span>{% trans %}new.arrival{% endtrans %}</span></li> -->
+				</ul>
+			</div>
+		</div>
+		<!-- /.clearfix -->
+		<div class="row">
+		{% for rs in paginated.currentpageresults %}
+			{% set data = rs[0] %}
+			{# price_data return price check  #}
+			{% set price_data = getPriceData(rs) %}
+
+			<div class="col-md-4 col-sm-6 mix {{data.brand.id}} {{loop.index0 % 3 == 0 ? "lg-clear"}} {{loop.index0 % 3 == 0 ? "md-clear"}} {{loop.index0 % 2 == 0 ? "sm-clear"}} ">
+				<div class="single-product-item text-center">
+					<div class="img-holder productZoom">
+						{# endDate and startDate are strings or DateTime objects #}
+						{#
+						{% set difference = date(endDate).diff(date(startDate)) %}
+						{% set leftDays = difference.days %}
+						{% if leftDays == 1 %}
+  							1 day
+						{% else %}
+  							{{ leftDays }} days
+						{% endif %}
+						#}
+
+						{% if data.isNew %}
+							<div class="new-product"><p>new</p></div>
+						{% endif %}
+
+						{% if price_data.price and price_data.price > 0 %}
+							{% if (price_data.compare_at_price > price_data.price) %}
+								<div class="offer-product"><p> -{{ rs|getPercentProductDiscount }}%</p></div>
+							{% endif %}
+						{% endif %}
+
+						{% if data.image %}
+							{% set image = asset(data.image)|imagine_filter('img_480x480') %}
+							{% set image_zoom = asset(data.image)|imagine_filter('img_1000x1000') %}
+						{% else %}
+							{% set image = 'https://placehold.it/480x480' %}
+							{% set image_zoom = 'https://placehold.it/1000x1000' %}
+						{% endif %}
+						<img src="{{image}}" alt="{{data.getTitle}}" class="img-responsive" data-zoom-image="{{image_zoom}}" />
+
+						{#<div class="overlay">
+							<div class="icon-holder">
+								<ul>
+									<li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+									<li><a href="#"><i class="fa fa-heart"></i></a></li>
+									<li><a href="#"><i class="fa fa-search-plus"></i></a></li>
+								</ul>
+							</div>
+							<!-- /.icon-holder -->
+						</div>#}
+						<!-- /.overlay -->
+					</div>
+					<!-- /.img-holder -->
+					<div class="title">
+						<a href="{{path('product_detail',{'id':data.id,'slug':data.getSlug})}}"><h3>{{data.getTitle}}</h3></a>
+						<h2>
+							{% if price_data.price and price_data.price > 0 %}
+								{% if (price_data.compare_at_price > price_data.price) %}
+									<del class="before-rate">
+										฿{{ price_data.compare_at_price|number_format(2, '.', ',') }}
+									</del>
+								{% endif %}
+								฿{{ price_data.price|number_format(2, '.', ',') }}
+							{% else %}
+								&nbsp;
+							{% endif %}
+						</h2>
+					</div>
+					<!-- /.title -->
+				</div>
+				<!-- /.single-product-item text-center -->
+			</div><!-- /.col-md-4 -->
+			{% else %}
+				<div class="col-md-12 text-center">No Data</div>
+		{% endfor %}
+		</div>
+		<!-- /.row -->
+	</div>
+	<!-- /.container -->
+</section>
+
+<!----------------------------------------------------------------------------------------------->
+<!-- Start For _products_home_section.html.twig -->
+<!-- <section class="shop-cta section-padding">
+	<div class="container">
+		<div class="row"></div>
+	</div>
+</section> -->
+<!-- End For _products_home_section.html.twig -->
+<!----------------------------------------------------------------------------------------------->

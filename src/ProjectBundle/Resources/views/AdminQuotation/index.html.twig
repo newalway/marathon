@@ -1,0 +1,191 @@
+{% extends 'ProjectBundle::admin.html.twig'%}
+
+{% block stylesheets %}
+  {{ parent() }}
+  <style media="screen">
+    .text-c-date {
+      color:#0F4880
+    }
+  </style>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <script>
+    $(document).ready(function(){
+      $( "#search_start_date" ).datepicker( {
+          todayHighlight:true,
+          todayBtn:'linked',
+          dateFormat: 'dd/mm/yy',
+          endDate: '+30d'
+      });
+      $( "#search_end_date" ).datepicker( {
+          todayHighlight:true,
+          todayBtn:'linked',
+          dateFormat: 'dd/mm/yy',
+          endDate:'+30d'
+      });
+    })
+  </script>
+{% endblock %}
+
+{% use "ProjectBundle:AdminQuotation:blocks.html.twig" %}
+{% use "ProjectBundle::flash_message.html.twig" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 margin-10-0">
+        <a href="" class="btn btn-info" title="Refresh"><i class="fa fa-refresh"></i> Refresh</a>
+        <!--    <a href="" title="setting" onclick="return confirm('Are you sure you want to export excel?');"><button class="btn btn-success"><i class="fa fa-file-excel-o"></i> Export Excel</button></a> -->
+    </div>
+</div>
+
+<br class="clearBoth">
+
+<div class="row" ng-app="adminOrderApp" ng-controller="adminOrderController">
+    <div class="col-xs-12">
+        <div class="box" style="min-height: 1000px;">
+            <div class="box-body">
+                <div class="row">
+                  <form action="{{path('admin_quotation')}}" id="data_form_search" method="get"
+                    data-search_data_path="{{path('admin_quotation')}}"
+                    {#data-search_export_excel_path=""
+                    data-search_export_excel_summary_report_path=""#} >
+                    <div class="ng-cloak">
+                      {% include 'ProjectBundle:AdminQuotation:_form_search.html.twig' %}
+                    </div>
+                  </form>
+                </div>
+              {#  <div class="col-md-12">
+                  <form id="data_form_search" action="{{path('admin_quotation_list')}}" method="get" role="form" enctype="multipart/form-data" class="form-horizontal"
+                    data-search_data_path="{{path('admin_banner')}}">
+                    {% include 'ProjectBundle::_form_search.html.twig' %}
+                    {% include 'ProjectBundle:AdminQuotation:_form_search.html.twig' %}
+                  </form>
+                </div>#}
+            </div>
+
+            <form action="#" method="post" {#id="data_group"
+                data-order_group_export_excel_path="{{path('admin_order_group_export_excel')}}"#} >
+                <div class="box-body">
+                    <table border="0" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th class="text-center" width="160px">Quotation No.</th>
+                                <th class="text-center" width="150px">Date</th>
+                                <th class="text-center" width="200px">Customer</th>
+                                {#<th class="text-center" width="120px">Method</th>
+                                <th class="text-center" width="150px">Additional detail</th>#}
+                                <th class="text-center" width="50">View</th>
+                                <th class="text-center" width="50">Delete</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for data in paginated.currentpageresults %}
+                            <tr class="text-center">
+                                <td>
+                                    <a href="{{path('admin_quotation_view', {'id' : data.id})}}" title="View">{{data.ordernumber}}</a>
+                                    {% if data.isRead == 0 %}
+                                        <span class="label label-warning">New <i class="fa fa-exclamation"></i></span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-center">
+                                    {{data.orderdate|date('d M Y')}}
+                                </td>
+
+                                <td class="text-center">
+                                    {% set full_name = data.user.firstName ~ ' ' ~ data.user.lastName %}
+                                    {{full_name}}
+                                    <br/>
+                                    <small>{{data.user.companyName}}</small>
+                                </td>
+
+                                {#
+                                <td class="text-center">
+                                    {{data.paymentOption}}
+                                </td>
+                                <td class="text-center">
+                                    {% if data.note %}
+                                        {{data.note}}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>#}
+
+                                <td class="text-center"><a href="{{path('admin_quotation_view', {'id' : data.id})}}" title="View"><i class="fa fa-file-text-o fa-2x"></a></td>
+                                <td class="text-center"><a href="{{path('admin_quotation_update_status', {'id' : data.id,'status':'soft_deleted'})}}" onclick="return confirm('Are you sure you want to delete?');" title="Delete"><i class="fa fa-trash fa-2x"></i></a></td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                              <td colspan="9" class="text-center">No data.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div><!-- /.box-body -->
+
+                <div class="box-footer clearfix">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="margin">Total : {{paginated.getNbResults}}</div>
+                        </div>
+                        <div class="col-md-9">
+                            {% if paginated.havetopaginate %}
+                                {{pagerfanta(paginated,'twitter_bootstrap3_translated')}}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div><!-- /.box -->
+    </div>
+</div>
+
+<script>
+  var app = angular.module('adminOrderApp',[]);
+
+  app.controller('adminOrderController',['$scope','$http',function($scope, $http){
+
+    $scope.search_start_date = '{{"first day of this month"|date('d/m/Y')}}';
+    $scope.search_end_date = '{{"now"|date('d/m/Y')}}';
+
+    $scope.filterType = {{arr_query_data['search_type']}};
+    $scope.filterDateType ={{arr_query_data['date_type']}};
+    $scope.yearIndex = {{arr_query_data['search_year']}};
+    $scope.monthIndex = {% if arr_query_data['search_month'] %}{{arr_query_data['search_month']}}{% else %}(new Date().getMonth()){% endif %};
+
+    $scope.search_start_date = '{{arr_query_data['search_start_date']}}';
+    $scope.search_end_date = '{{arr_query_data['search_end_date']}}';
+    $scope.search_status = '{{arr_query_data['search_status']}}';
+
+    $scope.filter_date_type_data = [
+      {name:'Order', id:1},
+      {name:'Shipment', id:2}
+    ];
+    $scope.filter_ddl = [
+      {name:'Date Range', id:1},
+      {name:'Month', id:2}
+    ];
+    $scope.data_status = [
+      {id: '2', name: 'All'},
+      {id: '1', name: 'Paid'},
+      {id: '0', name: 'Unpaid'}
+    ];
+
+    $scope.months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    var currentYear = new Date().getFullYear();
+    $scope.years = [];
+    for (var i = 0; i < 10; i++){
+      $scope.years.push(currentYear - i);
+    }
+
+    $scope.getFilterTypeData = function() {
+      return $scope.filterType;
+    }
+
+  }]);
+</script>
+
+{% endblock %}

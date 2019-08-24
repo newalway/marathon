@@ -1,0 +1,258 @@
+{% extends "ProjectBundle:"~ view_layout ~":layout_member.html.twig" %}
+
+{% block title %}
+    {% if is_granted('ROLE_CUSTOMER') %}
+        {% trans %}member.my.orders{% endtrans %}
+    {% elseif is_granted('ROLE_CLIENT')  %}
+        {% trans %}member.my.rfq{% endtrans %}
+    {% endif %}
+    | {{ parent() }}
+{% endblock %}
+{% block member_home_active %}active{% endblock %}
+{% block member_header %}
+    {% if is_granted('ROLE_CUSTOMER') %}
+        {% trans %}member.my.orders{% endtrans %}
+    {% elseif is_granted('ROLE_CLIENT')  %}
+        {% trans %}member.my.rfq{% endtrans %}
+    {% endif %}
+{% endblock %}
+
+{% block member_orders_active %}active{% endblock %}
+
+{% block breadcrumb_sub %}
+    {{ parent() }}
+    <li>
+            {% if is_granted('ROLE_CUSTOMER') %}
+                {% trans %}member.my.orders{% endtrans %}
+            {% elseif is_granted('ROLE_CLIENT')  %}
+                {% trans %}member.my.rfq{% endtrans %}
+            {% endif %}
+    </li>
+{% endblock %}
+
+{% block content_member %}
+{% for order in paginated.currentpageresults %}
+<div class="member-box member-order">
+    <div class="row mb-10">
+        <div class="col-xs-6">
+            {% if is_granted('ROLE_CUSTOMER') %}
+                {% trans %}order.txt{% endtrans %}
+            {% elseif is_granted('ROLE_CLIENT')  %}
+                {% trans %}member.number{% endtrans %}
+            {% endif %}
+            <b>#{{order.orderNumber}}</b>
+        </div>
+        <div class="col-xs-6 tt-u text-right">
+            <a href="{{path('track',{'no':order.orderNumber})}}" class="manage">
+                {% if is_granted('ROLE_CUSTOMER') %}
+                    {% trans %}order.manage{% endtrans %}
+                {% elseif is_granted('ROLE_CLIENT')  %}
+                    {% trans %}order.detail{% endtrans %}
+                {% endif %}
+            </a>
+        </div>
+        <div class="col-sm-4 clear-both">
+            {% trans %}order.placed.on{% endtrans %}
+            {{ order.orderDate|date("d") }} {{ order.orderDate|date("F")|trans }}
+            {{ order.orderDate|date("Y") }}
+        </div>
+        <div class="col-sm-4">
+            {% if is_granted('ROLE_CUSTOMER') %}
+                {% trans %}order.delivered.on{% endtrans %}
+                {{ order.shipDate|date("d") }} {{ order.shipDate|date("F")|trans }} {{ order.shipDate|date("Y") }}
+            {% endif %}
+        </div>
+        <div class="col-sm-4">
+            {% if is_granted('ROLE_CUSTOMER') %}
+                {% if order.cancelled == 1  %}
+                    {% if order.refunded == 1 %}
+                        <span class="label label-danger" style="letter-spacing: 1px;font-weight: normal;line-height: 1.5;">{{payment_status_refunded|trans}}</span>&nbsp;
+                    {% else %}
+                        <span class="label label-danger" style="letter-spacing: 1px;font-weight: normal;line-height: 1.5;">{{payment_status_cancelled|trans}}</span>&nbsp;
+                    {% endif %}
+                {% else %}
+
+                    {% if order.paid == 1 %}
+                        <span class="label label-success" style="letter-spacing: 1px;font-weight: normal;line-height: 1.5;">{{payment_status_paid|trans}}</span>
+                    {% else %}
+                        {% if order.paymentOption == payment_cash_on_deliveryr_code %}
+                            <span class="label label-default" style="letter-spacing: 1px;font-weight: normal;line-height: 1.5;">{{payment_status_pending|trans}}</span>
+                        {% else %}
+                            <span class="label label-default" style="letter-spacing: 1px;font-weight: normal;line-height: 1.5;">{{payment_status_awaiting_payment|trans}}</span>
+                        {% endif %}
+                    {% endif %}
+
+                    {% if order.fulfilled == 1 %}
+                        <span class="label label-success" style="letter-spacing: 1px;font-weight: normal;line-height: 1.5;">{{payment_status_shipped|trans}}</span>&nbsp;
+                    {% else %}
+                        <span class="label label-warning" style="letter-spacing: 1px;font-weight: normal;line-height: 1.5;">{{payment_status_processing|trans}}</span>&nbsp;
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row clear-both row-title">
+        {% if is_granted('ROLE_CUSTOMER') %}
+            <div class="col-sm-2"></div>
+            <div class="col-sm-3">
+                <b>{% trans %}order.items{% endtrans %}</b>
+            </div>
+            <div class="col-sm-2 text-right">
+                <b>{% trans %}order.price{% endtrans %}</b>
+            </div>
+            <div class="col-sm-2 text-center">
+                <b>{% trans %}order.qty{% endtrans %}</b>
+            </div>
+            <div class="col-sm-3 text-right">
+                <b>{% trans %}order.subtotal{% endtrans %}</b>
+            </div>
+        {% elseif is_granted('ROLE_CLIENT')  %}
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4">
+                <b>{% trans %}order.items{% endtrans %}</b>
+            </div>
+            <div class="col-sm-4 text-center">
+                <b>{% trans %}order.qty{% endtrans %}</b>
+            </div>
+        {% endif %}
+    </div>
+
+    {% for orderItems in order.customerOrderItems %}
+        <div class="row row-list order-list">
+
+            {% if is_granted('ROLE_CUSTOMER') %}
+                <div class="col-sm-2">
+                    <div class="row">
+                        {% if orderItems.product %}
+                            {% if  orderItems.skuTitle|length > 0 %}
+                                {% set str_variant = orderItems.skuTitle|join('-') %}
+                                {% set link_product_detail = path('product_detail', {'id':orderItems.product.id, 'slug':orderItems.product.getSlug, 'v':str_variant }) %}
+                            {% else %}
+                                {% set link_product_detail = path('product_detail', {'id':orderItems.product.id, 'slug':orderItems.product.getSlug}) %}
+                            {% endif %}
+                            <a href="{{link_product_detail}}">{% if orderItems.image %}<img src="{{orderItems.image|imagine_filter('img_thumb')}}" alt="">{% endif %}</a>
+                        {% else %}
+                            {% if orderItems.image %}<img src="{{orderItems.image|imagine_filter('img_thumb')}}" alt="">{% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-sm-3 pro">
+                    {{orderItems.productTitle}}
+                    {% if orderItems.skuTitle %}
+                        <br/><small>{{ orderItems.skuTitle|join(' · ') }}</small>
+                    {% endif %}
+                </div>
+                <div class="col-sm-2 price">
+                    <div class="row">
+                        <div class="col-xs-5 col-sm-12">
+                            <b>{% trans %}order.price{% endtrans %}</b>
+                        </div>
+                        <div class="col-xs-7 col-sm-12">
+                            ฿{{orderItems.price|number_format(2, '.', ',') }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-2 qty">
+                    <div class="row">
+                        <div class="col-xs-5 col-sm-12">
+                            <b>{% trans %}order.qty{% endtrans %}</b>
+                        </div>
+                        <div class="col-xs-7 col-sm-12">
+                            {{orderItems.quantity|number_format(0, '', ',') }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-3 subtotal">
+                    <div class="row">
+                        <div class="col-xs-5 col-sm-12">
+                            <b>{% trans %}order.subtotal{% endtrans %}</b>
+                        </div>
+                        <div class="col-xs-7 col-sm-12">
+                            ฿{{orderItems.amount|number_format(2, '.', ',') }}
+                        </div>
+                    </div>
+                </div>
+
+            {% elseif is_granted('ROLE_CLIENT')  %}
+                <div class="col-sm-4">
+                    <div class="row">
+                        {% if orderItems.product %}
+                            {% if  orderItems.skuTitle|length > 0 %}
+                                {% set str_variant = orderItems.skuTitle|join('-') %}
+                                {% set link_product_detail = path('product_detail', {'id':orderItems.product.id, 'slug':orderItems.product.getSlug, 'v':str_variant }) %}
+                            {% else %}
+                                {% set link_product_detail = path('product_detail', {'id':orderItems.product.id, 'slug':orderItems.product.getSlug}) %}
+                            {% endif %}
+                            <a href="{{link_product_detail}}">{% if orderItems.image %}<img src="{{orderItems.image|imagine_filter('img_thumb')}}" alt="">{% endif %}</a>
+                        {% else %}
+                            {% if orderItems.image %}<img src="{{orderItems.image|imagine_filter('img_thumb')}}" alt="">{% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-sm-4 pro">
+                    {{orderItems.productTitle}}
+                    {% if orderItems.skuTitle %}
+                        <br/><small>{{ orderItems.skuTitle|join(' · ') }}</small>
+                    {% endif %}
+                </div>
+                <div class="col-sm-4 qty">
+                    <div class="row">
+                        <div class="col-xs-5 col-sm-12">
+                            <b>{% trans %}order.qty{% endtrans %}</b>
+                        </div>
+                        <div class="col-xs-7 col-sm-12">
+                            {{orderItems.quantity|number_format(0, '', ',') }}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+        </div>
+    {% endfor %}
+
+{% if is_granted('ROLE_CUSTOMER') %}
+    <div class="row order-list">
+        <hr/>
+            <div class="col-xs-6 col-sm-8 col-md-8 text-right">
+                <b>{% trans %}order.total{% endtrans %} {% trans %}order.price{% endtrans %}</b>
+            </div>
+            <div class="col-xs-6 col-sm-4 col-md-4 text-right">
+                ฿{{order.totalPrice|number_format(2, '.', ',') }}
+            </div>
+    </div>
+{% endif %}
+    <div class="box-footer clearfix">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="margin">Total : {{order.itemCount}}</div>
+            </div>
+            <div class="col-md-9"></div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+{% if paginated.getNbResults %}
+    <div class="box-footer clearfix">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="margin">Total : {{paginated.getNbResults}}</div>
+            </div>
+            <div class="col-md-9">
+                {% if paginated.havetopaginate %}
+                    {{pagerfanta(paginated,'twitter_bootstrap3_translated')}}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% else %}
+<div class="panel panel-default">
+  <div class="panel-body">
+    {% trans %}order.none{% endtrans %}
+  </div>
+</div>
+{% endif %}
+{% endblock %}

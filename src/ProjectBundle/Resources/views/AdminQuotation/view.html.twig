@@ -1,0 +1,233 @@
+{% extends 'ProjectBundle::admin.html.twig'%}
+
+{% block stylesheets %}
+  {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+{% endblock %}
+
+{% use "ProjectBundle:AdminQuotation:blocks.html.twig" %}
+{% use "ProjectBundle::flash_message.html.twig" %}
+{% block breadcrumb_sub %}
+	{{ parent() }}
+    {% if (orders)%}
+    {% set  order = orders[0] %}
+	<li class="active">Number #{{order.orderNumber}}</li>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<style>
+#myImg {
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#myImg:hover {opacity: 0.7;}
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+}
+
+/* Modal Content (image) */
+.modal-content {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+}
+
+/* Caption of Modal Image */
+#caption {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+    text-align: center;
+    color: #ccc;
+    padding: 10px 0;
+    height: 150px;
+}
+
+/* Add Animation */
+.modal-content, #caption {
+    -webkit-animation-name: zoom;
+    -webkit-animation-duration: 0.6s;
+    animation-name: zoom;
+    animation-duration: 0.6s;
+}
+
+@-webkit-keyframes zoom {
+    from {-webkit-transform:scale(0)}
+    to {-webkit-transform:scale(1)}
+}
+
+@keyframes zoom {
+    from {transform:scale(0)}
+    to {transform:scale(1)}
+}
+
+/* The Close Button */
+.modal-close.close {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.close:hover,
+.close:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* 100% Image Width on Smaller Screens */
+@media only screen and (max-width: 700px){
+    .modal-content {
+        width: 100%;
+    }
+}
+</style>
+
+{% if (orders)%}
+    {% set  order = orders[0] %}
+    <div class="row" ng-app="orderDetailApp" ng-controller="orderDetailController" ng-init="init('{{acctoken}}','{{order.id}}');">
+        <div class="col-md-12 margin-10-0">
+            <a href="{% if app.session.get('back_to_url')[app.session.get('referer_route')] is defined %}{{app.session.get('back_to_url')[app.session.get('referer_route')]}}{% else %}{{path('admin_quotation')}}{% endif %}" class="btn btn-default"><i class="fa fa-angle-left"></i> Back </a>
+
+            <div class="pull-right">
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="box box-body">
+
+                <div class="col-md-12">
+                    <div class="col-sm-6">
+                        <b>Quotation No. {{order.orderNumber}}</b><br />
+                        {{ order.orderDate|date("d F Y") }}
+                    </div>
+                    <div class="col-sm-6 text-right">
+                    </div>
+                </div>
+
+                <div class="col-md-8">
+
+                    <div class="col-md-12">
+                        <table class="table table-striped">
+                            <tr>
+                                <th></th>
+                                <th class="th">{% trans %}order.items{% endtrans %}</th>
+                                <th class="th text-center">{% trans %}order.qty{% endtrans %}</th>
+                            </tr>
+                            <tbody>
+                                {% set sum = 0 %}
+                                {% for orderItems in order.customerOrderItems %}
+                                    {% set qty = orderItems.quantity %}
+                                    <tr>
+                                        <td class="">
+                                            {% if orderItems.image %}
+                                                <img src="{{orderItems.image|imagine_filter('img_small_thumb')}}" alt="" style="margin-top: 15px;"/>
+                                            {% else %}
+                                                <img src="{{ asset('template/img/shop/thumb-1.jpg')}}" style="margin-top: 15px;"/>
+                                            {% endif %}
+                                        </td>
+                                        <td class="">{{orderItems.productTitle}}</td>
+
+                                        <td class=" text-center">{{qty|number_format(0, '', ',') }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="section-padding pt0">
+                        <div class="row">
+                            {% for orderDeliverys in order.customerOrderDeliverys %}
+                                {% if orderDeliverys.addressType == 1 %}
+                                    <div class="col-sm-6 col-md-12 mb-20">
+                                        <div class="single-sidebar search-widget">
+                                            <div class="title">
+                                                <h4>Shipping Address</h4>
+                                            </div>
+                                            <!-- /.title -->
+                                            <h5>{{orderDeliverys.firstName}} {{orderDeliverys.lastName}}
+                                                {% if orderDeliverys.companyName %} <br/>{{orderDeliverys.companyName}}{% endif %}
+                                                {% if orderDeliverys.headOffice %}&nbsp;&nbsp;({{orderDeliverys.headOffice}}){% endif %}
+                                            </h5>
+                                            <p>
+                                                {{orderDeliverys.address}}, {{orderDeliverys.district}}, {{orderDeliverys.amphure}},
+                                                {{orderDeliverys.province}} {#,{{orderDeliverys.country}}#}
+                                                {{orderDeliverys.postCode}}<br />{{orderDeliverys.phone}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                                {% if orderDeliverys.addressType == 2 %}
+                                    <div class="col-sm-6 col-md-12 mb-20">
+                                        <div class="single-sidebar search-widget">
+                                            <div class="title">
+                                                <h4>Billing Address</h4>
+                                            </div>
+                                            <!-- /.title -->
+                                            <h5>{{orderDeliverys.firstName}} {{orderDeliverys.lastName}}
+                                                {% if orderDeliverys.companyName %} <br/>{{orderDeliverys.companyName}}{% endif %}
+                                                {% if orderDeliverys.headOffice %}&nbsp;&nbsp;({{orderDeliverys.headOffice}}){% endif %}
+                                            </h5>
+                                            <p>
+                                                {{orderDeliverys.address}}, {{orderDeliverys.district}}, {{orderDeliverys.amphure}},
+                                                {{orderDeliverys.province}} {#,{{orderDeliverys.country}}#}
+                                                {{orderDeliverys.postCode}}<br />{{orderDeliverys.phone}}
+                                                {% if orderDeliverys.taxPayerId %}
+                                                    <br/>{% trans %}member.taxpayerid{% endtrans %} {{orderDeliverys.taxPayerId}}
+                                                {% endif %}
+                                            </p>
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                            {% else %}
+                                <div class="col-sm-12 col-md-12 mb-20 text-center">No data Address</div>
+                            {% endfor %}
+
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>{# box box-body#}
+        </div>
+
+
+    </div>{# end row#}
+{% else %}
+    <div class="row">
+        <div class="col-sm-6 col-md-12 mb-20 text-center">No data</div>
+    </div>
+{% endif %}
+
+<script>
+
+</script>
+{% endblock %}

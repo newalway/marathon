@@ -1,0 +1,71 @@
+admin_portfolio:
+  path:  /
+  defaults: { _controller: ProjectBundle:AdminPortfolio:index }
+  requirements:
+    _method: get
+
+# admin_portfolio_update:
+#   path: /update
+#   defaults: {_controller: ProjectBundle:AdminPortfolio:update}
+#   requirements:
+#     _method: post
+#     id: \d+
+
+admin_portfolio_new:
+  path: /new
+  defaults: {_controller: ProjectBundle:AdminPortfolio:new}
+
+admin_portfolio_create:
+  path: /create
+  defaults: {_controller: ProjectBundle:AdminPortfolio:create}
+  requirements:
+    _method: post
+
+admin_portfolio_edit:
+  path: /{id}/edit
+  defaults: {_controller: ProjectBundle:AdminPortfolio:edit}
+  requirements:
+    id: \d+
+
+admin_portfolio_update:
+  path: /{id}
+  defaults: {_controller: ProjectBundle:AdminPortfolio:update}
+  requirements:
+    _method: post
+    id: \d+
+
+admin_portfolio_delete:
+  path: /{id}/delete
+  defaults: {_controller: ProjectBundle:AdminPortfolio:delete}
+  requirements:
+    _method: get
+
+admin_portfolio_group_delete:
+  path: /group-delete
+  defaults: {_controller: ProjectBundle:AdminPortfolio:group_delete}
+  requirements:
+    _method: post
+
+admin_portfolio_group_enable:
+  path: /group-enable
+  defaults: {_controller: ProjectBundle:AdminPortfolio:group_enable}
+  requirements:
+    _method: post
+
+admin_portfolio_group_disable:
+  path: /group-disable
+  defaults: {_controller: ProjectBundle:AdminPortfolio:group_disable}
+  requirements:
+    _method: post
+
+admin_portfolio_sort:
+  path: /sort
+  defaults: {_controller: ProjectBundle:AdminPortfolio:sort}
+  requirements:
+    _method: get
+
+admin_portfolio_sort_prosess:
+  path: /sort-prosess
+  defaults: {_controller: ProjectBundle:AdminPortfolio:sort_prosess}
+  requirements:
+    _method: post

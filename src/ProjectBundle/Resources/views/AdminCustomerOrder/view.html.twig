@@ -1,0 +1,801 @@
+{% extends 'ProjectBundle::admin.html.twig'%}
+
+{% block stylesheets %}
+  {{ parent() }}
+
+  <link rel="stylesheet" href="https://formden.com/static/cdn/bootstrap-iso.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+{% endblock %}
+
+{% use "ProjectBundle:AdminCustomerOrder:blocks.html.twig" %}
+{% use "ProjectBundle::flash_message.html.twig" %}
+{% block breadcrumb_sub %}
+	{{ parent() }}
+    {% if (orders)%}
+    {% set  order = orders[0] %}
+	<li class="active">Order #{{order.orderNumber}}</li>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<style>
+#myImg {
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#myImg:hover {opacity: 0.7;}
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+}
+
+/* Modal Content (image) */
+.modal-content {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+}
+
+/* Caption of Modal Image */
+#caption {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+    text-align: center;
+    color: #ccc;
+    padding: 10px 0;
+    height: 150px;
+}
+
+/* Add Animation */
+.modal-content, #caption {
+    -webkit-animation-name: zoom;
+    -webkit-animation-duration: 0.6s;
+    animation-name: zoom;
+    animation-duration: 0.6s;
+}
+
+@-webkit-keyframes zoom {
+    from {-webkit-transform:scale(0)}
+    to {-webkit-transform:scale(1)}
+}
+
+@keyframes zoom {
+    from {transform:scale(0)}
+    to {transform:scale(1)}
+}
+
+/* The Close Button */
+.modal-close.close {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.close:hover,
+.close:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* 100% Image Width on Smaller Screens */
+@media only screen and (max-width: 700px){
+    .modal-content {
+        width: 100%;
+    }
+}
+</style>
+
+{% if (orders)%}
+    {% set  order = orders[0] %}
+    <div class="row" ng-app="orderDetailApp" ng-controller="orderDetailController" ng-init="init('{{acctoken}}','{{order.id}}');">
+        <div class="col-md-12 margin-10-0">
+            <a href="{% if app.session.get('back_to_url')[app.session.get('referer_route')] is defined %}{{app.session.get('back_to_url')[app.session.get('referer_route')]}}{% else %}{{path('admin_customer_order_list')}}{% endif %}" class="btn btn-default"><i class="fa fa-angle-left"></i> Back </a>
+
+            <div class="pull-right">
+                {% if order.paid == 0 and order.cancelled != 1 %}
+                    <a href="{{path('admin_customer_order_update_status', {'id' : order.id,'status': payment_status_paid})}}" onclick="return confirm('Are you sure you want to confirm payment?');">
+                        <button class="btn btn-default"> Mark as Paid</button>
+                    </a>
+                {% else %}
+                    <button class="btn btn-default" disabled> Mark as Paid</button>
+                {% endif %}
+
+                {#{% if order.fulfilled == 0 and order.cancelled != 1 and order.paid == 1 %}#}
+                {% if order.fulfilled == 0 and order.cancelled != 1 %}
+                    <a href="{{path('admin_customer_order_update_status', {'id' : order.id,'status': payment_status_shipped})}}" onclick="return confirm('Are you sure you want to confirm delivery?');">
+                    <button class="btn btn-primary"><i class="fa fa-truck" aria-hidden="true"></i> Mark as Shipped</button>
+                    </a>
+                {% else %}
+                    <button class="btn btn-primary" disabled><i class="fa fa-truck" aria-hidden="true"></i> Mark as Shipped</button>
+                {% endif %}
+
+                {% if order.cancelled == 0 %}
+                    <a href="{{path('admin_customer_order_update_status', {'id' : order.id,'status': payment_status_cancelled})}}" onclick="return confirm('Are you sure you want to cancel?');">
+                        <button class="btn btn-warning"><i class="fa fa-ban" aria-hidden="true"></i> Cancel Order</button>
+                    </a>
+                {% else %}
+                    <button class="btn btn-warning" disabled><i class="fa fa-ban" aria-hidden="true"></i> Cancelled Order</button>
+                {% endif %}
+
+                {% if order.refunded == 0 %}
+                    <a href="{{path('admin_customer_order_update_status', {'id' : order.id,'status': payment_status_refunded})}}" onclick="return confirm('Are you sure you want to confirm refund?');">
+                        <button class="btn btn-default"><i class="fa fa-ban" aria-hidden="true"></i> Refund</button>
+                    </a>
+                {% else %}
+                    <button class="btn btn-default" disabled><i class="fa fa-ban" aria-hidden="true"></i> Refund</button>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="box box-body">
+                <div class="col-md-12">
+                    <div class="col-sm-6">
+                        <b>{% trans %}order.txt{% endtrans %} #{{order.orderNumber}}</b><br />
+                        {% trans %}order.placed.on{% endtrans %} {{ order.orderDate|date("d") }} {{ order.orderDate|date("F")|trans }} {{ order.orderDate|date("Y") }} {{ order.orderDate|date("H:i:s")}}
+                    </div>
+                    <div class="col-sm-6 text-right">
+
+                        {% trans %}order.delivered.on{% endtrans %}
+                        <div ng-cloak>
+                            <div ng-show="!showDeliveryDateUpdate">
+                                <span>
+                                    {{'{{ship_date}}'}}
+                                    {#{% if order.shipdate %}{{ order.shipDate|date("d") }} {{ order.shipDate|date("F")|trans }} {{ order.shipDate|date("Y") }}{% endif %}#}
+                                </span>
+
+                                &nbsp;&nbsp;
+                                <span ng-click="showDeliveryDateUpdate=true" class="btn btn-default btn-xs">
+                                    <span ng-show="ship_date">Change</span>
+                                    <span ng-show="!ship_date">Add</span>
+                                </span>
+                            </div>
+                            <div ng-show="showDeliveryDateUpdate">
+                                <input type="text" ng-model="delivery_date" id="delivery_date" style="border:1px solid #ccc; border-radius:3px;">
+                                <input type="button" class="btn-primary btn-xs" value="Save" ng-click="updateDeliveryDate();">
+                                <input type="button" class="btn-default btn-xs" value="Cancel" ng-click="showDeliveryDateUpdate=false">
+                            </div>
+                        </div>
+
+
+
+                        {% if order.cancelled == 0  %}
+        					{% if order.fulfilled == 1 %}
+        						<br/><span class="label label-success" style="letter-spacing: 1px;font-weight: normal;">{{payment_status_shipped|trans}}</span>
+        					{% else %}
+        						<br/><span class="label label-warning" style="letter-spacing: 1px;font-weight: normal;">{{payment_status_processing|trans}}</span>
+        					{% endif %}
+                        {% endif %}
+
+                    </div>
+                </div>
+
+                <div class="col-md-8">
+
+                    <div class="col-md-12">
+                        <table class="table table-striped">
+                            <tr>
+                                <th></th>
+                                <th class="th">{% trans %}order.items{% endtrans %}</th>
+                                <th class="th text-right">{% trans %}order.price{% endtrans %}</th>
+                                <th class="th text-center">{% trans %}order.qty{% endtrans %}</th>
+                                <th class="th text-right">{% trans %}order.subtotal{% endtrans %}</th>
+                            </tr>
+                            <tbody>
+                                {% set sum = 0 %}
+                                {% for orderItems in order.customerOrderItems %}
+                                    {% set price = orderItems.price   %}
+                                    {% set qty = orderItems.quantity %}
+                                    {% set sub_total = orderItems.amount %}
+                                    <tr>
+                                        <td class="">
+                                            {% if orderItems.image %}
+                                                <img src="{{orderItems.image|imagine_filter('img_small_thumb')}}" alt="" style="margin-top: 15px;"/>
+                                            {% else %}
+                                                <img src="{{ asset('template/img/shop/thumb-1.jpg')}}" style="margin-top: 15px;"/>
+                                            {% endif %}
+                                        </td>
+                                        <td class="">{{orderItems.productTitle}}</td>
+                                        <td class=" text-right">฿{{price|number_format(2, '.', ',') }}</td>
+                                        <td class=" text-center">{{qty|number_format(0, '', ',') }}</td>
+                                        <td class=" text-right">฿{{sub_total|number_format(2, '.', ',') }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="col-md-4">
+                        <h4>Payment Method</h4>
+                        {% if order.paymentOption == payment_bank_transfer_code %}
+                            <div class="panel panel-default">
+                                <div class="panel-body text-center">
+                                    <h5>{{order.paymentOptionTitle|trans}}</h5>
+                                    {% if order.cancelled == 1  %}
+                                        {% if order.refunded == 1 %}
+                                            <h5 class="text-warning">{{payment_status_refunded|trans}}</h5>
+                                        {% else %}
+                                            <h5 class="text-warning">{{payment_status_cancelled|trans}}</h5>
+                                        {% endif %}
+
+                                    {% else %}
+                                        {% if order.paid == 0 %}
+                                            <h5 class="text-warning">{{payment_status_awaiting_payment|trans}}</h5>
+                                        {% else %}
+                                            <h5 class="text-success">{{payment_status_paid|trans}}</h5>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if order.paymentOption == payment_credit_code %}
+                            <div class="panel panel-default">
+                                <div class="panel-body text-center">
+                                    {########## futuer must be edit in this section ############}
+                                    <h5>{{order.paymentOptionTitle|trans}}</h5>
+                                    {% if order.cancelled == 1  %}
+                                        {% if order.refunded == 1 %}
+                                            <h5 class="text-warning">{{payment_status_refunded|trans}}</h5>
+                                        {% else %}
+                                            <h5 class="text-warning">{{payment_status_cancelled|trans}}</h5>
+                                        {% endif %}
+
+                                    {% else %}
+                                        {% if order.paid == 0  %}
+                                            <h5 class="text-warning">{{payment_status_awaiting_payment|trans}}</h5>
+                                        {% else %}
+                                            <h5 class="text-success">{{payment_status_paid|trans}}</h5>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if order.paymentOption == payment_cash_on_deliveryr_code %}
+                            <div class="panel panel-default">
+                                <div class="panel-body text-center">
+                                    <h5>{{order.paymentOptionTitle|trans}}</h5>
+                                    {% if order.cancelled == 1  %}
+                                        {% if order.refunded == 1 %}
+                                            <h5 class="text-warning">{{payment_status_refunded|trans}}</h5>
+                                        {% else %}
+                                            <h5 class="text-warning">{{payment_status_cancelled|trans}}</h5>
+                                        {% endif %}
+
+                                    {% else %}
+                                        {% if order.paid == 0 %}
+                                            <h5 class="text-warning">{{payment_status_pending|trans}}</h5>
+                                        {% else %}
+                                            <h5 class="text-success">{{payment_status_paid|trans}}</h5>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-8">
+                        <h4>Total Summary</h4>
+                        {% set discount = order.discountAmount %}
+                        {% set shipping = order.shippingCost %}
+                        {% set subTotalFinal = order.subTotal %}
+                        {% set total = order.totalPrice %}
+                        <table class="table table-striped">
+                            <tbody>
+                                <tr>
+                                    <td>Subtotal</td>
+                                    <td class="td text-right">฿{{subTotalFinal|number_format(2, '.', ',') }}</td>
+                                </tr>
+                                {% if order.discountAmount %}
+                                    <tr >
+                                        <td class="td">Discount  {% if order.discountCode %} Code "{{order.discountCode}}"{% endif %}</th></td>
+                                        <td class="td text-right">- ฿{{discount|number_format(2, '.', ',') }}</td>
+                                    </tr>
+                                {% endif %}
+                                <tr >
+                                    {% if order.shippingCostByDistance > 0 %}
+                                        <td class="td">Delivery charge by distance</th></td>
+                                    {% else %}
+                                        <td class="td">Shipping and Handling</th></td>
+                                    {% endif %}
+
+                                    <td class="td text-right">฿{{shipping|number_format(2, '.', ',') }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="td">Total(VAT Incl.)</th></td>
+                                    <td class="td text-right"><h4>฿{{total|number_format(2, '.', ',') }}</h4></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {% if order.paymentOption == payment_bank_transfer_code %}
+                        <div class="col-md-12">
+                            <h4>Payment by Bank Transfer</h4>
+                        </div>
+                        {% if payment_bank_transfer %}
+
+                            <div class="col-md-6">
+                                {% for customer_payment in payment_bank_transfer %}
+                                    <table class="table tabel-striped">
+                                        <tbody>
+
+                                            <tr>
+                                                <td class="text-left"><b>Amount :</b></td>
+                                                <td>฿{{customer_payment.amount|number_format(2, '.', ',')}}</td>
+                                            </tr>
+
+                                            {% if customer_payment.bankAccount %}
+                                                <tr>
+                                                    <td class="text-left"><b>Received in :</b></td>
+                                                    <td>{{customer_payment.bankAccount.title}}, {{customer_payment.bankAccount.accountName}}, {{customer_payment.bankAccount.accountNumber}}</td>
+                                                </tr>
+                                            {% endif %}
+
+                                            <tr>
+                                                <td class="text-left"><b>Date :</b></td>
+                                                <td>{{customer_payment.dateTransfer|date('d M Y')}} {{customer_payment.timeTransfer|date('H:i')}}</td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="text-left" width="150px"><b>From :</b></td>
+                                                <td>
+                                                    {{customer_payment.firstName}} {{customer_payment.lastName}}<br/>
+                                                    {{customer_payment.phone}}
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="text-left"><b>Attachment:</b></td>
+                                                <td>
+                                                    <a href="{{path('admin_customer_payment_bank_transfer_view', {'id' : customer_payment.id})}}" target="_blank">
+                                                        View
+                                                    </a>|
+                                                    <a href="{{path('admin_customer_order_payment_dowload', {'id' : customer_payment.id})}}">
+                                                        Download
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            <tr></tr>
+                                        </tbody>
+                                    </table>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="col-md-12">
+                                customer does not confirm payment
+                            </div>
+                        {% endif %}
+
+
+                    {% elseif order.paymentOption == payment_credit_code %}
+                        <!-- CRDT -->
+                        {% set epayment = order.customerPaymentEpayment %}
+                        {% if epayment.decision %}
+                            <div class="col-md-12">
+                                <h4>Payment Information</h4>
+                            </div>
+                            <div class="col-md-6">
+
+                                <table class="table tabel-striped">
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-left" width="130px"><b>Card Number :</b></td>
+                                            <td>{{epayment.cardNumber}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-left"><b>Card Issuer :</b></td>
+                                            <td>{{epayment.cardIssuer}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-left"><b>Brand :</b></td>
+                                            <td>{{epayment.cardScheme}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-left"><b>Country :</b></td>
+                                            <td>{{epayment.cardCountry}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-left"><b>Amount :</b></td>
+                                            <td>{% if epayment.authAmount %}{{epayment.currency}} {{epayment.authAmount|number_format(2, '.', ',')}}{% endif %}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-left"><b>Decision :</b></td>
+                                            <td>{{epayment.decision}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">
+                                                {% if epayment.decision == 'ACCEPT' %}
+                                                    <h5 class="text-success">{{epayment.message}}</h5>
+                                                {% else %}
+                                                    <h5 class="text-warning">{{epayment.message}}</h5>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        <tr></tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+
+                        {% endif %}
+                    {% endif %}
+                </div>
+
+                <div class="col-md-4">
+                    <div class="section-padding pt0">
+                        <div class="row">
+                            {% for orderDeliverys in order.customerOrderDeliverys %}
+                                {% if orderDeliverys.addressType == 1 %}
+                                    <div class="col-sm-6 col-md-12 mb-20">
+                                        <div class="single-sidebar search-widget">
+                                            <div class="title">
+                                                <h4>Shipping Address</h4>
+                                            </div>
+                                            <!-- /.title -->
+                                            <h5>{{orderDeliverys.firstName}} {{orderDeliverys.lastName}}
+                                                {% if orderDeliverys.companyName %} <br/>{{orderDeliverys.companyName}}{% endif %}
+                                                {% if orderDeliverys.headOffice %}&nbsp;&nbsp;({{orderDeliverys.headOffice}}){% endif %}
+                                            </h5>
+                                            <p>
+                                                {{orderDeliverys.address}}, {{orderDeliverys.district}},
+                                                {% if orderDeliverys.amphure %}{{orderDeliverys.amphure}},{% endif %}
+                                                {{orderDeliverys.province}} {#,{{orderDeliverys.country}}#}
+                                                {{orderDeliverys.postCode}}<br />{{orderDeliverys.phone}}
+                                            </p>
+                                            {% if order.directionDistance %}
+                                                <p>
+                                                    Shipping distance is {{order.directionDistanceText}} from {{order.directionOriginShowroomName}}
+                                                </p>
+                                            {% endif %}
+
+                                            {% if orderDeliverys.latitude and orderDeliverys.longitude %}
+                                                {% if orderDeliverys.placeId %}
+                                                    {% set query_place_id = '&query_place_id=' ~ orderDeliverys.placeId %}
+                                                {% else %}
+                                                    {% set query_place_id = '' %}
+                                                {% endif %}
+                                                <a href="https://www.google.com/maps/search/?api=1&query={{orderDeliverys.latitude}},{{orderDeliverys.longitude}}{{query_place_id}}" target="_blank">Map <i class="fa fa-external-link-square"></i></a>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                                {% if orderDeliverys.addressType == 2 %}
+                                    <div class="col-sm-6 col-md-12 mb-20">
+                                        <div class="single-sidebar search-widget">
+                                            <div class="title">
+                                                <h4>Billing Address</h4>
+                                            </div>
+                                            <!-- /.title -->
+                                            <h5>{{orderDeliverys.firstName}} {{orderDeliverys.lastName}}
+                                                {% if orderDeliverys.companyName %} <br/>{{orderDeliverys.companyName}}{% endif %}
+                                                {% if orderDeliverys.headOffice %}&nbsp;&nbsp;({{orderDeliverys.headOffice}}){% endif %}
+                                            </h5>
+                                            <p>
+                                                {{orderDeliverys.address}}, {{orderDeliverys.district}},
+                                                 {% if orderDeliverys.amphure %}{{orderDeliverys.amphure}},{% endif %}
+                                                {{orderDeliverys.province}} {#,{{orderDeliverys.country}}#}
+                                                {{orderDeliverys.postCode}}<br />{{orderDeliverys.phone}}
+                                                {% if orderDeliverys.taxPayerId %}
+                                                    <br/>{% trans %}member.taxpayerid{% endtrans %} {{orderDeliverys.taxPayerId}}
+                                                {% endif %}
+                                            </p>
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                            {% else %}
+                                <div class="col-sm-12 col-md-12 mb-20 text-center">No data Address</div>
+                            {% endfor %}
+
+
+                            <div class="col-sm-6 col-md-12 mb-20" ng-cloak>
+                                <div class="single-sidebar search-widget">
+                                    <hr/>
+                                    <div class="title">
+                                        <h4>Tracking Information</h4>
+                                    </div>
+
+                                    {#
+                                    <div ng-show="!showTrackingUpdate">
+                                        <p>
+                                            <span ng-click="showTrackingUpdate=true" class="btn btn-default btn-xs ">Change</span>
+                                        </p>
+                                    </div>
+                                    #}
+
+                                    <div ng-show="tracking_numbers.length>0">
+                                        <p ng-repeat="v in tracking_numbers">
+                                            <span class="small">{{'{{v.shippingCarrierName}}'}}: </span>
+                                            <span>
+                                                <a ng-href="{{'{{getTrackingUrl(v.trackingUrl, v.trackingNumber)}}'}}" target="_blank">{{'{{v.trackingNumber}}'}}</a>
+                                            </span>
+                                            <span>
+                                                <button type="button" class="remove small" ng-click="removeTrackingNumber(v.id, $index)"><i class="fa fa-trash"></i></button>
+                                            </span>
+                                        </p>
+                                    </div>
+
+                                    <div ng-show="showTrackingUpdate">
+                                        <p>
+                                            <select name="repeatSelect" id="repeatSelect" ng-model="new_tracking_data.shipping_carrier_id" style="border:1px solid #ccc;">
+                                                <option ng-repeat="option in shipping_carriers" value="{{'{{option.id}}'}}">{{'{{option.name}}'}}</option>
+                                            </select>
+                                            <input type="text" ng-model="new_tracking_data.tracking_number" placeholder="Tracking number" style="border:1px solid #ccc; border-radius:3px;">
+                                            <input type="button" class="btn-primary btn-xs" value="Save" ng-click="addTrackingNumber()">
+                                            <input type="button" class="btn-default btn-xs" value="Cancel" ng-click="showTrackingUpdate=false; new_tracking_msg=''; new_tracking_error_msg=''">
+                                        </p>
+                                        <div>
+                                            <input type="checkbox" ng-model="new_tracking_data.shipping_confirm_email" name="shipping_confirm_email" id="shipping_confirm_email" ng-checked="new_tracking_data.shipping_confirm_email">
+                                            <label for="shipping_confirm_email">Send notification email to customer.</label>
+                                        </div>
+                                        {#
+                                        <div ng-repeat="tmp_tracking_url in shipping_carriers">
+                                            <p ng-show="new_tracking_data.shipping_carrier_id==tmp_tracking_url.id">
+                                                {{'{{tmp_tracking_url.trackingUrl}}'}}
+                                            </p>
+                                        </div>
+                                        #}
+
+                                        <p ng-show="new_tracking_msg" class="text-success">{{'{{new_tracking_msg}}'}}</p>
+                                        <p ng-show="new_tracking_error_msg" class="text-danger">{{'{{new_tracking_error_msg}}'}}</p>
+                                    </div>
+
+                                    <p ng-show="tracking_msg" class="text-success">{{'{{tracking_msg}}'}}</p>
+
+                                    {% if order.cancelled != 1  %}
+                                        <div class="text-right">
+                                            <a href="javascript:void(0)" ng-show="!showTrackingUpdate" ng-click="showTrackingUpdate=true" style="margin-bottom:10px;">
+                                              <input type="button" class="btn-default btn-xs" value="Add Tracking">
+                                            </a>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>{# box box-body#}
+        </div>
+
+{#
+shipping_carriers :: <br/>
+{{'{{shipping_carriers}}'}}
+<br/>
+tracking_numbers :: <br/>
+{{'{{tracking_numbers}}'}}
+#}
+    </div>{# end row#}
+{% else %}
+    <div class="row">
+        <div class="col-sm-6 col-md-12 mb-20 text-center">No data</div>
+    </div>
+{% endif %}
+
+<script>
+    //     var img = document.getElementById('myImgView');
+    // if(img){
+    //     img.onclick = function() {
+    //       $("#myModal").css({"display":"block","z-index":"100000"});
+    //     }
+    //     // Get the <span> element that closes the modal
+    //     var span = document.getElementsByClassName("modal-close")[0];
+    //     // When the user clicks on <span> (x), close the modal
+    //     span.onclick = function() {
+    //       $("#myModal").css({"display":"none"});
+    //     }
+    //   }
+
+    var app = angular.module('orderDetailApp', []);
+
+    app.factory('shipping_data', ['$http', function($http){
+        return {
+            getShippingCarrierAndTrackingNumber: function(order_id, token){
+                return $http({
+                    method:'GET',
+                    url: Routing.generate('api_1_get_shipping_carriers_and_tracking_numbers'),
+                    params: { order_id: order_id },
+                    headers: {
+                        'Authorization':'Bearer ' + token,
+                        'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'
+                    }
+                });
+            },
+            postAddTrackingNumber: function(dataObj, token){
+                return $http({
+                    method:'POST',
+                    url: Routing.generate('api_1_post_tracking_number'),
+                    data: $.param(dataObj),
+                    headers: {
+                        'Authorization':'Bearer ' + token,
+                        'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'
+                    }
+                });
+            },
+            deleteRemoveTrackingNumber: function(tracking_number_id, token){
+                return $http({
+                    method:'DELETE',
+                    url: Routing.generate('api_1_delete_tracking_number',{id:tracking_number_id}),
+                    headers: {
+                        'Authorization':'Bearer ' + token,
+                        'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'
+                    }
+                });
+            },
+            updateDeliveryDate: function(dataObj, token){
+                return $http({
+                    method:'PUT',
+                    url: Routing.generate('api_1_put_delivery_date'),
+                    data: $.param(dataObj),
+                    headers: {
+                        'Authorization':'Bearer ' + token,
+                        'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'
+                    }
+                });
+            }
+        }
+    }]);
+
+    app.controller('orderDetailController',['$scope', '$sce', 'shipping_data', function($scope, $sce, shipping_data){
+
+        $scope.init = function(token, order_id){
+
+            //set inital data
+            $scope.setToken(token);
+            $scope.order_id = order_id;
+            $scope.tracking_numbers = [];
+            $scope.shipping_carriers = [];
+
+            $scope.tracking_msg = '';
+            $scope.new_tracking_msg = '';
+            $scope.new_tracking_error_msg = '';
+
+            $scope.new_tracking_data = {
+                order_id:order_id,
+                shipping_carrier_id:'',
+                tracking_number:'',
+                shipping_confirm_email:true
+            };
+
+            //get shipping_carrirs data
+            shipping_data.getShippingCarrierAndTrackingNumber($scope.order_id, $scope.getToken()).then(function onSuccess(response){
+                $scope.tracking_numbers = response.data.tracking_numbers;
+                $scope.shipping_carriers = response.data.shipping_carriers;
+
+                //set default new_tracking_data
+                if($scope.shipping_carriers.length>0){
+                    $scope.new_tracking_data.shipping_carrier_id = $scope.shipping_carriers[0].id.toString();
+                }
+			}).catch(function onError(response) {
+			});
+
+            //delivery date
+            $scope.showDeliveryDateUpdate=false;
+            $scope.delivery_date = '{% if order.shipdate %}{{order.shipdate|date('d/m/Y')}}{% endif %}';
+            $scope.ship_date = $scope.delivery_date; //for show delivery date
+        }
+
+        $scope.updateDeliveryDate = function(){
+            var data_delivery_date = {
+                order_id: $scope.order_id,
+                delivery_date: $scope.delivery_date,
+            };
+            shipping_data.updateDeliveryDate(data_delivery_date, $scope.getToken()).then(function(data){
+                if(data.data.success){
+                    $scope.ship_date = data.data.ship_date;
+                }
+                $scope.showDeliveryDateUpdate=false;
+            });
+        }
+
+        $scope.addTrackingNumber = function () {
+
+            $scope.resetMsg();
+
+            shipping_data.postAddTrackingNumber($scope.new_tracking_data, $scope.getToken()).then(function onSuccess(response){
+                if(response.data.success){
+                    var resp_tracking_number = response.data.tracking_number;
+                    $scope.tracking_numbers.push( { id:resp_tracking_number.id, orderNumber:resp_tracking_number.orderNumber, trackingNumber: resp_tracking_number.trackingNumber, shippingCarrierId: resp_tracking_number.shippingCarrierId, shippingCarrierName: resp_tracking_number.shippingCarrierName, trackingUrl:resp_tracking_number.trackingUrl });
+                    // reset data tracking_number
+                    $scope.new_tracking_data.tracking_number = '';
+                    $scope.new_tracking_msg = "Tracking added successfully";
+                }else{
+                    $scope.new_tracking_error_msg = "Error: Can't add the data";
+                }
+
+            }).catch(function onError(response) {
+			});
+
+        };
+
+        $scope.removeTrackingNumber = function(tracking_number_id, index)
+        {
+            var result = confirm("Are you sure you want to delete?");
+            if (result) {
+                $scope.resetMsg();
+                shipping_data.deleteRemoveTrackingNumber(tracking_number_id, $scope.getToken()).then(function onSuccess(response){
+                    if(response.data.success){
+                        $scope.tracking_numbers.splice(index,1);
+                        $scope.tracking_msg = response.data.msg;
+                    }else{
+                        $scope.tracking_msg = response.data.error_msg;
+                    }
+                }).catch(function onError(response) {
+    			});
+            }
+        }
+
+        $scope.setToken = function(token){
+          $scope.access_token = token;
+        }
+        $scope.getToken = function(){
+          return $scope.access_token;
+        }
+        $scope.getTrackingUrl = function(trackingUrl, trackingNumber){
+            var uri = get_tracking_url(trackingUrl, trackingNumber);
+            return uri;
+        }
+        $scope.resetMsg = function()
+        {
+            $scope.tracking_msg = '';
+            $scope.new_tracking_msg = '';
+            $scope.new_tracking_error_msg = '';
+        }
+    }]);
+
+    var unAvailableHolidayDates = {{arr_holidays|json_encode|raw }};
+    var blackoutDeliveryDates = {{arr_non_delivery_date|json_encode|raw }};
+
+    $(function() {
+        $('#delivery_date').datepicker({
+            // dateFormat: 'dd/mm/yy',
+            format: 'dd/mm/yyyy',
+            daysOfWeekDisabled: blackoutDeliveryDates,
+            autoclose: true,
+            todayHighlight: true,
+            beforeShowDay: function(dt){
+                return unavailable(dt);
+            }
+        });
+    });
+    function unavailable(date) {
+        dmy = date.getDate() + "-" + (date.getMonth()+1) + "-" + date.getFullYear();
+        if ($.inArray(dmy, unAvailableHolidayDates) != -1) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+</script>
+{% endblock %}

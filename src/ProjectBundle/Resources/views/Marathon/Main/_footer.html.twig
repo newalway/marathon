@@ -1,0 +1,183 @@
+<footer class="footer-area">
+    <div class="container">
+        <div class="row">
+            <!--Start single footer widget-->
+            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                <div class="single-footer-widget">
+                    <div class="footer-logo">
+                        <a href="{{path('homepage')}}"><img alt="Marathon (Thailand)" src="{{ asset('images/marathon/logo-marathon.png')}}"></a>
+                    </div>
+                    <div class="caption-text">
+                        <p>
+                            {% trans %}footer.about{% endtrans %}
+                        </p>
+                        <a class="thm-btn arrow-push-out-right" href="{{path('about_us')}}"><span>More Details <i class="fa fa-caret-right"></i></span></a>
+                    </div>
+                </div>
+            </div>
+            <!--End single footer widget-->
+            <!--Start single footer widget-->
+            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                <div class="single-footer-widget">
+                    <h3 class="title">{% trans %}quick.links{% endtrans %}</h3>
+                    <ul class="quick-links left">
+                        <li><a href="{{path('homepage')}}">{% trans %}menu.home{% endtrans %}</a></li>
+                        <li><a href="{{path('about_us')}}">{% trans %}menu.about.us{% endtrans %}</a></li>
+                        <li><a href="{{path('promotion')}}">{% trans %}menu.promotion{% endtrans %}</a></li>
+                        <li><a href="{{path('product')}}">{% trans %}menu.product{% endtrans %}</a></li>
+                        <li><a href="{{path('blog')}}">{% trans %}menu.health.tips{% endtrans %}</a></li>
+                        <li><a href="{{path('showroom')}}">{% trans %}menu.showroom{% endtrans %}</a></li>
+                        <li><a href="{{path('contact')}}">{% trans %}menu.contact.us{% endtrans %}</a></li>
+                    </ul>
+                    <ul class="quick-links">
+                        <li><a href="{{path('service')}}">{% trans %}menu.service{% endtrans %}</a></li>
+                        <li><a href="{{path('how_to_buy')}}">{% trans %}menu.how.to.buy{% endtrans %}</a></li>
+                        <li><a href="{{path('shipping_delivery')}}">{% trans %}menu.shipping.delivery{% endtrans %}</a></li>
+                        <li><a href="{{path('terms_conditions')}}">{% trans %}menu.terms.conditions{% endtrans %}</a></li>
+                        <li><a href="{{path('privacy_policy')}}">{% trans %}menu.privacy.policy{% endtrans %}</a></li>
+                        <li><a href="{{path('track')}}">{% trans %}menu.track.my.order{% endtrans %}</a></li>
+                        <li><a href="{{path('confirm_payment')}}">{% trans %}menu.confirm.payment{% endtrans %}</a></li>
+                        <li><a href="{{path('request_service')}}">{% trans %}menu.request.service{% endtrans %}</a></li>
+                    </ul>
+                </div>
+            </div>
+            <!--End single footer widget-->
+            <!--Start single footer widget-->
+            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12 md-clear sm-clear">
+                <div class="single-footer-widget">
+                    <h3 class="title">{% trans %}recent.health.tips{% endtrans %}</h3>
+                    {% if news_recents | length > 0 %}
+                    <ul class="recent-news">
+                        {% for news_recent in news_recents %}
+                        <li>
+                            <div class="box">
+                                <div class="overlay">
+                                    <a href="{{path('blog_detail',{'id':news_recent.id,'slug':news_recent.title|slug})}}">
+                                        {% if news_recent.image %}
+                                            <img src="{{asset(news_recent.image) | imagine_filter('img_75x75')}}" alt="{{news_recent.title}}" />
+                                        {% else %}
+                                            <img src="/template/img/footer/recent-news/1.jpg" alt="{{news_recent.title}}">
+                                        {% endif %}
+
+                                        <div class="content-box">
+                                            <div class="icon-holder">
+                                                <i class="fc-icon ftc-icon-dumbbell"></i>
+                                            </div>
+                                            <div class="text">
+                                                <p>{% trans %}health.tips{% endtrans %}</p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="content">
+                                <a href="{{path('blog_detail',{'id':news_recent.id,'slug':news_recent.title|slug})}}">
+                                    <p>{{news_recent.title}}</p>
+                                </a>
+                                <span>{{news_recent.publicDate|date('d F Y')}}</span>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+            </div>
+            <!--End single footer widget-->
+            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                <div class="single-footer-widget">
+                    <h3 class="title">{% trans %}menu.contact.us{% endtrans %}</h3>
+                    <ul class="contact">
+                        <li>
+                            <div class="icon-holder">
+                                <i class="fa fa-map-marker"></i>
+                            </div>
+                            <div class="text">
+                                <p>
+                                    <b>{% trans %}company.name{% endtrans %}</b><br />
+                                    {% trans %}company.address{% endtrans %}
+                                </p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="icon-holder">
+                                <i class="fa fa-phone"></i>
+                            </div>
+                            <div class="text">
+                                <p>(+66)2-433-7992-4, (+66)2-434-0500-6</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="icon-holder">
+                                <i class="fa fa-fax"></i>
+                            </div>
+                            <div class="text">
+                                <p>(+66)2-433-3722-6</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="icon-holder">
+                                <i class="fa fa-envelope"></i>
+                            </div>
+                            <div class="text">
+                                <p><a href="mailto:info@marathon.co.th">info@marathon.co.th</a></p>
+                            </div>
+                        </li>
+                        {#<li>
+                            <div class="icon-holder">
+                                <i class="fa fa-clock-o"></i>
+                            </div>
+                            <div class="text">
+                                <p>Week Days : 05:00 – 22:00
+                                    <br>Saturday : 08:00 – 18:00
+                                    <br>Sunday : 08:00 – 12:00</p>
+                            </div>
+                        </li>#}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!--End footer area-->
+<!--Start footer bottom area-->
+<section class="footer-bottom-area">
+    <div class="container ">
+        <div class="footer-bottom">
+            <div class="clearfix">
+                <div class="pull-left">
+                    <div class="copy-right">
+                        <p>© 2018 Marathon (Thailand) Co.,Ltd. All rights reserved.</p>
+                    </div>
+                </div>
+                <div class="pull-right">
+                    <div class="social-links">
+                        {# <a href=""><i class="fa fa-google-plus"></i></a> #}
+                        {% for social_network in social_networks %}
+                            {% if social_network.optionName == 'social_network_facebook' %}
+                                {% set icon = 'fa-facebook' %}
+                            {% elseif social_network.optionName == 'social_network_twitter' %}
+                                {% set icon = 'fa-twitter' %}
+                            {% elseif social_network.optionName == 'social_network_line_at' %}
+                                {% set icon = 'fa-line fa-line-o' %}
+                            {% elseif social_network.optionName == 'social_network_youtube' %}
+                                {% set icon = 'fa-youtube' %}
+                            {% endif %}
+
+                            {% if social_network.optionName == 'social_network_line_at' %}
+                                {% if social_network.optionValue %}
+                                    <a href="http://line.me/ti/p/%40{{social_network.optionValue}}" target="_blank"><i class="fab fa-line"></i></a>
+                                {% endif %}
+                            {% else %}
+                                {% if social_network.optionValue %}
+                                    <a href="{{social_network.optionValue}}" target="_blank"><i class="fa {{icon}}"></i></a>
+                                {% endif %}
+                            {% endif %}
+
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.footer-bottom -->
+    </div>
+</section>

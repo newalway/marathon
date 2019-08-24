@@ -1,0 +1,257 @@
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+<div ng-app="skuApp" ng-controller="mainCtrl" ng-init="init('{{acctoken}}', '{{product.id}}', '{% if form.vars.value.id %}{{form.vars.value.inventoryPolicyStatus}}{% endif %}')">
+	<div class="row">
+
+		<div class="col-md-4">
+			<div class="box box-solid">
+                <div class="box-body">
+                    <div class="media">
+                        <div class="media-left">
+                            <a href="{{path('admin_product_edit',{'id':product.id})}}" class="ad-click-event">
+								{% if product.image %}
+									<img src="{{asset(product.image) | imagine_filter('img_thumb')}}" alt="{{product.getTitle}}" />
+								{% else %}
+									<img class="media-object" src="https://placehold.it/90x90" alt="" style="max-width: 150px;height: auto; {# border-radius: 4px;box-shadow: 0 1px 3px rgba(0,0,0,.15); #} ">
+								{% endif %}
+                            </a>
+                        </div>
+                        <div class="media-body">
+                            <div class="clearfix">
+                                <h4 style="margin-top: 0">{{product.getTitle}}</h4>
+                                <p>{{variant_option_data|length}} variants</p>
+                                <p style="margin-bottom: 0">
+                                    <!-- <i class="fa fa-shopping-cart margin-r5"></i>  -->
+									<a href="{{path('admin_product_edit',{'id':product.id})}}">Back to product</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+			<div class="box">
+	            <div class="box-header with-border">
+	            	<h3 class="box-title">Variants</h3>
+	            </div>
+
+				<div class="box-body">
+					<ul class="nav nav-pills nav-stacked">
+						{% for key, sku in variant_option_data %}
+							<li class="{% if sku_key_name == key %}active{% endif %}">
+								<a href="{{path('admin_sku_edit',{'id':sku.id})}}">
+									{% if sku.image %}
+  										<img src="{{asset(sku.image) | imagine_filter('img_thumb')}}" width="50px" alt="{{product.getTitle}}" />
+  									{% else %}
+			                    		<img src="https://placehold.it/50x50" height="50px" alt="Product Image">
+									{% endif %}
+
+									{{ sku.option|join(' · ') }}
+
+									{% if sku.default_option == '1'%}
+										&nbsp;&nbsp;<span class="label label-default">DEFAULT</span>
+									{% endif %}
+
+									{#
+									<span class="pull-right">
+										{% if sku.status == 'on'%}
+											<span class=""><i class="fa fa-check-square-o"></i></span>
+										{% elseif sku.status == 'off'%}
+											<span class=""><i class="fa fa-minus-square-o"></i></span>
+										{% endif %}
+									</span>
+									#}
+								</a>
+							</li>
+						{% endfor %}
+		                <!-- /.item -->
+					</ul>
+				</div>
+
+        	</div>
+		</div>
+
+		<div class="col-md-8">
+
+			<div class="box">
+				<div class="box-header with-border">
+					<h3 class="box-title">Options</h3>
+				</div>
+				<!-- /.box-header -->
+				<div class="box-body">
+					<div class="row">
+						<div class="col-md-6">
+							{% for va_key, va in view_variant_data %}
+								<div class="form-group">
+									<label for="price">{{va}}:</label>
+									&nbsp;&nbsp;{{sku_variant_option[va_key]}}
+								</div>
+							{% endfor %}
+						</div>
+
+						<div class="col-md-6">
+							<div class="form-control-static">
+								{{form_widget(form.image, {'id' : 'image'})}}
+								<a href="javascript:void(0)" onclick="selectFileWithCKFinder('image', 'image_thumbnail');" style="" >
+									{% if form.vars.value.image %}
+										<img id="image_thumbnail" class="img-responsive" src="{{asset(form.vars.value.image) | imagine_filter('img_150x150')}}" alt="Image" />
+									{% else %}
+										<img id="image_thumbnail" class="img-responsive" src="https://placehold.it/150x100" width="150px;">
+									{% endif %}
+								</a>
+								{% if form.vars.value.image %}
+									<span class="checkbox">
+										<input type="checkbox" id="removefileimage" name="removefileimage" value="1">
+										<label class="control-label" for="removefileimage">  Remove</label>
+									</span>
+								{% endif %}
+								<!-- <p class="help-block">size image 800x800 px</p> -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="box">
+				<div class="box-header with-border">
+					<h3 class="box-title">Pricing</h3>
+				</div>
+				<!-- /.box-header -->
+				<div class="box-body">
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="price"><span class="require">*</span> Price</label>
+								{{form_widget(form.price, {'id' : 'price'})}}
+								<div class="error-form">{{form_errors(form.price)}}</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="compareAtPrice">Compare at price</label>
+								{{form_widget(form.compareAtPrice, {'id' : 'compareAtPrice'})}}
+								<div class="error-form">{{form_errors(form.compareAtPrice)}}</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="box">
+				<div class="box-header with-border">
+					<h3 class="box-title">Inventory</h3>
+				</div>
+				<!-- /.box-header -->
+				<div class="box-body">
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="sku"> SKU</label>
+								{{form_widget(form.sku, {'id' : 'sku'})}}
+								<div class="error-form">{{form_errors(form.sku)}}</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="inventoryPolicyStatus">Inventory policy</label>
+								{{form_widget(form.inventoryPolicyStatus, {'id' : 'inventoryPolicyStatus'})}}
+								<div class="error-form">{{form_errors(form.inventoryPolicyStatus)}}</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group" ng-if="glob_inventory_policy_status=='1'">
+								<label for="inventoryQuantity">Quantity</label>
+								{{form_widget(form.inventoryQuantity, {'id' : 'inventoryQuantity'})}}
+								<div class="error-form">{{form_errors(form.inventoryQuantity)}}</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="box">
+				<div class="box-header with-border">
+					<h3 class="box-title">Shipping</h3>
+				</div>
+				<!-- /.box-header -->
+				<div class="box-body">
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="price"> Weight</label>
+								<div class="input-group">
+									{{form_widget(form.weight, {'id' : 'weight'})}}
+									<div class="btn-group">
+										{{form_widget(form.weightUnit, {'id' : 'weightUnit'})}}
+									</div><!-- /btn-group -->
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="box">
+				<!-- <div class="box-header with-border">
+					<h3 class="box-title"></h3>
+				</div> -->
+				<!-- /.box-header -->
+				<div class="box-body">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label> Publishing </label>
+							<div class="radio-group">
+								{{form_widget(form.status, {'id' : 'status'})}}
+								<div class="error-form">{{form_errors(form.status)}}</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>  </label>
+							<div class="radio-group">
+								{{form_widget(form.defaultOption, {'id' : 'default_option'})}}
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="box-footer">
+					<div class="row">
+						<div class="col-md-offset-2 col-md-9">
+							{{form_widget(form.save, {'id' : 'save', 'label': btn_label_save})}}
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+<script>
+	$(function() {
+		$('.icheckbox input').iCheck('destroy');
+		$('.remove_icheck input').iCheck('destroy');
+		$('#weight').removeClass('form-control');
+	});
+
+	var app = angular.module('skuApp', []);
+
+	app.controller('mainCtrl', function($scope, $http) {
+		$scope.glob_inventory_policy_status = '0';
+		$scope.init = function(token, product_id, inventory_policy_status) {
+			$scope.glob_access_token = token;
+			$scope.glob_product_id = product_id;
+			$scope.glob_inventory_policy_status = inventory_policy_status;
+		}
+	});
+</script>

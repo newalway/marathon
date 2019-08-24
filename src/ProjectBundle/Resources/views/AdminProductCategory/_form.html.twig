@@ -1,0 +1,85 @@
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+<div class="" ng-app="productCategoryApp" ng-controller="productCategoryCtrl">
+
+	<div class="box-body">
+
+		{% if form.vars.value.id is empty %}
+			{% include 'ProjectBundle:AdminProductCategory:_content_position.html.twig'%}
+		{% endif %}
+
+		<div class="form-group">
+	    	<label class="control-label col-md-2" for="status"> Translation</label>
+			<div class="col-md-6">
+				{{ form_widget(form.translations) }}
+		    </div>
+		</div>
+
+		<div class="form-group">
+			<label class="control-label col-md-2" for="parent">Image </label>
+			<div class="col-md-6 form-control-static">
+				{{form_widget(form.image, {'id' : 'image'})}}
+				<a href="javascript:void(0)" onclick="selectFileWithCKFinder('image', 'image_thumbnail');" style="" >
+					{% if form.vars.value.image %}
+						<img id="image_thumbnail" class="img-responsive" src="{{asset(form.vars.value.image) | imagine_filter('img_100x100')}}" alt="{{form.vars.value.getTitle}}" />
+					{% else %}
+						<img id="image_thumbnail" class="img-responsive" src="https://placehold.it/100x100" width="100px;">
+					{% endif %}
+				</a>
+				{% if form.vars.value.image %}
+					<span>
+						<input type="checkbox" id="removefileimage" name="removefileimage" value="1">
+						<label class="control-label" for="removefileimage">  Remove</label>
+					</span>
+				{% endif %}
+				<!-- <p class="help-block">size image 800x800 px</p> -->
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="control-label col-md-2" for="isHighlight"> </label>
+			<div class="col-md-6">
+				{{form_widget(form.isHighlight, {'attr': {'ng-model' : 'cp.isHighlight', 'ng-true-value':"'1'", 'ng-false-value':"'0'"}})}}
+				<div class="error-form">{{form_errors(form.isHighlight)}}</div>
+				<!-- <p class="help-block"><small></small></p> -->
+			</div>
+		</div>
+
+		<div ng-show="cp.isHighlight==1" ng-cloak>
+			<div class="form-group">
+				<label class="control-label col-md-3" for="templateCustomerGroups"> Usage Information Template</label>
+				<div class="col-md-6">
+					{{form_widget(form.templateCustomerGroups, {'id' : 'templateCustomerGroups'})}}
+					<div class="error-form">{{form_errors(form.templateCustomerGroups)}}</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+	<div class="box-footer">
+		<div class="row">
+			<div class="col-md-offset-2 col-md-9">
+				{{form_widget(form.save, {'id' : 'save', 'label': btn_label_save})}}
+				{{form_widget(form.save_and_add, {'id' : 'save_and_add', 'label': btn_label_save_add})}}
+				{{form_widget(form.save_and_edit, {'id' : 'save_and_edit', 'label': btn_label_save_edit})}}
+				<a href="{%if app.session.get('back_to_url')['admin_product_category'] is defined%}{{app.session.get('back_to_url')['admin_product_category']}}{%else%}{{path('admin_product_category')}}{%endif%}" class="btn btn-default">{{btn_label_close}} </a>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+<script>
+	var app = angular.module('productCategoryApp', []);
+
+	app.controller('productCategoryCtrl', ['$scope', '$http',  function($scope, $http) {
+
+		$scope.cp = {};
+		$scope.cp.isHighlight = '{{form.vars.value.isHighlight}}';
+
+		$scope.init = function(){
+
+		}
+	}]);
+</script>

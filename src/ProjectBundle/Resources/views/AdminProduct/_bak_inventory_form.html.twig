@@ -1,0 +1,759 @@
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+<div ng-app="productApp" ng-controller="mainCtrl" ng-init="init('{{acctoken}}', '{{form.vars.value.id}}', '{% if form.vars.value.id %}{{form.vars.value.price}}{% endif %}', '{% if form.vars.value.id %}{{form.vars.value.compareAtPrice}}{% endif %}', '{% if form.vars.value.id %}{{form.vars.value.sku}}{% endif %}', '{% if form.vars.value.id %}{{form.vars.value.inventoryPolicyStatus}}{% endif %}', '{% if form.vars.value.id %}{{form.vars.value.inventoryQuantity}}{% endif %}')">
+
+	<div class="row">
+		<div class="col-md-8">
+
+			<div class="box">
+				<div class="box-header with-border">
+					<h3 class="box-title">Title</h3>
+				</div>
+				<!-- /.box-header -->
+				<div class="box-body">
+					<div class="form-group">
+						<!-- <label for=""></label> -->
+						{{ form_widget(form.translations) }}
+					</div>
+				</div>
+			</div>
+
+			<div class="box">
+				<div class="box-header with-border">
+					<h3 class="box-title">Images</h3>
+				</div>
+				<!-- /.box-header -->
+				<div class="box-body">
+					<div class="form-group">
+						<!-- <label for="image"></label> -->
+						<div class="col-md-12">
+							{% if form.vars.value.image %}
+								<a href="{{asset(form.vars.value.image)}}" class="fancybox pull-left" style="margin-right: 10px;margin-bottom: 10px;" >
+									<img src="{{asset(form.vars.value.image) | imagine_filter('img_thumb')}}" alt="{{form.vars.value.getTitle}}" />
+								</a>
+								<span class="checkbox">
+									<input type="checkbox" id="removefileimage" name="removefileimage" value="1">
+									<label class="control-label" for="removefileimage">  Remove</label>
+								</span>
+							{% endif %}
+							<div class="input-group clearfix">
+								{{form_widget(form.image, {'id' : 'image'})}}
+								<span class="input-group-btn">
+									<button onclick="selectFileWithCKFinder('image');" class="btn btn-default" name="image_btn" id="image_btn" type="button">Browse Server</button>
+								</span>
+							</div>
+							<p class="help-block">size image 800x800 px</p>
+							<div class="error-form">{{form_errors(form.image)}}</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+			<div class="box">
+				<div class="box-header with-border">
+					<h3 class="box-title">Pricing</h3>
+				</div>
+				<!-- /.box-header -->
+				<div class="box-body">
+					<div class="form-group">
+						<label for="price"><span class="require">*</span> Price</label>
+						{{form_widget(form.price, {'id' : 'price'})}}
+						<div class="error-form">{{form_errors(form.price)}}</div>
+					</div>
+					<div class="form-group">
+						<label for="compareAtPrice">Compare at price</label>
+						{{form_widget(form.compareAtPrice, {'id' : 'compareAtPrice'})}}
+						<div class="error-form">{{form_errors(form.compareAtPrice)}}</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="box">
+				<div class="box-header with-border">
+					<h3 class="box-title">Inventory</h3>
+				</div>
+				<!-- /.box-header -->
+				<div class="box-body">
+					<div class="form-group">
+						<label for="sku"> SKU</label>
+						{{form_widget(form.sku, {'id' : 'sku'})}}
+						<div class="error-form">{{form_errors(form.sku)}}</div>
+					</div>
+					<div class="form-group">
+						<label for="inventoryPolicyStatus">Inventory policy</label>
+						{{form_widget(form.inventoryPolicyStatus, {'id' : 'inventoryPolicyStatus'})}}
+						<div class="error-form">{{form_errors(form.inventoryPolicyStatus)}}</div>
+					</div>
+					<div class="form-group" ng-if="glob_inventory_policy_status=='1'">
+						<label for="inventoryPolicyStatus">Quantity</label>
+						<div class="">
+							<div class="col-md-2">
+								<input type="hidden" name="admin_product[inventory_quantity]" value="{{'{{glob_invt_quantity}}'}}">
+								<input type="hidden" name="admin_product[old_inventory_quantity]" value="{{'{{glob_old_invt_quantity}}'}}">
+								<button type="button" class="btn">
+									{{'{{glob_old_invt_quantity}}'}}
+									{# show new quantity #}
+									<span ng-if="glob_invt_quantity>=0 && glob_invt_quantity_adjustment!=null ">
+										<i class="fa fa-long-arrow-right text-gray"></i> <span style="background:#fcf8e3;"> {{'{{glob_invt_quantity}}'}} </span>
+									</span>
+								 </button>
+							</div>
+							<div class="col-md-7 form-group-sm">
+								<!-- update quantity -->
+								<div class="bs-quantity">
+								    <div class="btn-group remove_icheck" data-toggle="buttons">
+								        <label ng-click="setInvtType('add'); adjustInvtQuantity(glob_invt_quantity_adjustment)" ng-class="{'active': glob_invt_type == 'add'}" class="btn btn-default btn-sm">
+								            <input type="radio" ng-model="glob_invt_type" name="admin_product[inventory_quantity_adjustment_type]" id="quantity_adjustment_add" value="add"> Add
+								        </label>
+								        <label ng-click="setInvtType('set'); adjustInvtQuantity(glob_invt_quantity_adjustment)" ng-class="{'active': glob_invt_type == 'set'}" class="btn btn-default btn-sm">
+								            <input type="radio" ng-model="glob_invt_type" name="admin_product[inventory_quantity_adjustment_type]" id="quantity_adjustment_set" value="set"> Set
+								        </label>
+										<input class="form-control-static " type="number" name="admin_product[inventory_quantity_adjustment]" ng-model="glob_invt_quantity_adjustment" ng-change="adjustInvtQuantity(glob_invt_quantity_adjustment)">
+								    </div>
+									<!-- <hr><p><strong>Note:</strong> Click on the button to select an option. You can select only single option inside buttons radio.</p> -->
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="box">
+				<div class="box-header with-border">
+					<h3 class="box-title">Shipping</h3>
+				</div>
+				<!-- /.box-header -->
+				<div class="box-body">
+					<div class="form-group">
+						<label for="price"> Weight</label>
+						<div class="input-group">
+							{{form_widget(form.weight, {'id' : 'weight'})}}
+							<div class="btn-group">
+								{{form_widget(form.weightUnit, {'id' : 'weightUnit'})}}
+							</div><!-- /btn-group -->
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+
+		<div class="col-md-4">
+			<div class="box">
+            <div class="box-header with-border">
+              <h3 class="box-title">Publishing</h3>
+            </div>
+            <!-- /.box-header -->
+			<div class="box-body">
+				<!-- radio -->
+				<div class="form-group">
+					<!-- <label for="status"></label> -->
+					<div class="radio-group">
+						{{form_widget(form.status, {'id' : 'status'})}}
+						<div class="error-form">{{form_errors(form.status)}}</div>
+					</div>
+				</div>
+			</div>
+            <!-- /.box-body -->
+          </div>
+		</div>
+
+		<div class="col-md-4">
+			<div class="box">
+            <div class="box-header with-border">
+              <h3 class="box-title">Organization</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+				<!-- select -->
+				<div class="form-group">
+					<label for="brand" class="" ><span class="require">*</span> Brand</label>
+					{{form_widget(form.brand, {'id' : 'brand'})}}
+					<div class="error-form">{{form_errors(form.brand)}}</div>
+				</div><hr>
+                <div class="form-group">
+                	<label for="equipment">Equipment</label>
+					{{form_widget(form.equipment, {'id' : 'equipment'})}}
+  					<div class="error-form">{{form_errors(form.equipment)}}</div>
+                </div><hr>
+				<div class="form-group">
+                	<label for="power">Power</label>
+                	{{form_widget(form.power, {'id' : 'power'})}}
+  					<div class="error-form">{{form_errors(form.power)}}</div>
+                </div><hr>
+
+                <!-- checkbox -->
+                <div class="form-group">
+				  <label for="customer_groups">Customer Group</label>
+                  <div class="checkbox-group">
+					  {{form_widget(form.customer_groups, {'id' : 'customer_groups'})}}
+					  <div class="error-form">{{form_errors(form.customer_groups)}}</div>
+                  </div>
+                </div><hr>
+				<div class="form-group">
+				  <label for="age_groups">Age Group</label>
+                  <div class="checkbox-group">
+					  {{form_widget(form.age_groups, {'id' : 'age_groups'})}}
+					  <div class="error-form">{{form_errors(form.age_groups)}}</div>
+                  </div>
+                </div><hr>
+				<div class="form-group">
+				  <label for="muscles">Sport Science Training</label>
+                  <div class="checkbox-group">
+					  {{form_widget(form.muscles, {'id' : 'muscles'})}}
+					  <div class="error-form">{{form_errors(form.muscles)}}</div>
+                  </div>
+                </div><hr>
+
+				<div ng-controller="hashTagCtrl" ng-init="init_hashtag()">
+					<div class="form-group">
+					  <label>Tags</label>
+	                  <div class="checkbox-group">
+						  <tags-input ng-model="tags" min-length="2" max-length="45" use-strings="true" replace-spaces-with-dashes="flase">
+							  <auto-complete source="loadTags($query)"></auto-complete>
+						  </tags-input>
+						  <input type="hidden" name="admin_product[tags]" value="{{'{{tags}}'}}">
+	                  </div>
+	                </div>
+				</div>
+
+            </div>
+            <!-- /.box-body -->
+          </div>
+		</div>
+	</div>
+
+	<!-- Product variants -->
+	<div ng-controller="variantsCtrl" ng-init="init_variants()">
+	<div class="row">
+		<div class="col-md-8">
+			<div class="box">
+				<div class="box-header with-border">
+					<h3 class="box-title">Variants</h3>
+					<div class="box-tools pull-right">
+						<input type='hidden' name='is_variant_enable' value="{{'{{showVariants}}'}}">
+						<div ng-show="!showVariants">
+							<button type="button" ng-click="showVariants = !showVariants" class="btn btn-link">
+								<span ng-switch on="haveVariants">
+									<span ng-switch-when="true">
+										Edit options
+									</span>
+									<span ng-switch-default>
+										Add variants
+									</span>
+								</span>
+							</button>
+						</div>
+						<div ng-show="showVariants">
+							<button type="button" ng-click="showVariants = !showVariants; initVariantsData()" class="btn btn-link pull-right">Cancel</button>
+						</div>
+					</div>
+				</div>
+
+				<div class="box-body">
+
+					<div ng-if="!showVariants">
+						<span ng-switch on="haveVariants">
+							<span ng-switch-when="true">
+
+								<table ng-show="view_variant_options.length>0" class="table" role="grid">
+									<thead>
+										<tr role="row">
+											<th style="width: 20px"></th>
+											<th style="width: 20px" ng-repeat="vn in view_variants">{{'{{vn}}'}}</th>
+											<th ng-if="glob_inventory_policy_status=='1'" style="width: 50px">Inventory</th>
+											<th style="width: 50px">Price</th>
+											<th style="width: 50px">Compare at price</th>
+											<th style="width: 50px">SKU</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-repeat="v in view_variant_options">
+											<td>
+												<span ng-switch on="v.status">
+													<span ng-switch-when="on" class="text-green"><i class="fa fa-check-square-o"></i></span>
+												    <span ng-switch-default class="text-danger"><i class="fa fa-minus-square-o"></i></span>
+												</span>
+											</td>
+											<td ng-repeat="vv in v.option">{{'{{vv}}'}}</td>
+											<td ng-if="glob_inventory_policy_status=='1'">{{'{{v.inventory_quantity | number:0}}'}}</td>
+											<td>{{'{{v.price | number:0}}'}}</td>
+											<td>{{'{{v.compare_at_price | number:0}}'}}</td>
+											<td>{{'{{v.sku}}'}}</td>
+										</tr>
+									</tbody>
+								</table>
+
+							</span>
+						</span>
+					</div>
+
+					<div ng-show="showVariants">
+
+						<fieldset data-ng-repeat="choice in choices">
+							<label>Option name:</label>
+				      		<input type="text" name="variant_name[]" ng-model="choice.option_name" placeholder="">
+							<tags-input ng-model="choice.option_value" tabindex="1" min-length="1" max-length="45" use-strings="true" replace-spaces-with-dashes="flase" placeholder="Option values"></tags-input>
+							<input type='hidden' name="variant_value[{{'{{choice.option_name}}'}}]" value="{{'{{choice.option_value}}'}}">
+
+							<button type="button" class="remove" ng-click="removeChoice($index)">-</button>
+				      		{# <button type="button" class="remove" ng-show="$last" ng-click="removeLastChoice()">-</button> #}
+							<br/><br/>
+				    	</fieldset>
+
+						<br/>
+						<button type="button" class="addfields" ng-click="addNewChoice()">Add another option</button>
+
+						<!-- display data -->
+						<br/><br/>
+						<div ng-if="showVariants" style="overflow-x: auto;" class="icheckbox disabled">
+							<table ng-show="variant_option.length>0" class="table" role="grid">
+								<thead>
+									<tr role="row">
+										<th style="width: 50px"></th>
+										<th style="width: 50px">Variant</th>
+										<th ng-if="glob_inventory_policy_status=='1'" style="width: 50px">Inventory</th>
+										<th style="width: 50px">Price</th>
+										<th style="width: 50px">Compare at price</th>
+										<th style="width: 50px">SKU</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="n in variant_option">
+										<td>
+											<input type='hidden' name='variant_sku_id[{{'{{$index}}'}}]' value='{{'{{n.id}}'}}'>
+											<input type='hidden' name='variant_sku_status[{{'{{$index}}'}}]' value='off'>
+											<input style="width: 80px;" type="checkbox" name="variant_sku_status[{{'{{$index}}'}}]" ng-model="n.status" ng-true-value="'on'" ng-false-value="'off'">
+										</td>
+										<td>
+											{{"{{n.option | join:' · '}}"}}
+											<input type="hidden" name="variant_sku_option[{{'{{$index}}'}}]" value="{{'{{n.option}}'}}">
+										</td>
+										<td ng-if="glob_inventory_policy_status=='1'">
+											<input style="width: 80px;" name="variant_sku_inventory_quantity[{{'{{$index}}'}}]" ng-model="n.inventory_quantity" class="form-control" type="number">
+										</td>
+										<td>
+											<input style="width: 80px;" name="variant_sku_price[{{'{{$index}}'}}]" ng-model="n.price" class="form-control" type="number" required>
+										</td>
+										<td>
+											<input style="width: 80px;" name="variant_sku_compare_at_price[{{'{{$index}}'}}]" ng-model="n.compare_at_price" class="form-control" type="number">
+										</td>
+										<td>
+											<input style="width: 80px;" name="variant_sku_sku[{{'{{$index}}'}}]" ng-model="n.sku" class="form-control" type="text">
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+
+{#
+<!-- // Debug -->
+<div id="choicesDisplay">
+	<!-- {{ dump('{{choices|json}}') }} -->
+	{{ dump('{{variant_option|json}}') }}
+	Option length : {{'{{choices.length}}'}}
+</div>
+#}
+
+					</div>
+
+{#
+{{ dump('{{choices|json}}')}}
+{{ dump('{{variant_option|json}}')}}
+#}
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End .row -->
+	</div>
+	<!-- End Product variants -->
+
+	<div class="box-footer">
+		<div class="row">
+			<div class="col-md-offset-2 col-md-9">
+				{{form_widget(form.save, {'id' : 'save', 'label': btn_label_save})}}
+				{{form_widget(form.save_and_add, {'id' : 'save_and_add', 'label': btn_label_save_add})}}
+				{{form_widget(form.save_and_edit, {'id' : 'save_and_edit', 'label': btn_label_save_edit})}}
+				<a href="{%if app.session.get('back_to_url')['admin_product'] is defined%}{{app.session.get('back_to_url')['admin_product']}}{%else%}{{path('admin_product')}}{%endif%}" class="btn btn-default">{{btn_label_close}} </a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	$(function() {
+		$('.icheckbox input').iCheck('destroy');
+		$('.remove_icheck input').iCheck('destroy');
+		$('#weight').removeClass('form-control');
+	});
+
+	var app = angular.module('productApp', ['ngTagsInput']);
+
+	app.factory('hashtag_data', ['$http', function hashtag_data($http) {
+		return {
+			getProductHashtags: function(token, product_id){
+	      		return $http({
+					method:'GET',
+					url: Routing.generate('api_1_get_product_tags',{'product_id':product_id}),
+					headers: {
+						'Authorization':'Bearer ' + token
+					}
+				});
+	    	}
+		}
+	}]);
+	app.factory('variant_data', ['$http', function variant_data($http) {
+		return {
+			getProductVariants: function(token, product_id){
+	      		return $http({
+					method:'GET',
+					url: Routing.generate('api_1_get_product_variants',{'product_id':product_id}),
+					headers: {
+						'Authorization':'Bearer ' + token
+					}
+				});
+	    	}
+		}
+	}]);
+
+	app.controller('mainCtrl', function($scope, $http) {
+		$scope.init = function(token, product_id, price, compare_at_price, sku, inventory_policy_status, inventory_quantity) {
+
+			$scope.glob_access_token = token;
+			$scope.glob_product_id = product_id;
+
+			if(product_id){
+				$scope.glob_price = parseInt(price);
+				if(compare_at_price){
+					$scope.glob_compare_at_price = parseInt(compare_at_price);
+				}
+				$scope.glob_sku = sku;
+
+				//inventory
+				$scope.glob_inventory_policy_status = inventory_policy_status;
+				if(inventory_quantity){
+					$scope.glob_old_invt_quantity = inventory_quantity;
+				}else{
+					$scope.glob_old_invt_quantity = '0';
+				}
+			}else{
+				//inventory
+				$scope.glob_inventory_policy_status = '0';
+				$scope.glob_old_invt_quantity = '0';
+			}
+
+			//inventory
+			$scope.resetInvtQuantity();
+			$scope.setInvtType('add');
+		}
+
+		$scope.setInvtType = function(status) {
+			$scope.glob_invt_type = status;
+		}
+		$scope.resetInvtQuantity = function() {
+			$scope.glob_invt_quantity = 0;
+			$scope.glob_invt_quantity_adjustment = null;
+		}
+		$scope.adjustInvtQuantity = function(data) {
+			$scope.glob_invt_quantity_adjustment = data;
+			var qty_adjust = parseInt(data),
+				old_qty = parseInt($scope.glob_old_invt_quantity),
+				new_qty = old_qty;
+			if($scope.glob_invt_type=='add'){
+				if(qty_adjust>0){
+					new_qty = old_qty + qty_adjust;
+				}
+			}else if($scope.glob_invt_type=='set'){
+				if(qty_adjust>=0){
+					new_qty = qty_adjust;
+				}
+			}
+			$scope.glob_invt_quantity = new_qty;
+		}
+		$scope.changedInventoryPolicyStatus = function(data) {
+			if(data=='0'){
+				$scope.resetInvtQuantity();
+			}
+		}
+	});
+
+	app.controller('variantsCtrl',  function($scope, $http, variant_data) {
+		$scope.init_variants = function() {
+
+			// debug choice value
+			// $scope.showVariants = true;
+			// $scope.choices = [
+			// 	{"id": 'choice1', "option_name": "Color", "option_value": ["White","Blue","Yellow"]},
+			// 	{"id": "choice2","option_name": "Size","option_value": ["S","M","L"]}
+			// ];
+
+			$scope.showVariants = false;
+			$scope.haveVariants = false;
+			$scope.initVariantsData();
+
+			if($scope.glob_product_id){
+				variant_data.getProductVariants($scope.glob_access_token, $scope.glob_product_id).then(function onSuccess(response){
+					if(response.data.variants.length>0){
+						$scope.haveVariants = true;
+						$scope.choices = response.data.variants;
+						$scope.variant_options = response.data.variant_options;
+						$scope.view_variants = response.data.view_variants;
+						$scope.view_variant_options = response.data.view_variant_options;
+
+					}
+
+					// // compare array or object
+					// var a = [ {a:["red","s","10lb"],b:[1,2,3]} ];
+					// var b = [ {a:["red","s","10lb"],b:[1,2,3]} ];
+					// if( _.isEqual(a.sort(), b.sort()) ){
+					// 	console.log('_equal');
+					// }else{
+					// 	console.log('_not_equal');
+					// }
+
+					$scope.addItemNo($scope.choices.length);
+				}).catch(function onError(response){
+					console.log('Error get variants data');
+				});
+			}
+		}
+
+		$scope.initVariantsData = function() {
+			if($scope.haveVariants){
+				//reset data from database
+			}else{
+				$scope.choices = [ {"id": 'choice1', "option_name": "", "option_value": []} ];
+				$scope.variant_options = [];
+				$scope.view_variants = [];
+				$scope.view_variant_options = [];
+				$scope.itemNo=0; //init value
+				$scope.addItemNo($scope.choices.length);
+			}
+		}
+
+		$scope.addItemNo = function(itemNo) {
+			$scope.itemNo+=itemNo;
+		}
+
+		$scope.addNewChoice = function() {
+			$scope.addItemNo(1);
+			var newItemNo = $scope.itemNo;
+			$scope.choices.push({'id':'choice'+newItemNo});
+		};
+
+		$scope.removeChoice = function(index) {
+			$scope.choices.splice(index,1);
+		};
+
+		$scope.$watch('choices', function (newValue, oldValue, scope) {
+		    //Do anything with $scope.choices
+				$scope.setRangeVariants();
+		}, true);
+
+		$scope.setRangeVariants = function() {
+			$scope.variant_option = $scope.createRangeVariants();
+		};
+
+		$scope.createRangeVariants = function() {
+			var option_len = $scope.choices.length,
+				variants = [],
+				result = [],
+				cartesianProduct = [],
+				tmp_sku_variant_option = '',
+				tmp_key_name = '',
+				tmp_variant_options = [],
+				tmp_id = '',
+				tmp_price = '',
+				tmp_compare_at_price = '',
+				tmp_inventory_quantity = '',
+				tmp_sku = '',
+				tmp_status = '';
+
+			$scope.choices.forEach(function(choice){
+				if(choice.option_value){
+					variants.push(choice.option_value);
+				}
+			});
+
+			if(variants.length>0)
+			{
+				//get recursive variant options
+				cartesianProduct = $scope.cartesianProduct(variants);
+
+				//set variant options
+				cartesianProduct.forEach(function(data, index)
+				{
+					//prepare default input data
+					tmp_id = '';
+					tmp_price = parseInt($scope.glob_price);
+					tmp_compare_at_price = parseInt($scope.glob_compare_at_price);
+					tmp_inventory_quantity = parseInt($scope.glob_invt_quantity_adjustment);
+					tmp_status = "on";
+					if($scope.glob_sku){
+						tmp_sku = $scope.glob_sku+'-'+(index+1);
+					}
+
+					if($scope.glob_product_id){
+						//edit mode
+						tmp_key_name = data.join('-');
+						tmp_key_name = tmp_key_name.toLowerCase();
+						if (tmp_key_name in $scope.variant_options){
+							//exist data
+							tmp_variant_options = $scope.variant_options[tmp_key_name];
+							tmp_id = tmp_variant_options['id'];
+							tmp_price = parseInt(tmp_variant_options['price']);
+							tmp_compare_at_price = parseInt(tmp_variant_options['compare_at_price']);
+							tmp_inventory_quantity = tmp_variant_options['inventory_quantity'];
+							tmp_sku = tmp_variant_options['sku'];
+							tmp_status = tmp_variant_options['status'];
+						}
+					}
+
+					//set data
+					tmp_sku_variant_option = {'option':data, 'id':tmp_id, 'status':tmp_status, 'price':tmp_price, 'compare_at_price':tmp_compare_at_price, 'inventory_quantity':tmp_inventory_quantity, 'sku':tmp_sku};
+					result.push(tmp_sku_variant_option);
+				});
+			}
+
+// console.log(result);
+
+			return result;
+		};
+
+		$scope.cartesianProduct = function(arr) {
+		    return arr.reduce(function(a,b){
+		        return a.map(function(x){
+		            return b.map(function(y){
+		                return x.concat(y);
+		            })
+		        }).reduce(function(a,b){ return a.concat(b) },[])
+		    }, [[]])
+		}
+
+		$scope.range = function(min, max, step) {
+		    step = step || 1;
+		    var input = [];
+		    for (var i = min; i <= max; i += step) {
+				input.push(i);
+		    }
+		    return input;
+		};
+
+		// $scope.removeLastChoice = function() {
+		// 	var lastItem = $scope.choices.length-1;
+		// 	$scope.choices.splice(lastItem);
+		// };
+
+		/*
+		$scope.createRangeVariants = function() {
+			var option_len = $scope.choices.length;
+			var variants = [];
+			var combos = [];
+			var new_combos = [];
+			var tmp = '';
+			var arr_tmp = [];
+
+			if(option_len>1){
+
+				variants.push($scope.choices[0].option_value);
+
+				for (var x = 1; x < option_len; x++) {
+
+					combos = [];
+
+					variants.forEach(function(variant) {
+						new_combos = [];
+						$scope.choices[x].option_value.forEach(function(option){
+
+							tmp = variant;
+							arr_tmp.push(option);
+							new_combos.push(arr_tmp);
+						});
+						combos.push(new_combos);
+
+					});
+					variants = [];
+					combos.forEach(function(combo) {
+						combo.forEach(function(tmp) {
+							variants.push(tmp);
+						});
+
+					});
+		    }
+			}else{
+				// variants.push($scope.choices[0].option_value);
+			}
+			return variants;
+		};
+		*/
+
+		/*
+		// only 2 dimention
+		$scope.generateVariants = function(data, prefix) {
+		    if (typeof prefix === 'undefined') {
+          		prefix = '';
+	        }
+	        var result = [];
+	        var attribute = data.shift();
+	        $.each(attribute, function(key,val) {
+	            if (data instanceof Array && data.length > 0) {
+					// Instead of passing the original array, clone it and pass the cloned array as argument.
+
+					_data = data.slice(0);
+
+					result = result.concat($scope.generateVariants(_data, val + ' '));
+	            } else {
+					result.push(prefix + val);
+	            }
+        	});
+        	return result;
+		}
+		*/
+
+	});
+
+	app.controller('hashTagCtrl', function($scope, $http, hashtag_data) {
+		$scope.init_hashtag = function() {
+			$scope.tags = [];
+
+			if($scope.glob_product_id){
+				hashtag_data.getProductHashtags($scope.glob_access_token, $scope.glob_product_id).then(function onSuccess(response){
+				$scope.tags = response.data.data;
+		    }).catch(function onError(response) {
+				console.log('Error get current hashtag');
+		    });
+			}else{
+				$scope.tags = [];
+			}
+		}
+        $scope.loadTags = function(query) {
+			return $http.get('{{path('api_1_get_tags')}}?query=' + query, {
+				headers: {
+					"Authorization": "Bearer " + $scope.glob_access_token
+				}
+			}).then(function (response) {
+				return response.data.data;
+			}, function(response) {
+				console.log('Error loading tag');
+			});
+        };
+		// $scope.tags = [{text:'just'}, {text:'some'}]; //option use-strings=false
+		// $scope.tags = ['just', 'some', 'cool', 'tags'];  //option use-strings=true
+	});
+
+	app.filter('join', function () {
+	    return function join(array, separator, prop) {
+	        if (!Array.isArray(array)) {
+				return array; // if not array return original - can also throw error
+	        }
+			return (!!prop ? array.map(function (item) {
+				return item[prop];
+			}) : array).join(separator);
+		};
+	});
+
+</script>

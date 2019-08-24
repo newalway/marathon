@@ -1,0 +1,58 @@
+error.name: กรุณากรอกชื่อ-นามสกุล
+error.firstname: กรุณากรอกชื่อ
+error.lastname: กรุณากรอกนามสกุล
+error.companyname: กรุณากรอกชื่อบริษัท
+error.address: 'กรุณากรอกที่อยู่'
+error.city: 'กรุณากรอกอำเภอ'
+error.state: 'กรุณากรอกจังหวัด'
+error.country: 'กรุณาเลือกประเทศ'
+error.zip: 'กรุณากรอกรหัสไปรษณีย์'
+error.is.guest: 'กรุณาเลือกเข้าสู่ระบบหรือชำระสินค้าแบบไม่ได้เป็นสมาชิก'
+error.email: กรุณาระบุอีเมล์
+error.email.wrong: อีเมลไม่ถูกต้อง
+error.email.valid: 'กรุณากรอกที่อยู่อีเมลที่ถูกต้องในแบบฟอร์ม username@domain.com'
+error.email.already: อีเมล์นี้มีอยู่แล้ว
+error.password: กรุณากรอกรหัสผ่าน
+error.message: กรุณากรอกข้อความ
+error.phone: กรุณากรอกเบอร์โทรศัพท์
+error.mobile: 'กรุณากรอกหมายเลขโทรศัพท์มือถือ'
+error.mobile.min: 'กรุณากรอกหมายเลขโทรศัพท์ให้ครบ 10 หลัก'
+error.mobile.min9: 'หมายเลขโทรศัพท์ต้องมีความยาวอย่างน้อย 9 ตัว'
+error.mobile.max23: 'หมายเลขโทรศัพท์ต้องมีความยาวไม่เกิน 23 ตัว'
+error.mobile.fill.valid: 'กรุณากรอกหมายเลขโทรศัพท์ที่ถูกต้อง'
+error.mobile.only.numbers: 'เฉพาะตัวเลขเท่านั้น, "+", "-" และ "#" ได้รับอนุญาต'
+error.order.no: 'กรุณากรอกเลขที่รายการสั่งซื้อ'
+error.bank: 'กรุณาเลือกธนาคารที่โอนเงินไป'
+error.money: 'กรุณากรอกจำนวนเงินที่โอน'
+error.date: 'กรุณาเลือกวันที่โอนเงิน'
+error.time: 'กรุณาเลือกเวลาโอนเงิน'
+error.bank.form: 'กรุณากรอกธนาคารต้นทาง'
+error.gender: 'กรุณาเลือกเพศ'
+error.title: 'กรุณากรอกหัวข้อที่อยู่'
+error.password.match: 'รหัสผ่านที่ระบุไม่ตรงกัน'
+error.password.blank: 'กรุณาระบุรหัสผ่าน'
+error.date.of.birth: 'กรุณากรอกวันเกิด'
+error.select.product: 'กรุณาเลือกสินค้า'
+error.district: 'กรุณากรอกเขต/อำเภอ'
+error.amphure: 'กรุณากรอกเขต/อำเภอ'
+error.province: 'กรุณากรอกจังหวัด'
+error.postcode: 'กรุณากรอกรหัสไปรษณีย์'
+error.postcode.fill.valid: 'กรุณากรอกรหัสไปรษณีย์ที่ถูกต้อง เฉพาะตัวเลขเท่านั้น'
+error.taxid.invalid: 'กรุณากรอกเลขประจำตัวผู้เสียภาษี 13 หลัก'
+error.taxid: 'กรุณากรอกเลขประจำตัวผู้เสียภาษี 13 หลัก'
+error.files: 'ไฟล์ต้องน้อยกว่า 8MB ในขนาด กรุณาลองอีกครั้ง.'
+error.select_file: 'กรุณาแนบหลักฐานการชำระค่าสินค้า'
+error.address.max50: 'กรุณากรอกที่อยู่ไม่เกิน 50 ตัวอักษร'
+error.product.name: 'กรุณากรอกชื่อผลิตภัณฑ์'
+error.product.medel: 'กรุณากรอกรุ่นผลิตภัณฑ์'
+error.description: 'กรุณากรอกรายละเอียด'
+error.subDistrict: 'กรุณากรอกแขวง/ตำบล'
+error.latitude: 'กรุณากรอกละติจูด'
+error.longitude: 'กรุณากรอกลองจิจูด'
+
+error.product.price_min: 'ราคามากกว่า หรือเท่ากับ 0.'
+error.product.price_max: 'ราคาน้อยกว่าหรือเท่ากับ 99,999,999.99'
+error.product.inventory_min: Please select a value that is more than or equal to 1
+error.product.inventory_max: Please select a value that is no more than 99,999,999
+error.product.weight_min: Please select a value that is more than 1
+error.product.weight_max: Please select a value that is no more than 99,999

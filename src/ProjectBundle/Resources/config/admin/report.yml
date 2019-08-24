@@ -1,0 +1,16 @@
+admin_customer_order_excel_dowload:
+    path: /excel/customer_order_excel_dowload
+    defaults: {_controller: ProjectBundle:AdminCustomerOrder:order_summary_reportExcel}
+    methods:   [GET, POST]
+
+# admin_customer_order_items_excel_dowload:
+#     path: /excel/{id}/customer_order_items_payment_dowload
+#     defaults: {_controller: ProjectBundle:AdminCustomerOrder:order_items_summary_reportExcel}
+#     methods:   [GET, POST]
+#     requirements:
+#         id: \d+
+
+# admin_customer_list_excel_dowload:
+#     path: /excel/{id}/customer_list_excel_dowload
+#     defaults: {_controller: ProjectBundle:AdminMemberController:group_export_excel}
+#     methods:   [GET, POST]

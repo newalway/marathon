@@ -1,0 +1,230 @@
+<style media="screen">
+/* Important part */
+.modal-dialog{
+overflow-y: initial !important
+}
+.modal-body{
+height: 550px;
+overflow-y: auto;
+}
+.input-group-btn:last-child>.btn, .input-group-btn:last-child>.btn-group .current-location{
+    z-index: 2;
+    margin-left: -1px;
+    height: 34px;
+}
+svg.current-location{
+    width: 16px;
+    height: 18px;
+}
+</style>
+<div class="member-box">
+    {#
+    <div class="form-group">
+        <label class="col-sm-6 col-md-3 control-label" for="title">{% trans %}member.address.title{% endtrans %} <span class="red-text"> *</span></label>
+        <div class="col-sm-6">
+            {{form_widget(form.title, {'id' : 'title'})}}
+            <div class="red-text">{{form_errors(form.title)}}</div>
+        </div>
+    </div>
+    #}
+
+    <div class="form-group">
+        <div class="col-sm-6">
+            <label class="control-label" for="first_name">{% trans %}member.personal.fname{% endtrans %} <span class="red-text"> *</span></label>
+            {{form_widget(form.first_name, {'id' : 'first_name'})}}
+            <div class="red-text">{{form_errors(form.first_name)}}</div>
+        </div>
+        <div class="col-sm-6">
+            <label class="control-label" for="last_name">{% trans %}member.personal.lname{% endtrans %} <span class="red-text"> *</span></label>
+            {{form_widget(form.last_name, {'id' : 'last_name'})}}
+            <div class="red-text">{{form_errors(form.last_name)}}</div>
+        </div>
+
+    </div>
+
+
+    <div class="form-group">
+
+        <div class="col-sm-6">
+            <label class=" control-label" for="company_name">{% trans %}member.personal.company_name{% endtrans %} </label>
+            {{form_widget(form.company_name, {'id' : 'company_name'})}}
+            <div class="red-text">{{form_errors(form.company_name)}}</div>
+        </div>
+        <div class="col-sm-6">
+                <label class="control-label" for="phone">{% trans %}member.personal.phone{% endtrans %}<span class="red-text"> *</span> </label>
+            {{form_widget(form.phone, {'id' : 'phone'})}}
+            <div class="red-text">{{form_errors(form.phone)}}</div>
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <label class="col-sm-3 col-md-3 control-label" for="map">{% trans %}find_address{% endtrans %}</label>
+        <div class="col-sm-9">
+            <div id="floating-panel" class="input-group">
+              <input id="geocode-address" type="textbox" value="" class="form-control">
+              <span class="input-group-btn">
+                  <input id="submit-map" type="button" class="btn btn-default" value="{% trans %}search{% endtrans %}">
+              </span>
+              <span class="input-group-btn">
+                  <button id="get-current-location" type="button" class="btn btn-default" value="">
+                     <svg class="current-location" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                         <path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3c-.46-4.17-3.77-7.48-7.94-7.94V1h-2v2.06C6.83 3.52 3.52 6.83 3.06 11H1v2h2.06c.46 4.17 3.77 7.48 7.94 7.94V23h2v-2.06c4.17-.46 7.48-3.77 7.94-7.94H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>
+                     </svg>
+                  </button>
+              </span>
+            </div>
+        </div>
+        <div class="col-sm-12">
+            <div id="map-canvas" style="width:100%;height:350px;margin-top:15px;"></div>
+        </div>
+
+    </div>
+
+    {#<div class="form-group">
+        <div id="map-canvas" style="width:100%;height:350px;"></div>
+    </div>#}
+
+
+
+    <div class="form-group">
+        <div class="col-sm-6">
+            <label class="control-label" for="">{% trans %}latitude{% endtrans %}<span class="red-text"> *</span> </label>
+            {{form_widget(form.latitude, {'id' : 'latitude'})}}
+            <div class="error-form red-text">{{form_errors(form.latitude)}}</div>
+        </div>
+        <div class="col-sm-6">
+            <label class="control-label" for="">{% trans %}longitude{% endtrans %}<span class="red-text"> *</span> </label>
+            {{form_widget(form.longitude, {'id' : 'longitude'})}}
+            <div class="error-form red-text">{{form_errors(form.longitude)}}</div>
+        </div>
+        <div class="col-sm-6" style="display:none;">
+            <label class="control-label" for="">{% trans %}latitude{% endtrans %}<span class="red-text"> *</span> </label>
+            {{form_widget(form.placeId, {'id' : 'placeId'})}}
+            <div class="error-form red-text">{{form_errors(form.longitude)}}</div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-6">
+            <label class="control-label" for="address">{% trans %}member.address{% endtrans %}<span class="red-text"> *</span></label>
+            {{form_widget(form.address, {'id' : 'address'})}}
+            <div class="red-text">{{form_errors(form.address)}}</div>
+        </div>
+        <div class="col-sm-6">
+            <label class="control-label" for="district">{% trans %}member.subDistrict{% endtrans %}<span class="red-text"> *</span></label>
+            {{form_widget(form.district, {'id' : 'district', 'attr': {'autocomplete':'off'}})}}
+            <div class="red-text">{{form_errors(form.district)}}</div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-6">
+                <label class="control-label" for="amphure">{% trans %}member.amphure{% endtrans %}<span class="red-text"> *</span></label>
+            {{form_widget(form.amphure, {'id' : 'amphure', 'attr': {'autocomplete':'off'}})}}
+            <div class="red-text">{{form_errors(form.amphure)}}</div>
+        </div>
+        <div class="col-sm-6">
+            <label class="control-label" for="province">{% trans %}member.province{% endtrans %}<span class="red-text"> *</span></label>
+            {{form_widget(form.province, {'id' : 'province', 'attr': {'autocomplete':'off'}})}}
+            <div class="red-text">{{form_errors(form.province)}}</div>
+        </div>
+    </div>
+
+
+    <div class="form-group hidden">
+        <label class="col-sm-3 col-md-3 control-label" for="countryCode">{% trans %}member.country{% endtrans %}<span class="red-text"> *</span></label>
+        <div class="col-sm-9">
+            {{form_widget(form.countryCode, {'id' : 'countryCode'})}}
+            <div class="red-text">{{form_errors(form.countryCode)}}</div>
+        </div>
+    </div>
+
+    <div class="form-group">
+
+        <div class="col-sm-6">
+            <label class="control-label" for="postcode">{% trans %}member.postcode{% endtrans %}<span class="red-text"> *</span></label>
+            {{form_widget(form.postcode, {'id' : 'postcode', 'attr': {'autocomplete':'off'}})}}
+            <div class="red-text">{{form_errors(form.postcode)}}</div>
+        </div>
+        <div class="col-sm-6">
+            <label class="control-label" for="taxpayer_id">{% trans %}member.taxpayerid{% endtrans %}
+                {% if is_granted('ROLE_CUSTOMER') %}
+                    <span id="taxpayer_require_icon" class="red-text">*</span>
+                {% endif %}
+            </label>
+            {{form_widget(form.taxpayer_id, {'id' : 'taxpayer_id'})}}
+            <div class="red-text">{{form_errors(form.taxpayer_id)}}</div>
+        </div>
+    </div>
+
+
+
+    <div class="form-group">
+        <label class="col-sm-3 col-md-3 control-label" for="default_shipping"></label>
+        <div class="col-sm-9">
+            <label for="default_shipping">
+                {{form_widget(form.default_shipping, {'id' : 'default_shipping'})}}
+                {% trans %}member.default.shipping{% endtrans %}
+            </label>
+            <div class="red-text">{{form_errors(form.default_shipping)}}</div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-3 col-md-3 control-label" for="default_tax"></label>
+        <div class="col-sm-9">
+            <label for="default_tax">
+                {{form_widget(form.default_tax,  {'id':'default_tax'})}}
+                {% trans %}member.default.billing{% endtrans %}
+            </label>
+            <div class="red-text">{{form_errors(form.default_tax)}}</div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-offset-3 col-sm-10">
+            {{form_widget(form.save, {'id' : 'save', 'label': 'member.button.save'|trans({}, 'ProjectBundle'),'attr': {'class': 'thm-btn arrow-push-in-right'} })}}
+            <a href="{{path('address')}}" class="thm-btn arrow-push-in-right btn-gray">
+                <span>{% trans %}member.button.close{% endtrans %}<i class="fa fa-caret-right"></i></span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<script async defer src="https://maps.googleapis.com/maps/api/js?key={{google_maps_api_key}}&callback=initGeocodeMap&language={{app.request.locale}}"></script>
+<script>
+    $(document).ready(function() {
+        $('#geocode-address').keydown(function(event) {
+            if (event.keyCode == 13) {
+                document.getElementById("submit-map").click();
+                return false;
+            }
+        });
+        $("#get-current-location").click(function() {
+            initGeocodeMapWithCurrentLocation();
+        });
+
+
+        // taxpayer_id required
+        {% if is_granted('ROLE_CUSTOMER') %}
+            {% if form.vars.value.defaultTax is defined %}
+                {% if form.vars.value.defaultTax %}
+                    $('#taxpayer_id').attr('required', 'required');
+                {% else %}
+                    $("#taxpayer_require_icon").hide();
+                {% endif %}
+            {% endif %}
+
+            $('#default_tax').click(function() {
+                if( $('#default_tax').is(':checked') ){
+                    $('#taxpayer_id').attr('required', 'required');
+                    $("#taxpayer_require_icon").show();
+                }else{
+                    $('#taxpayer_id').removeAttr('required');
+                    $("#taxpayer_require_icon").hide();
+                }
+            });
+        {% endif %}
+	});
+</script>

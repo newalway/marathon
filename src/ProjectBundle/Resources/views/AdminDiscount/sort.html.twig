@@ -1,0 +1,66 @@
+{% extends 'ProjectBundle::admin.html.twig'%}
+
+{% block stylesheets %}
+  {{ parent() }}
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+  <style>
+    #sortable { list-style-type: none; margin: 0; padding: 0; width:100%; }
+    #sortable li { margin: 0 3px 3px 3px; padding: 5px 15px; display: block; font-size: 16px;  }
+  </style>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <script>
+    $(document).ready(function(){
+      $( "#sortable" ).sortable({
+        placeholder: "ui-state-highlight",
+        opacity: 0.6,
+        update: function(event, ui) { }
+      });
+      $( "#sortable" ).disableSelection();
+
+      initAjaxSortableSaveData();
+    });
+  </script>
+{% endblock %}
+
+{% use "ProjectBundle:AdminBrand:blocks.html.twig" %}
+{% use "ProjectBundle::flash_message.html.twig" %}
+{% block breadcrumb_sub %}
+	{{ parent() }}
+	<li class="active">Sort</li>
+{% endblock %}
+
+{% block content %}
+<div class="flash-notice"></div>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="box box-primary">
+      <div class="box-header with-border">
+        <i class="fa fa-list-ol"></i>
+        <h3 class="box-title">Sort Items</h3>
+      </div><!-- /.box-header -->
+      <div class="box-body" id="info">
+        {% if datas|length > 0 %}
+          <ul id="sortable">
+              {% for data in datas %}
+                <li id="sort_{{data.id}}"  class="ui-state-default">
+                  {{data.title}}
+                </li>
+              {% endfor %}
+          </ul>
+        {% endif %}
+      </div><!-- /.box-body -->
+
+      <div class="box-footer">
+        <button type="button" id="save_sortdata" data-uri="{{path("admin_brand_sort_prosess")}}" name="save_sortdata" class="btn btn-primary">{{btn_label_save}}</button>
+        <a href="{% if app.session.get('back_to_url')['admin_brand'] is defined %}{{app.session.get('back_to_url')['admin_brand']}}{% else %}{{path('admin_brand')}}{% endif %}" class="btn btn-default">{{btn_label_close}}</a>
+        <span>&nbsp;<i id="loader" class="fa fa-lg fa-spin fa-refresh" style="display:none"></i></span>
+      </div>
+
+    </div><!-- /.box -->
+  </div><!-- ./col -->
+</div>
+{% endblock %}

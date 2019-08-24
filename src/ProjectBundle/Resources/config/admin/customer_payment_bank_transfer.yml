@@ -1,0 +1,19 @@
+admin_customer_payment_bank_transfer_list:
+  path: /
+  defaults: {_controller: ProjectBundle:AdminCustomerPaymentBankTransfer:index}
+  requirements:
+    _method: get
+
+admin_customer_payment_bank_transfer_download:
+  path: /{id}/download
+  defaults: {_controller: ProjectBundle:AdminCustomerPaymentBankTransfer:download}
+  requirements:
+    _method: get
+    id: \d+
+
+admin_customer_payment_bank_transfer_view:
+  path: /{id}/view
+  defaults: {_controller: ProjectBundle:AdminCustomerPaymentBankTransfer:view}
+  requirements:
+    _method: get
+    id: \d+

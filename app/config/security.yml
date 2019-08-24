@@ -1,0 +1,120 @@
+# To get started with security, check out the documentation:
+# https://symfony.com/doc/current/security.html
+security:
+    encoders:
+        FOS\UserBundle\Model\UserInterface: sha512
+
+    # https://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
+    providers:
+        fos_userbundle:
+            id: fos_user.user_provider.username
+
+    firewalls:
+
+        oauth_token:
+            pattern:    ^/oauth/v2/token
+            security:   false
+
+        oauth_authorize:
+            pattern: ^/oauth/v2/auth
+            form_login:
+                provider: fos_userbundle
+                check_path: fos_user_security_check
+                login_path: fos_user_security_login
+            anonymous: true
+
+        api_doc:
+            pattern:      ^/api/doc
+            security:     false
+
+        api_public:
+            pattern:      ^/api/v(1|2|3)/public
+            security:     false
+            anonymous:    true
+
+        api:
+            pattern:    ^/api/v(1|2|3)/
+            fos_oauth:  true
+            stateless:  true
+            anonymous:  false
+
+        # disables authentication for assets and the profiler, adapt it according to your needs
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        main:
+            pattern: ^/
+
+            form_login:
+                provider: fos_userbundle
+                csrf_token_generator: security.csrf.token_manager
+                login_path: fos_user_security_login
+                check_path: fos_user_security_check
+                default_target_path: default_target_login
+
+                # if you are using Symfony < 2.8, use the following config instead:
+                # csrf_provider: form.csrf_provider
+
+            oauth:
+                resource_owners:
+                    facebook: "/connect/check-facebook"
+                    google: "/connect/check-google"
+                failure_path: /connect
+                login_path: fos_user_security_login
+                #login_path: /connect
+                #check_path: /connect_check
+                provider: fos_userbundle
+                oauth_user_provider:
+                    service: my.oauth_aware.user_provider.service
+
+            logout:
+                path: fos_user_security_logout
+                target: default_target_logout
+                #Set this option to false in every firewall and the user will only be logged out from the current firewall and not the other ones.
+                invalidate_session: false
+            anonymous:    true
+            remember_me:
+                lifetime: 3600
+                domain: ~
+                path: fos_user_security_login
+                secret: %secret%
+
+    access_control:
+        - { path: ^/api/v(1|2|3)/public, roles: [ IS_AUTHENTICATED_ANONYMOUSLY ] }
+        - { path: ^/api/v(1|2|3), roles: [ IS_AUTHENTICATED_FULLY ] }
+        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin/, role: [ROLE_SUPER_ADMIN, ROLE_ADMIN, ROLE_EDITOR, ROLE_USER] }
+
+    role_hierarchy:
+        ROLE_CUSTOMER: ROLE_CUSTOMER
+        ROLE_CLIENT: ROLE_CLIENT
+        ROLE_EDITOR: ROLE_USER
+        ROLE_ADMIN: ROLE_EDITOR
+        ROLE_SUPER_ADMIN: ROLE_ADMIN
+
+
+##security:
+
+    # https://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
+    ##providers:
+        ##in_memory:
+            ##memory: ~
+
+    ##firewalls:
+        # disables authentication for assets and the profiler, adapt it according to your needs
+        ##dev:
+            ##pattern: ^/(_(profiler|wdt)|css|images|js)/
+            ##security: false
+
+        ##main:
+            ##anonymous: ~
+            # activate different ways to authenticate
+
+            # https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
+            #http_basic: ~
+
+            # https://symfony.com/doc/current/security/form_login_setup.html
+            #form_login: ~

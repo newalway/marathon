@@ -1,0 +1,114 @@
+{% extends 'ProjectBundle::admin.html.twig'%}
+
+{% use "ProjectBundle:AdminRequestService:blocks.html.twig" %}
+{% use "ProjectBundle::flash_message.html.twig" %}
+
+{% block content %}
+<div class="row">
+	<div class="col-md-8 margin-10-0">
+	</div>
+</div>
+
+<br class="clearBoth">
+
+<div class="row">
+	<div class="col-xs-12">
+		<div class="box" style="min-height: 1000px;">
+			<div class="box-body">
+				<div class="row">
+					<div class="col-md-8">
+						<button type="button" class="btn bg-red" data-form_id="data_group" id="group_delete">
+							<i class="fa fa-trash-o"></i> Delete
+						</button>
+						<!-- <a href="{{path('admin_request_service_excel_export')}}">
+							<button type="button" class="btn btn-success" data-form_id="data_form_search" id="search_export_excel_summary_report_path">
+								<i class="fa fa-file-excel-o"></i> Export Excel
+							</button>
+						</a> -->
+					</div>
+					<div class="col-md-4">
+					<!-- <form id="data_form_search" action="{{path('admin_request_service')}}" method="get" role="form" enctype="multipart/form-data" class="form-horizontal"
+						data-search_data_path="{{path('admin_request_service')}}"
+						data-search_export_excel_path="{{path('admin_request_service_excel_export')}}">
+						{% include 'ProjectBundle::_form_search.html.twig' %}
+					</form> -->
+					<form id="data_form_search" action="{{path('admin_request_service')}}" method="get" role="form" enctype="multipart/form-data" class="form-horizontal"
+						  data-search_data_path="{{path('admin_request_service')}}"
+						  data-search_export_excel_path="{{path('admin_request_service_excel_export')}}">
+						  {% include 'ProjectBundle:AdminRequestService:_form_search.html.twig' %}
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<form action="#" method="post" id="data_group">
+			<div class="box-body table-responsive icheck">
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th width="19"><input type="checkbox" id="select_all" /></th>
+							<th>Customer Name</th>
+							<th>Product name</th>
+							<th>Product Model</th>
+							<th>Serail Number</th>
+							<th>Detail</th>
+							<th>Phone</th>
+							<th>Create date</th>
+							<th class="text-center" width="50">View</th>
+							<th class="text-center" width="50">Delete</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for data in paginated.currentpageresults %}
+						<tr>
+							<td><input type="checkbox" name="data_ids[]" class="check_all" value="{{data.id}}"/></td>
+							<td>{{data.firstName}} {{data.lastName}}
+								{% if data.status == 4 %}
+								 	<span class="label label-warning">Unread</span>
+								{% endif %}
+							</td>
+							<td>{{data.productTitle}}</td>
+							<td>{{data.productModel}}</td>
+							<td>
+								{% if data.productSerialNumber %}
+								{{data.productSerialNumber}}
+								{% else %}
+								-
+								{% endif %}
+							</td>
+							<td>{{data.requestDetail}}</td>
+							<td>{{data.phone}}</td>
+							<td>{{data.createdAt|date('d/m/Y')}}</td>
+							<td class="text-center">
+								<a href="{{path('admin_request_service_view', {'id' : data.id})}}"
+									<i class="fa fa-file-text-o fa-2x">
+								</a>
+							</td>
+								<td class="text-center">
+									<a href="{{path('admin_request_service_delete', {'id' : data.id})}}" onclick="return confirm('Are you sure you want to delete?');" title="Delete"><i class="fa fa-trash fa-2x"></i></a>
+								</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+
+				</div><!-- /.box-body -->
+
+				<div class="box-footer clearfix">
+					<div class="row">
+						<div class="col-md-3">
+							<div class="margin">Total : {{paginated.getNbResults}}</div>
+						</div>
+						<div class="col-md-9">
+							{% if paginated.havetopaginate %}
+							{{pagerfanta(paginated,'twitter_bootstrap3_translated')}}
+							{% endif %}
+						</div>
+					</div>
+				</div>
+			</form>
+		</div><!-- /.box -->
+	</div>
+</div>
+
+{% endblock %}

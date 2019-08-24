@@ -1,0 +1,97 @@
+{% extends "ProjectBundle:"~ view_layout ~":layout.html.twig" %}
+
+{% set product_category = product_categorys[0] %}
+
+{% block title %} {{product_category.getTitle}} | {% trans %}menu.category{% endtrans %} | {{ parent() }}{% endblock %}
+{% block product_active %}active{% endblock %}
+{% block m_product_active %}active{% endblock %}
+
+{% block breadcrumb_title1 %}{% trans %}menu.category{% endtrans %}{% endblock %}
+
+{% block breadcrumb_sub %}
+  {{ parent() }}
+  <li><a href="{{path('homepage')}}#product-cat">{% trans %}menu.category{% endtrans %}</a></li>
+  <li class="active"> {{product_category.getTitle}} </li>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+{% endblock %}
+
+{% block content %}
+<style media="screen">
+.title-category{
+  background: #ffc013;
+  color:#482b0f;
+  /* border-radius: 3px; */
+  padding: 10px;
+}
+.sub-title-category{
+  background: #ffc013;
+  border-radius: 3px;
+  padding-right: 10px;
+  color:#482b0f;
+  -webkit-transition: all .5s ease !important; /* Safari */
+  transition: all .5s ease !important;
+}
+.sub-title-category:hover{
+  background: #482b0f;
+  border-radius: 3px;
+  padding-right: 10px;
+  color:#ffffff;
+  -webkit-transition: all .5s ease !important; /* Safari */
+  transition: all .5s ease !important;
+}
+.fa.fa-play-circle{
+  color:#e91d28;
+  font-size: 22px;
+}
+.addon-group{
+  background-color: transparent;
+  border: none;
+}
+
+</style>
+<section  ng-app="productDetailApp" class="sidebar-pages popular-shop-item product-detail">
+    <div class="container">
+        <div class="section-padding pb0">
+            <div class="inner-page-wrapper section-padding pt0 white-bg">
+                <h3><div class="input-group title-category">{{product_category.getTitle}}</div></h3>
+                {% set template_customer_groups = product_category.getTemplateCustomerGroups %}
+                {% for template_customer_group in template_customer_groups %}
+                    {% set customer_group = template_customer_group.getCustomerGroup %}
+                    <div class="col-md-12">
+
+                        <a href="{{path('product', {'product_search[ddlPriceSort]':'', 'product_search[searchBox]':'', 'product_search[productCategories][]': product_category.id, 'product_search[customerGroups][]':customer_group.id }) }}">
+                            <div class="box-sub-title">
+                                <div class="col-md-4 input-group text-left">
+                                    <h4 class="sub-title-category">
+                                        {% if customer_group.getIcon %}
+                                        <img src="{{asset(customer_group.getIcon)}}" alt="{{customer_group.getTitle}}" hight="39px;">
+                                        {% endif %}
+                                        {{customer_group.getTitle}}
+                                    </h4>
+                                    <span class="input-group-addon addon-group"><i class="fa fa-play-circle"></i></span>
+                                </div>
+                            </div>
+                        </a>
+
+                    </div>
+                    <div class="col-md-12">
+                        {{template_customer_group.getDescription|raw}}
+                    </div>
+                    <hr/>
+                {% endfor %}
+            </div>
+            <!-- /.inner-page-wrapper -->
+        </div>
+        <!-- /.sidebar-page-content -->
+    </div>
+    <!-- /.container -->
+</section>
+{% endblock %}
+
+{% block javascripts_body %}
+    {{ parent() }}
+
+{% endblock %}

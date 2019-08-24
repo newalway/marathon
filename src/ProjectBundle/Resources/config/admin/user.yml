@@ -1,0 +1,90 @@
+admin_user:
+  path: /
+  defaults: {_controller: ProjectBundle:AdminUser:index}
+  requirements:
+    _method: get
+
+admin_user_new:
+  path: /new
+  defaults: {_controller: ProjectBundle:AdminUser:new}
+
+admin_user_create:
+  path: /create
+  defaults: {_controller: ProjectBundle:AdminUser:create}
+  requirements:
+    _method: post
+
+admin_user_edit:
+  path: /{id}/edit
+  defaults: {_controller: ProjectBundle:AdminUser:edit}
+  requirements:
+    id: \d+
+
+admin_user_update:
+  path: /{id}
+  defaults: {_controller: ProjectBundle:AdminUser:update}
+  requirements:
+    _method: post
+    id: \d+
+
+admin_user_change_password:
+  path: /change_password/{id}
+  defaults: {_controller: ProjectBundle:AdminUser:change_password}
+  requirements:
+    _method: get
+    id: \d+
+
+admin_user_change_password_update:
+  path: /change_password_update/{id}
+  defaults: {_controller: ProjectBundle:AdminUser:change_password_update}
+  requirements:
+    _method: post
+    id: \d+
+
+admin_user_delete:
+  path: /{id}/delete
+  defaults: {_controller: ProjectBundle:AdminUser:delete}
+  requirements:
+    _method: get
+
+admin_user_group_delete:
+  path: /group-delete
+  defaults: {_controller: ProjectBundle:AdminUser:group_delete}
+  requirements:
+    _method: post
+
+admin_user_group_enable:
+  path: /group-enable
+  defaults: {_controller: ProjectBundle:AdminUser:group_enable}
+  requirements:
+    _method: post
+
+admin_user_group_disable:
+  path: /group-disable
+  defaults: {_controller: ProjectBundle:AdminUser:group_disable}
+  requirements:
+    _method: post
+
+admin_user_generate_token:
+  path: /generate/token
+  defaults: {_controller: ProjectBundle:AdminUser:generate_token}
+  requirements:
+    _method: get
+
+admin_user_generate_token_update:
+  path: /generate/token/update
+  defaults: {_controller: ProjectBundle:AdminUser:generate_token_update}
+  requirements:
+    _method: post
+
+admin_user_edit_profile:
+  path: /profile/edit
+  defaults: {_controller: ProjectBundle:AdminUser:user_edit_profile}
+  requirements:
+    _method: get
+
+admin_user_edit_profile_update:
+  path: /profile/edit/update
+  defaults: {_controller: ProjectBundle:AdminUser:user_edit_profile_update}
+  requirements:
+    _method: post

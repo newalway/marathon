@@ -1,0 +1,29 @@
+# This file is auto-generated during the composer install
+parameters:
+    database_host: 127.0.0.1
+    database_port: null
+    database_name: marathon
+    database_user: root
+    database_password: root
+    mailer_transport: smtp
+    mailer_host: mail.marathon.co.th
+    mailer_user: no-reply@marathon.co.th
+    mailer_password: '!Tmarathon@2018'
+    secret: abac1b02f42b2620e752e86433881e1041e01258
+
+
+# /app/config/config.yml
+# Swiftmailer Configuration
+swiftmailer:
+    transport: '%mailer_transport%'
+    host: '%mailer_host%'
+    username: '%mailer_user%'
+    password: '%mailer_password%'
+    spool: { type: memory }
+    encryption: null
+    auth_mode:  login
+    port:       587
+
+
+# /app/config/project_grobal_variables.yml
+default_sender_mail_address: 'no-reply@marathon.co.th'

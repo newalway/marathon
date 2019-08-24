@@ -1,0 +1,239 @@
+{% extends "ProjectBundle:"~ view_layout ~":layout.html.twig" %}
+
+{% block title %}{% trans %}menu.showroom{% endtrans %} | {{ parent() }}{% endblock %}
+{% block showroom_active %}active{% endblock %}
+{% block m_showroom_active %}active{% endblock %}
+
+{% block breadcrumb_title1 %}{% trans %}menu.showroom{% endtrans %}{% endblock %}
+
+{% block breadcrumb_sub %}
+    {{ parent() }}
+    <li class="active">{% trans %}menu.showroom{% endtrans %}</li>
+{% endblock %}
+
+{% block content %}
+<section ng-app="showroomApp" class="experienced-trainer-area has-dynamic-divider showroom-area" data-count-element="3">
+    <div ng-controller="showroomCtrl" ng-init="init('{{cookie_coordinates.lat}}', '{{cookie_coordinates.lng}}')" class="container">
+        <div class="row">
+            {% for arr_data in paginated.currentpageresults %}
+            {% if (arr_data[0] is defined ) %}
+                {% set data = arr_data[0] %}
+            {% else %}
+                {% set data = arr_data %}
+            {% endif %}
+            <div class="col-sm-6 col-md-4 dynamic-divider-element">
+                <div class="single-item">
+                    <div class="img-holder">
+                        <!-- <img src="/template/img/shop/1.jpg" alt=""> -->
+                        <div class="embed-responsive embed-responsive-16by9 embed-map" id="map{{data.id}}" style="padding-bottom: 90%;" data-latitude="{{data.latitude}}" data-longitude="{{data.longitude}}" data-id="map{{data.id}}"> </div>
+                        <div class="overlay-content">
+                            <ul>
+                                {% if data.phone %}
+                                    <li>{% trans %}showroom.tel{% endtrans %} {{data.phone}}</li>
+                                {% endif %}
+                                {% if data.fax %}
+                                    <li>{% trans %}showroom.fax{% endtrans %} {{data.fax}}</li>
+                                {% endif %}
+                                {% if data.mobile %}
+                                    <li>{% trans %}showroom.mobile{% endtrans %} {{data.mobile}}</li>
+                                {% endif %}
+                            </ul>
+                            <div class="overlay-buttom" style="width: 100%;">
+                                <div class="trainer-name">
+                                    <div class="name pull-left">
+                                        <h3>{{data.getTitle}}</h3>
+                                        <!-- <span>Ceo & Fitness Instructor</span> -->
+                                    </div>
+                                </div>
+                                {% if data.getAddress %}
+                                    <p>{{data.getAddress}}</p>
+                                {% endif %}
+                                {#<div class="social-links">
+                                <a href="#" target="_blank"><i class="fa fa-facebook"></i></a>
+                                <a href="#" target="_blank"><i class="fa fa-instagram"></i></a>
+                                <a href="#" target="_blank"><i class="fa fa-youtube"></i></a>
+                                <a href="https://www.google.com/maps/search/?api=1&query={{data.latitude}},{{data.longitude}}&hl=en-US" target="_blank" title="{% trans %}showroom.directions{% endtrans %}"><i class="fa fa-map-marker"></i></a>
+                                </div>#}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content">
+                        <div class="trainer-name">
+                            <div class="name pull-left">
+                                <h3>{{data.getTitle}}</h3>
+                                <!-- <span>Ceo & Fitness Instructor</span> -->
+                            </div>
+                        </div>
+                        {% if data.getAddress %}
+                            <p>{{data.getAddress}}</p>
+                        {% endif %}
+                        {#<div class="social-links">
+                        <a href="#" target="_blank"><i class="fa fa-facebook"></i></a>
+                        <a href="#" target="_blank"><i class="fa fa-instagram"></i></a>
+                        <a href="#" target="_blank"><i class="fa fa-youtube"></i></a>
+                        <a href="https://www.google.com/maps/search/?api=1&query={{data.latitude}},{{data.longitude}}&hl=en-US" target="_blank" title="{% trans %}showroom.directions{% endtrans %}"><i class="fa fa-map-marker"></i></a>
+                        </div>#}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="center">
+            {% if paginated.havetopaginate %}
+                {{pagerfanta(paginated,'twitter_bootstrap3_translated_template')}}
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block javascripts_body %}
+    {{ parent() }}
+    <script src="http://maps.google.com/maps/api/js?key={{google_maps_api_key}}"></script>
+
+    <script>
+        function initMapPoint(latitude,longitude,id) {
+            var uluru = {lat: latitude, lng: longitude};
+            var map = new google.maps.Map(document.getElementById(id), {
+                zoom: 17,
+                center: uluru
+            });
+            var image = {
+                url: '{{ app.request.getSchemeAndHttpHost() ~ asset('images/marathon/map-marker-mini.png') }}',
+                // This marker is 20 pixels wide by 32 pixels high.
+                size: new google.maps.Size(40, 45),
+                // The origin for this image is (0, 0).
+                origin: new google.maps.Point(0, 0),
+                // The anchor for this image is the base of the flagpole at (0, 32).
+                anchor: new google.maps.Point(0, 45)
+            };
+            var marker = new google.maps.Marker({
+                position: uluru,
+                map: map,
+                icon: image
+            });
+        }
+        $(function(){
+            dynamicDivider();
+            // Google Map
+            $('.embed-map').each(function( index ) {
+                initMapPoint($(this).data('latitude'),$(this).data('longitude'),$(this).data('id'));
+            });
+        })
+
+
+
+        var app = angular.module('showroomApp', []);
+
+        app.factory('showroom_data', ['$http', function showroom_data($http) {
+            return {
+                find_showroom_distance: function(lat, lng, set_cookie){
+                    return $http({
+                        method:'GET',
+                        url: Routing.generate('find_showroom_distance', { lat:lat, lng:lng, set_cookie:set_cookie } ),
+                        headers: {
+                            'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'
+                        }
+                    });
+                }
+            }
+        }]);
+
+        app.controller('showroomCtrl',['$scope', '$sce', '$http', 'showroom_data', function($scope, $sce, $http, showroom_data){
+            $scope.init = function(cookie_coordinate_lat, cookie_coordinate_lng)
+            {
+                $scope.data_showroom_loaded = false;
+                $scope.data_showroom_showmap = false;
+
+                $scope.arr_showrooms = {};
+                $scope.cookie_coordinate = {lat:cookie_coordinate_lat, lng:cookie_coordinate_lng};
+console.log($scope.cookie_coordinate);
+                $scope.getShowroomLocation();
+            }
+
+            // geolocation
+            $scope.getShowroomLocation = function(){
+                if(!$scope.data_showroom_loaded){
+                    if ("geolocation" in navigator){
+                        // geolocation is available
+                        if (navigator.geolocation){
+                            navigator.geolocation.getCurrentPosition(
+                                // $scope.displayLocationInfo, $scope.handleLocationError, { maximumAge: 1500000, timeout: 0 }
+                                $scope.displayLocationInfo, $scope.handleLocationError
+                            );
+                        }else{
+                            // Geolocation is not supported by this browser
+                        }
+                    }
+                }
+            }
+
+            // geolocation
+            $scope.displayLocationInfo = function(position, set_cookie) {
+                set_cookie = (typeof set_cookie !== 'undefined') ?  set_cookie : 0;
+
+console.log(position);
+console.log(set_cookie);
+
+                var lat = position.coords.latitude;
+                var lng = position.coords.longitude;
+
+                showroom_data.find_showroom_distance(lat, lng, set_cookie).then(function onSuccess(response){
+                    $scope.arr_showrooms = response.data.arr_showrooms;
+                    $scope.data_showroom_loaded = true;
+                    $scope.data_showroom_showmap = true;
+                }).catch(function onError(response) {
+                });
+            }
+
+            // geolocation
+            $scope.handleLocationError = function(error) {
+                console.log('error.code: '+error.code+' '+error.message);
+                switch (error.code) {
+                    case 3:
+                        // #timeout was hit, meaning nothing's in the cache
+                        // #now make a non-cached request to get the actual position
+                        navigator.geolocation.getCurrentPosition($scope.displayLocationInfo, $scope.handleLocationError);
+                        break;
+                    case 2:
+                        // #Unable to retrieve your location
+                        $scope.tryGoogleAPIGeolocation();
+                        break;
+                    case 1:
+                        // #User denied geolocation prompt
+                        $scope.tryGoogleAPIGeolocation();
+                }
+            }
+
+            // google geolocation
+            $scope.tryGoogleAPIGeolocation = function() {
+
+                if($scope.cookie_coordinate.lat !='' && $scope.cookie_coordinate.lng !=''){
+                    console.log('have cookie');
+                    var position = {coords: {latitude: $scope.cookie_coordinate.lat, longitude: $scope.cookie_coordinate.lng}};
+                    $scope.displayLocationInfo(position);
+                }else{
+                    console.log('no cookie');
+                    $http.post('https://www.googleapis.com/geolocation/v1/geolocate?key={{geolocation_api_key}}').then(function onSuccess(success){
+                        console.log("API Geolocation");
+                        var position = {coords: {latitude: success.data.location.lat, longitude: success.data.location.lng}};
+                        $scope.displayLocationInfo(position, 1);
+                    }, function errorCallback(err) {
+                        console.log("API Geolocation error! \n"+err);
+                        // $scope.displayLocationInfoWithoutLatLng();
+                    });
+                }
+            }
+
+            // geolocation
+            $scope.displayLocationInfoWithoutLatLng = function() {
+console.log('get data without lat lng');
+                // $scope.data_showroom_showmap = true;
+                // product_data.find_fastest_showroom_distance($scope.product_id, '', '').then(function onSuccess(response){
+                //     $scope.data_showroom_loaded = true;
+                // }).catch(function onError(response) {
+                // });
+            }
+        }]);
+    </script>
+{% endblock %}

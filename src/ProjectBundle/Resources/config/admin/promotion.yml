@@ -1,0 +1,59 @@
+admin_promotion:
+  path: /
+  defaults: {_controller: ProjectBundle:AdminPromotion:index}
+  requirements:
+    _method: get
+
+admin_promotion_new:
+  path: /new
+  defaults: {_controller: ProjectBundle:AdminPromotion:new}
+
+admin_promotion_create:
+  path: /create
+  defaults: {_controller: ProjectBundle:AdminPromotion:create}
+  requirements:
+    _method: post
+
+admin_promotion_edit:
+  path: /{id}/edit
+  defaults: {_controller: ProjectBundle:AdminPromotion:edit}
+  requirements:
+    id: \d+
+
+admin_promotion_update:
+  path: /{id}
+  defaults: {_controller: ProjectBundle:AdminPromotion:update}
+  requirements:
+    _method: post
+    id: \d+
+
+admin_promotion_download:
+  path: /{id}/download
+  defaults: {_controller: ProjectBundle:AdminPromotion:download}
+  requirements:
+    _method: get
+    id: \d+
+
+admin_promotion_delete:
+  path: /{id}/delete
+  defaults: {_controller: ProjectBundle:AdminPromotion:delete}
+  requirements:
+    _method: get
+
+admin_promotion_group_delete:
+  path: /group-delete
+  defaults: {_controller: ProjectBundle:AdminPromotion:group_delete}
+  requirements:
+    _method: post
+
+admin_promotion_group_enable:
+  path: /group-enable
+  defaults: {_controller: ProjectBundle:AdminPromotion:group_enable}
+  requirements:
+    _method: post
+
+admin_promotion_group_disable:
+  path: /group-disable
+  defaults: {_controller: ProjectBundle:AdminPromotion:group_disable}
+  requirements:
+    _method: post

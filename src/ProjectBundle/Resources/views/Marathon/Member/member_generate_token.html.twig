@@ -1,0 +1,54 @@
+{% extends "ProjectBundle:"~ view_layout ~":layout_member.html.twig" %}
+
+{% block title %}{% trans %}member.generate.token{% endtrans %} | {{ parent() }}{% endblock %}
+{% block member_header %}{% trans %}member.generate.token{% endtrans %}{% endblock %}
+
+{% block content_member %}
+  {% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+
+  <div class="member-box member-generate-token">
+
+    {% for flashMessage in app.session.flashbag.get('notice') %}
+      <div class="alert alert-member">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <i class="fa fa-check-circle-o"></i> {{ flashMessage|raw }}
+      </div>
+    {% endfor %}
+
+    <form id="data_form" action="{{path('member_generate_token_update')}}" method="post" enctype="multipart/form-data" class="form-horizontal">
+      {{form_widget(form._token)}}
+
+      <div class="row">
+        <div class="col-sm-offset-2 col-sm-10">
+          <div class="form-control-static">
+            {% trans %}member.generate.token_description{% endtrans %}
+          </div>
+        </div>
+      </div>
+
+      {% if app.user.email %}
+        <div class="form-group">
+          <label class="col-sm-2 control-label">{% trans %}member.personal.email{% endtrans %}</label>
+          <div class="col-sm-6">
+            <div class="form-control-static">{{app.user.email}}</div>
+          </div>
+        </div>
+      {% endif %}
+
+      <div class="form-group">
+        <label class="col-sm-2 control-label" for="current_password">{% trans %}member.password{% endtrans %} <span class="red-text"> *</span></label>
+        <div class="col-sm-6">
+          {{form_widget(form.current_password, {'id' : 'current_password'})}}
+          <div class="red-text">{{form_errors(form.current_password)}}</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          {{form_widget(form.save, {'id' : 'save', 'label': 'member.generate.token.button'|trans, 'attr': {'class': 'btn btn-marathon'}})}}
+        </div>
+      </div>
+
+    </form>
+  </div>
+{% endblock %}

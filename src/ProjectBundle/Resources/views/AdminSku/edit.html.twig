@@ -1,0 +1,33 @@
+{% extends 'ProjectBundle::admin.html.twig'%}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style media="screen">
+        label {
+            font-weight: normal !important;
+        }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
+
+{% use "ProjectBundle:AdminSku:blocks.html.twig" %}
+{% use "ProjectBundle::flash_message.html.twig" %}
+{% block breadcrumb_sub %}
+    {{ parent() }}
+    <li><a href="{{path('admin_product_edit',{'id':product.id})}}">{{product.getTitle}}</a></li>
+    <li class="active">Variants</li>
+{% endblock %}
+
+{% block content_header %}
+    {{ sku_variant_option|join(' · ') }}
+{% endblock %}
+
+{% block content %}
+    <form id="data_form" action="{{path('admin_sku_update', {'id': form.vars.value.id})}}" method="post" role="form" enctype="multipart/form-data">
+        {{form_widget(form._token)}}
+        {% include 'ProjectBundle:AdminSku:_form.html.twig'%}
+    </form>
+{% endblock %}

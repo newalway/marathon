@@ -1,0 +1,20 @@
+{% extends "ProjectBundle:"~ view_layout ~":layout.html.twig" %}
+
+{% block title %}{{data.getTitle}} | {{ parent() }}{% endblock %}
+{% block how_to_buy_active %}active{% endblock %}
+{% block m_how_to_buy_active %}active{% endblock %}
+
+{% block breadcrumb_title1 %}{{data.getTitle}}{% endblock %}
+
+{% block breadcrumb_sub %}
+    {{ parent() }}
+    <li class="active">{{data.getTitle}}</li>
+{% endblock %}
+
+{% block content %}
+    <section class="section-padding">
+        <div class="container">
+            {{data.getContent|raw}}
+        </div>
+    </section>
+{% endblock %}

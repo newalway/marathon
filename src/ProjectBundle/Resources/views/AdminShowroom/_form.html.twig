@@ -1,0 +1,103 @@
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+<div class="box-body icheck">
+
+	<div class="form-group">
+    <label class="control-label col-md-2" for="status"> Translation</label>
+		<div class="col-md-9">
+		    {{ form_widget(form.translations) }}
+    </div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label col-md-2" for="phone">Phone</label>
+		<div class="col-md-5">
+			{{form_widget(form.phone, {'id' : 'phone'})}}
+			<div class="error-form">{{form_errors(form.phone)}}</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label col-md-2" for="fax"> Fax</label>
+		<div class="col-md-5">
+			{{form_widget(form.fax, {'id' : 'fax'})}}
+			<div class="error-form">{{form_errors(form.fax)}}</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label col-md-2" for="mobile"> Mobile</label>
+		<div class="col-md-5">
+			{{form_widget(form.mobile, {'id' : 'mobile'})}}
+			<div class="error-form">{{form_errors(form.mobile)}}</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label col-md-2" for="map"> </label>
+		<div class="col-md-9">
+			<div id="floating-panel">
+			  <input id="geocode-address" type="textbox" value="" class="">
+			  <input id="submit-map" type="button" value="{% trans %}search{% endtrans %}">
+			</div>
+			<div id="map-canvas"></div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label col-md-2" for="latitude"> * Map</label>
+			<div class="col-md-3">
+				<div class="input-group">
+		      <span class="input-group-addon">lat</span>
+					{{form_widget(form.latitude, {'id' : 'latitude'})}}
+		    </div>
+				<div class="error-form">{{form_errors(form.latitude)}}</div>
+			</div>
+			<div class="col-md-3">
+				<div class="input-group">
+					<span class="input-group-addon">lng</span>
+					{{form_widget(form.longitude, {'id' : 'longitude'})}}
+				</div>
+				<div class="error-form">{{form_errors(form.longitude)}}</div>
+			</div>
+			<div class="col-md-3">
+				<div class="input-group">
+					<span class="input-group-addon">PlaceId</span>
+					{{form_widget(form.placeId, {'id' : 'placeId'})}}
+				</div>
+				<div class="error-form">{{form_errors(form.placeId)}}</div>
+			</div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label col-md-2" for="status"> Status</label>
+		<div class="col-md-9">
+			{{form_widget(form.status, {'id' : 'status'})}}
+			<div class="error-form">{{form_errors(form.status)}}</div>
+		</div>
+	</div>
+
+</div>
+
+<div class="box-footer">
+	<div class="row">
+		<div class="col-md-offset-2 col-md-9">
+			{{form_widget(form.save, {'id' : 'save', 'label': btn_label_save})}}
+			{{form_widget(form.save_and_add, {'id' : 'save_and_add', 'label': btn_label_save_add})}}
+			{{form_widget(form.save_and_edit, {'id' : 'save_and_edit', 'label': btn_label_save_edit})}}
+			<a href="{%if app.session.get('back_to_url')['admin_showroom'] is defined%}{{app.session.get('back_to_url')['admin_showroom']}}{%else%}{{path('admin_showroom')}}{%endif%}" class="btn btn-default">{{btn_label_close}} </a>
+		</div>
+	</div>
+</div>
+
+<script async defer src="https://maps.googleapis.com/maps/api/js?key={{google_maps_api_key}}&callback=initGeocodeMap&language={{app.request.locale}}"></script>
+<script>
+	$(document).ready(function() {
+	  $('#geocode-address').keydown(function(event) {
+	    if (event.keyCode == 13) {
+				document.getElementById("submit-map").click();
+	      return false;
+	    }
+	  });
+	});
+</script>

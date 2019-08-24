@@ -1,0 +1,70 @@
+{% if item_best_seller %}
+<style media="screen">
+	.best-seller{color:#ffffff}
+</style>
+<section class="section-padding pb0">
+	<div class="container">
+		<div class="section-title text-left">
+			<h1><span>{% trans %}best.sale{% endtrans %}</span></h1>
+		</div>
+		<div class="owl-carousel owl-theme product-carousel-loop">
+			{% for  data in item_best_seller %}
+				{% set item = data[0] %}
+				{% set price_data = getPriceData(data) %}
+
+				<div class="item">
+					<div class="single-product-item text-center product-border">
+						<div class="img-holder offer productZoom">
+							<div class="offer-product best-seller">
+								<h4>{% trans %}product.best_seller{% endtrans %}</h4>
+							</div>
+							{% if item.image %}
+								<img alt="" src="{{asset(item.image) | imagine_filter('img_480x480')}}" data-zoom-image="{{asset(item.image) | imagine_filter('img_1000x1000')}}">
+							{% else %}
+								<img alt="" src="{{asset('images/marathon/products/480x480.jpg') | imagine_filter('img_480x480')}}" data-zoom-image="{{asset('images/marathon/products/1000x1000.png') | imagine_filter('img_1000x1000')}}">
+							{% endif %}
+							{#<div class="overlay">
+								<div class="icon-holder">
+									<ul>
+										<li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+										<li><a href="#"><i class="fa fa-heart"></i></a></li>
+										<li><a href="#"><i class="fa fa-search-plus"></i></a></li>
+									</ul>
+								</div>
+								<!-- /.icon-holder -->
+							</div>>#}
+							<!-- /.overlay -->
+						</div>
+						<!-- /.img-holder -->
+
+
+						<div class="title">
+							<a href="{{path('product_detail',{'id':item.id,'slug':item.getSlug})}}"><h3>{{item.getTitle}}</h3></a>
+							<h2>
+								{% if price_data.price and price_data.price > 0 %}
+									{% if (price_data.compare_at_price > price_data.price) %}
+										<del class="before-rate">
+											฿{{ price_data.compare_at_price|number_format(2, '.', ',') }}
+										</del>
+									{% endif %}
+									฿{{ price_data.price|number_format(2, '.', ',') }}
+								{% else %}
+									&nbsp;
+								{% endif %}
+							</h2>
+						</div>
+
+
+						<!-- /.title -->
+					</div>
+					<!-- /.single-product-item text-center -->
+				</div>
+				<!-- /.item -->
+			{% endfor %}
+		</div>
+		<!-- /.owl-carousel owl-theme -->
+	</div>
+	<!-- /.container -->
+</section>
+<!-- /.section-padding -->
+{% endif %}

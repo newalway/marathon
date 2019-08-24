@@ -1,0 +1,52 @@
+admin_equipment:
+  path: /
+  defaults: {_controller: ProjectBundle:AdminEquipment:index}
+  requirements:
+    _method: get
+
+admin_equipment_new:
+  path: /new
+  defaults: {_controller: ProjectBundle:AdminEquipment:new}
+
+admin_equipment_create:
+  path: /create
+  defaults: {_controller: ProjectBundle:AdminEquipment:create}
+  requirements:
+    _method: post
+
+admin_equipment_edit:
+  path: /{id}/edit
+  defaults: {_controller: ProjectBundle:AdminEquipment:edit}
+  requirements:
+    id: \d+
+
+admin_equipment_update:
+  path: /{id}
+  defaults: {_controller: ProjectBundle:AdminEquipment:update}
+  requirements:
+    _method: post
+    id: \d+
+
+admin_equipment_delete:
+  path: /{id}/delete
+  defaults: {_controller: ProjectBundle:AdminEquipment:delete}
+  requirements:
+    _method: get
+
+admin_equipment_group_delete:
+  path: /group-delete
+  defaults: {_controller: ProjectBundle:AdminEquipment:group_delete}
+  requirements:
+    _method: post
+
+admin_equipment_sort:
+  path: /sort
+  defaults: {_controller: ProjectBundle:AdminEquipment:sort}
+  requirements:
+    _method: get
+
+admin_equipment_sort_prosess:
+  path: /sort-prosess
+  defaults: {_controller: ProjectBundle:AdminEquipment:sort_prosess}
+  requirements:
+    _method: post

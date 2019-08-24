@@ -1,0 +1,113 @@
+<div class="box-body icheck">
+
+	<div class="form-group">
+		<label class="control-label col-md-2" for="title"><span class="require">*</span> Title</label>
+		<div class="col-md-9">
+			{{form_widget(form.title, {'id' : 'title'})}}
+			<div class="error-form">{{form_errors(form.title)}}</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label col-md-2" for="image"> Image</label>
+		<div class="col-md-9">
+			{% if form.vars.value.image %}
+				<a href="{{asset(form.vars.value.image)}}" class="fancybox pull-left" style="margin-right: 10px;margin-bottom: 10px;" >
+					<img src="{{asset(form.vars.value.image) | imagine_filter('img_thumb')}}" alt="{{form.vars.value.title}}" />
+				</a>
+				<span class="checkbox">
+					<input type="checkbox" id="removefileimage" name="removefileimage" value="1">
+					<label class="control-label" for="removefileimage">  Remove</label>
+				</span>
+			{% endif %}
+			<div class="input-group clearfix">
+				{{form_widget(form.image, {'id' : 'image'})}}
+				<span class="input-group-btn">
+					<button onclick="selectFileWithCKFinder('image');" class="btn btn-default" name="image_btn" id="image_btn" type="button">Browse Server</button>
+				</span>
+			</div>
+			<p class="help-block">size image 1100x620 px</p>
+			<div class="error-form">{{form_errors(form.image)}}</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label col-md-2" for="short_desc"> Short Desc.</label>
+		<div class="col-md-9">
+			{{form_widget(form.short_desc, {'id' : 'short_desc'})}}
+			<div class="error-form">{{form_errors(form.short_desc)}}</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label col-md-2" for="description"> Content</label>
+		<div class="col-md-9">
+			{{form_widget(form.description, {'id' : 'description'})}}
+			<div class="error-form">{{form_errors(form.description)}}</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label col-md-2" for="public_date"> Publish date</label>
+		<div class="col-md-9">
+			{{form_widget(form.public_date, {'id' : 'public_date'})}}
+			<div class="error-form">{{form_errors(form.public_date)}}</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label col-md-2" for="status"> Status</label>
+		<div class="col-md-9">
+			<div class="form-control-static">
+				{{form_widget(form.status, {'id' : 'status'})}}
+			</div>
+			<div class="error-form">{{form_errors(form.status)}}</div>
+		</div>
+	</div>
+	<hr />
+	<!-- Gallery -->
+	<div class="form-group">
+		<label class="control-label col-sm-2"> Gallery</label>
+		<div class="col-sm-9">
+			<div class="form-control-static">
+				<div id="gallery_canvas">
+					<div id="data_gallery_remove"></div>
+					{% if gallery_images %}
+						{% for gallery_image in gallery_images %}
+							<div class="photo-gallery">
+								<img src="{{asset(gallery_image.image) | imagine_filter('img_h_150')}}" alt="photo" data-fancybox="images" data-src="{{asset(gallery_image.image)}}" data-fancybox="group" />
+								<a class="removePhotoGalleryData" href="#" data-id="{{gallery_image.id}}" data-remove_elem_name="data_gallery_remove"></a>
+							</div>
+						{% endfor %}
+					{% endif %}
+				</div>
+
+				<p>
+					<input type="button" value="Add gallery images" onclick="BrowseServerGallery('gallery_canvas');" class="btn btn-default btn-sm" />
+				</p>
+				<p class="help-block">size image 800x600 px</p>
+			</div>
+    </div>
+	</div>
+	<!-- End Gallery -->
+
+
+</div>
+
+<div class="box-footer">
+	<div class="row">
+		<div class="col-md-offset-2 col-md-9">
+			{{form_widget(form.save, {'id' : 'save', 'label': btn_label_save})}}
+			{{form_widget(form.save_and_add, {'id' : 'save_and_add', 'label': btn_label_save_add})}}
+			{{form_widget(form.save_and_edit, {'id' : 'save_and_edit', 'label': btn_label_save_edit})}}
+			<a href="{%if app.session.get('back_to_url')['admin_blog'] is defined%}{{app.session.get('back_to_url')['admin_blog']}}{%else%}{{path('admin_blog')}}{%endif%}" class="btn btn-default">{{btn_label_close}} </a>
+		</div>
+	</div>
+</div>
+
+<script>
+//html5 date for safari and other browser not support html5 date
+webshims.setOptions('forms-ext', {types: 'date'});
+webshims.polyfill('forms forms-ext');
+
+</script>

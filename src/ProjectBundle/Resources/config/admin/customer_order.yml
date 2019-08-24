@@ -1,0 +1,26 @@
+admin_customer_order_list:
+  path: /
+  defaults: {_controller: ProjectBundle:AdminCustomerOrder:index}
+  requirements:
+    _method: get,post
+
+admin_customer_order_view:
+  path: /{id}/view
+  defaults: {_controller: ProjectBundle:AdminCustomerOrder:view}
+  requirements:
+    _method: get
+    id: \d+
+
+admin_customer_order_update_status:
+  path: /{id}/update
+  defaults: {_controller: ProjectBundle:AdminCustomerOrder:updateStatus}
+  requirements:
+    _method: get
+    id: \d+
+
+admin_customer_order_payment_dowload:
+    path: /{id}/customer_order_payment_dowload
+    defaults: {_controller: ProjectBundle:AdminCustomerOrder:customer_order_payment_download}
+    methods:   [GET, POST]
+    requirements:
+      id: \d+

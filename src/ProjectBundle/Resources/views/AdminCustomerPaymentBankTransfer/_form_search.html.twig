@@ -1,0 +1,77 @@
+<div class="col-md-12">
+
+	<div class="col-md-1 form-control-static">
+		<select name="date_type" class="form-control" ng-options="date_type.id as date_type.name for date_type in filter_date_type_data" ng-model="filterDateType"></select>
+	</div>
+
+	<div class="col-md-1 form-control-static">
+		<select name="search_type" class="form-control" ng-options="opt.id as opt.name for opt in filter_ddl" ng-model="filterType"></select>
+	</div>
+
+	<div ng-show="getFilterTypeData()==2">
+		<label class="control-label col-md-1 form-control-static text-center" for="status">Month</label>
+		<div class="col-md-2 form-control-static">
+			<div class="input-group">
+				<select name="search_month" class="form-control" ng-model="monthIndex" ng-options="months.indexOf(m) as m for m in months"></select>
+			</div>
+		</div>
+
+		<label class="control-label col-md-1 form-control-static text-center" for="status">Year</label>
+		<div class="col-md-2 form-control-static">
+			<div class="input-group">
+				<select name="search_year" class="form-control" ng-model="yearIndex" ng-options="years.indexOf(y) as y for y in years"></select>
+			</div>
+		</div>
+	</div>
+
+	<div ng-show="getFilterTypeData()==1">
+		<label class="control-label col-md-1 form-control-static text-center" for="status">Start</label>
+		<div class="col-md-2 form-control-static">
+			<div class="input-group">
+				<div class="input-group-addon">
+					<i class="fa fa-calendar"></i>
+				</div>
+				<input id="search_start_date" name="search_start_date" ng-model="search_start_date" class="form-control" data-date-format="dd/mm/yyyy"  type="text" ng-change='validateDate()'>
+			</div>
+		</div>
+		<label class="control-label col-md-1 form-control-static text-center" for="status">End</label>
+		<div class="col-md-2 form-control-static">
+			<div class="input-group">
+				<div class="input-group-addon">
+					<i class="fa fa-calendar"></i>
+				</div>
+				<input id="search_end_date" name="search_end_date" ng-model="search_end_date" class="form-control" data-date-format="dd/mm/yyyy"  type="text" ng-change='validateDate()'>
+			</div>
+		</div>
+	</div>
+
+	<label class="control-label col-md-1 form-control-static text-center" for="status">Status</label>
+	<div class="col-md-1 form-control-static">
+		<select name="search_status" class="form-control" ng-options="option.id as option.name for option in data_status" ng-model="search_status"></select>
+	</div>
+
+	<div class="col-md-2 form-control-static">
+		<div class="input-group" style="width:100%;">
+			<input id="q" name="q" class="form-control" placeholder="Search ..." type="text" value="{{app.request.get('q')}}">
+			{#
+			<span class="input-group-btn">
+				<button type="submit" class="btn btn-primary btn-flat"><i class="fa fa-search"></i></button>
+			</span>
+			#}
+		</div>
+	</div>
+</div>
+
+<div class="col-md-12 text-center" style="margin-top:20px;">
+	<button type="submit" class="btn btn-primary" data-form_id="data_form_search" id="search_data_path">
+		<i class="fa fa-search"></i> Search
+	</button>
+
+	<button type="button" class="btn btn-info" data-form_id="data_form_search" id="search_export_excel_path">
+		<i class="fa fa-file-text-o"></i> Export Orders
+	</button>
+
+	<button type="button" class="btn btn-info" data-form_id="data_form_search" id="search_export_excel_summary_report_path">
+		<i class="fa fa-file-text-o"></i> Export Orders Summary
+	</button>
+</div>

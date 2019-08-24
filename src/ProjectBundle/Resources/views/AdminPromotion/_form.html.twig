@@ -1,0 +1,390 @@
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+<div ng-app="promotionApp" ng-controller="promotionCtrl" ng-init="init('{{acctoken}}', '{{form.vars.value.id}}')">
+	<div class="box-body">
+
+		<div class="form-group">
+		    <label class="control-label col-md-2"> Translation</label>
+			<div class="col-md-9">
+			    {{ form_widget(form.translations) }}
+		    </div>
+		</div>
+
+		{#
+		<div class="form-group">
+			<label class="control-label col-md-2" for="title"><span class="require">*</span> Title</label>
+			<div class="col-md-9">
+				{{form_widget(form.title, {'id' : 'title'})}}
+				<div class="error-form">{{form_errors(form.title)}}</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-md-2" for="image"> Image</label>
+			<div class="col-md-9">
+				{% if form.vars.value.image %}
+					<a href="{{asset(form.vars.value.image)}}" class="fancybox pull-left" style="margin-right: 10px;margin-bottom: 10px;" >
+						<img src="{{asset(form.vars.value.image) | imagine_filter('img_thumb')}}" alt="{{form.vars.value.title}}" />
+					</a>
+					<span class="checkbox icheck">
+						<input type="checkbox" id="removefileimage" name="removefileimage" value="1">
+						<label class="control-label" for="removefileimage"> Remove</label>
+					</span>
+				{% endif %}
+				<div class="input-group clearfix">
+					{{form_widget(form.image, {'id' : 'image'})}}
+					<span class="input-group-btn">
+						<button onclick="selectFileWithCKFinder('image');" class="btn btn-default" name="image_btn" id="image_btn" type="button">Browse Server</button>
+					</span>
+				</div>
+				<p class="help-block">size image 800x450 px</p>
+				<div class="error-form">{{form_errors(form.image)}}</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-md-2" for="short_desc"> Short Desc.</label>
+			<div class="col-md-9">
+				{{form_widget(form.short_desc, {'id' : 'short_desc'})}}
+				<div class="error-form">{{form_errors(form.short_desc)}}</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-md-2" for="description"> Description</label>
+			<div class="col-md-9">
+				{{form_widget(form.description, {'id' : 'description'})}}
+				<div class="error-form">{{form_errors(form.description)}}</div>
+			</div>
+		</div>
+		#}
+
+		<div class="form-group" id="filepath">
+			<label class="control-label col-md-2" for="pdf"> Downloadable File</label>
+			<div class="col-md-9">
+				{% if file_data.file_size %}
+					<ul class="mailbox-attachments clearfix">
+						<li>
+							<span class="mailbox-attachment-icon" style="font-size: 45px;"><i class="fa fa-file-pdf-o"></i></span>
+							<div class="mailbox-attachment-info">
+								<a href="{{asset(form.vars.value.filepath)}}" target="_blank" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i> {{file_data.file_name}}</a>
+								<span class="mailbox-attachment-size">
+									{{file_data.file_size}} KB
+									{% if form.vars.value.id %}
+										<a href="{{path('admin_promotion_download',{'id':form.vars.value.id})}}" class="btn btn-default btn-xs pull-right"><i class="fa fa-cloud-download"></i></a>
+									{% endif %}
+								</span>
+							</div>
+						</li>
+						<span class="checkbox icheck">
+							<input type="checkbox" id="removefilepath" name="removefilepath" value="1">
+							<label class="control-label" for="removefilepath"> Remove</label>
+						</span>
+					</ul>
+				{% endif %}
+
+				<div class="input-group clearfix">
+					{{form_widget(form.filepath, {'id' : 'pdf'})}}
+					<span class="input-group-btn">
+						<button onclick="selectFileWithCKFinder('pdf');" class="btn btn-default" name="image_btn" id="image_btn" type="button">Browse Server</button>
+					</span>
+				</div>
+				<div class="error-form">{{form_errors(form.filepath)}}</div>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="control-label col-md-2" for="public_date"> Specific Products</label>
+			<div class="col-md-9">
+				<div>
+					<div style="padding-bottom: 8px;">
+						<input type="text" name="" value="" ng-model="textSearchProducts" placeholder="Search products">
+						<button type="button" name="button" ng-click="searchProducts(textSearchProducts);isSearchSpecificProducts=true">Browse</button>
+						<img ng-if="search_loading_icon" src="/images/bx_loader.gif" alt="loading" width="25px;">
+					</div>
+
+					<div ng-show="searchSpecificProducts.length>0" style="padding-bottom: 8px;">
+						<div class="row" ng-repeat="product in searchSpecificProducts">
+							<div class="col-md-1">
+								<input ng-hide="checkIsSelectedProduct(product)" ng-model="product.selected" id="specificProduct_{{'{{product.id}}'}}" type="checkbox" name="specificProducts[]" value="{{'{{product.id}}'}}">
+							</div>
+							<div class="col-md-2">
+								<label for="specificProduct_{{'{{product.id}}'}}">
+									<img ng-if="!product.image" src="https://placehold.it/50x50" width="50px;">
+									<img ng-src="{{'{{product.image}}'}}" alt="" ng-show="product.image">
+								</label>
+							</div>
+							<div class="col-md-7">
+								<label for="specificProduct_{{'{{product.id}}'}}"> {{'{{product.title}}'}} </label>
+								<div ng-show="checkIsSelectedProduct(product)">
+									Item already added
+								</div>
+							</div>
+							<div class="col-md-2 text-right">
+								{{'{{product.price}}'}}฿
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12 text-left" style="padding-top:8px">
+								<button type="button" name="button" ng-click="addSpecificProducts(searchSpecificProducts)">Add</button>
+							</div>
+						</div>
+					</div>
+					<hr/>
+
+					<img ng-if="specific_products_loading_icon" src="/images/bx_loader.gif" alt="loading" width="25px;">
+					<div ng-show="specificProductsSelectedObject.length>0">
+						<div style="padding-bottom: 8px;" >
+							Specific products
+						</div>
+
+						<div class="row" ng-repeat="selectedProduct in specificProductsSelectedObject" style="padding-bottom: 8px;">
+							<div class="col-md-1">
+							</div>
+							<div class="col-md-2">
+								<img ng-if="!selectedProduct.image" src="https://placehold.it/50x50" width="50px;">
+								<img ng-src="{{'{{selectedProduct.image}}'}}" alt="" ng-show="selectedProduct.image">
+							</div>
+							<div class="col-md-5">
+								{{'{{selectedProduct.title}}'}}
+							</div>
+							<div class="col-md-4 text-right">
+								<input type="hidden" name="admin_promotion[specificProducts][]" value="{{'{{selectedProduct.id}}'}}">
+								<button type="button" name="button" ng-click="removeSpecificProducts($index)">X</button>
+							</div>
+						</div>
+
+					</div>
+
+					<div ng-repeat="removeSelectedProduct in removeSpecificProductsSelectedObject">
+						<input type="hidden" name="admin_promotion[removespecificProducts][]" value="{{'{{removeSelectedProduct.id}}'}}">
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-md-2"><span class="require">*</span> Start date </label>
+			<div class="col-md-9">
+				{{form_widget(form.startDate, {'id' : 'startDate'})}}
+				<div class="error-form">{{form_errors(form.startDate)}}</div>
+			</div>
+		</div>
+		<div class="form-group" ng-show="cp.isEndDate=='1'">
+			<label class="control-label col-md-2"> End date </label>
+			<div class="col-md-9">
+				{{form_widget(form.endDate, {'id' : 'endDate'})}}
+				<div class="error-form">{{form_errors(form.endDate)}}</div>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="control-label col-md-2"> </label>
+			{{form_label(form.isEndDate,  'Set end date', {
+				'label_attr': {'class':'control-label col-md-2'}
+			})}}
+			<div class="col-md-9">
+				{{form_widget(form.isEndDate, { 'attr': {'ng-model':'cp.isEndDate', 'ng-true-value':"'1'", 'ng-false-value':"'0'"}} )}}
+			</div>
+			<div class="error-form">{{form_errors(form.isEndDate)}}</div>
+		</div>
+
+		<div class="form-group">
+			<label class="control-label col-md-2" for="status"><span class="require">*</span> Status</label>
+			<div class="col-md-9">
+				<div class="form-control-static icheck">
+					{{form_widget(form.status, {'id' : 'status'})}}
+				</div>
+				<div class="error-form">{{form_errors(form.status)}}</div>
+			</div>
+		</div>
+
+	</div>
+
+	<div class="box-footer">
+		<div class="row">
+			<div class="col-md-offset-2 col-md-9">
+				{{form_widget(form.save, {'id' : 'save', 'label': btn_label_save})}}
+				{{form_widget(form.save_and_add, {'id' : 'save_and_add', 'label': btn_label_save_add})}}
+				{{form_widget(form.save_and_edit, {'id' : 'save_and_edit', 'label': btn_label_save_edit})}}
+				<a href="{%if app.session.get('back_to_url')['admin_promotion'] is defined%}{{app.session.get('back_to_url')['admin_promotion']}}{%else%}{{path('admin_promotion')}}{%endif%}" class="btn btn-default">{{btn_label_close}} </a>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+<script>
+	$(function() {
+		//html5 date for safari and other browser not support html5 date
+		webshims.setOptions('forms-ext', {types: 'date'});
+		webshims.polyfill('forms forms-ext');
+		$('#startDate').datetimepicker({
+			format: 'YYYY-MM-DD',
+			// useCurrent: true,
+		});
+		$('#endDate').datetimepicker({
+			format: 'YYYY-MM-DD',
+			// useCurrent: true,
+			"defaultDate":new Date()
+		});
+
+		if($('.image-input-group')){
+			$('.image-input-group').each(function() {
+				var elm = $(this);
+				var elm_input =  elm[0].outerHTML;
+				var elm_id = elm.attr('id');
+				var elm_img = '';
+				if(elm.val()){
+					var elm_val = elm.val();
+					elm_img = '<a href="'+ elm_val +'" class="fancybox pull-left" style="margin-right: 10px;margin-bottom: 10px;" ><img src="'+ elm_val +'" alt="image" style="height: 100px;"/></a><span class="checkbox" style="padding-left: 120px;"><input type="checkbox" id="removefileimage_'+ elm_id +'" name="removefileimage_'+ elm_id +'" value="1"><label class="control-label" for="removefileimage_'+ elm_id +'">  Remove</label></span>';
+				}
+				elm.replaceWith('<div>'+ elm_img + '<div class="input-group clearfix">'+ elm_input +'<span class="input-group-btn"><button onclick="selectFileWithCKFinder(\''+ elm_id +'\');" class="btn btn-default" name="'+ elm_id +'" id="'+ elm_id +'_btn" type="button">Browse Server</button></span></div></div>');
+			});
+		}
+	});
+
+
+	var app = angular.module('promotionApp', []);
+
+	app.factory('product_data', ['$http', function product_data($http) {
+		return {
+			getPublicSearchProducts: function(text){
+				return $http({
+					method:'GET',
+					url: Routing.generate('api_1_get_public_search_products', {'text':text}),
+					headers: {
+						// 'Authorization':'Bearer ' + token
+					}
+				});
+			},
+			getProductsPromotions: function(token, promotion_id){
+	      		return $http({
+					method:'GET',
+					url: Routing.generate('api_1_get_products_promotions',{'promotion_id':promotion_id}),
+					headers: {
+						'Authorization':'Bearer ' + token
+					}
+				});
+	    	}
+		}
+	}]);
+
+	app.controller('promotionCtrl', ['$scope', '$http', 'product_data',  function($scope, $http, product_data) {
+		$scope.init = function(token, promotion_id){
+
+			$scope.glob_access_token = token;
+			$scope.glob_promotion_id = promotion_id;
+
+			$scope.searchSpecificProducts = [];
+			$scope.specificProductsSelectedObject = [];
+			$scope.removeSpecificProductsSelectedObject = [];
+			$scope.cp = {};
+
+			$scope.cp.isEndDate = '{{form.vars.value.isEndDate}}';
+
+			$scope.search_loading_icon = false;
+			$scope.specific_products_loading_icon = false;
+
+			if($scope.glob_promotion_id){
+				$scope.specific_products_loading_icon = true;
+				product_data.getProductsPromotions($scope.glob_access_token, $scope.glob_promotion_id).then(function onSuccess(response){
+					$scope.specificProductsSelectedObject = response.data.arr_products;
+					$scope.specific_products_loading_icon = false;
+			    }).catch(function onError(response) {
+					console.log('Error get current hashtag');
+					$scope.specific_products_loading_icon = false;
+			    });
+			}
+		}
+
+		$scope.searchProducts = function(text)
+		{
+			$scope.search_loading_icon = true;
+			// $scope.searchSpecificProducts = [{'id':1, 'title':'T-shirt', 'price':500, 'selected':''}, {'id':2, 'title':'Petan', 'price':1000, 'selected':''}, {'id':3, 'title':'Dumbbell', 'price':800, 'selected':''}];
+
+			product_data.getPublicSearchProducts(text).then(function onSuccess(response){
+				// $scope.tags = response.data.data;
+				$scope.searchSpecificProducts = response.data.arr_products;
+				$scope.search_loading_icon = false;
+			}).catch(function onError(response) {
+				console.log('Error get search product');
+				$scope.search_loading_icon = false;
+			});
+		}
+
+		$scope.addSpecificProducts = function(data)
+		{
+		    for(var i in data){
+				if(data[i].selected==true){
+
+					//find object
+					var index = $scope.specificProductsSelectedObject.find(x => x.id === data[i].id);
+					if (index === undefined){
+						//push data to specificProductsSelectedObject
+						$scope.specificProductsSelectedObject.push(data[i]);
+					}
+
+					//remove this data if exist in removeSpecificProductsSelectedObject
+					var obj_remove = $scope.removeSpecificProductsSelectedObject.find(x => x.id === data[i].id);
+					if (obj_remove){
+						var index_remove = $scope.removeSpecificProductsSelectedObject.findIndex(x => x.id === obj_remove.id);
+						//remove from removeSpecificProductsSelectedObject
+						$scope.removeSpecificProductsSelectedObject.splice(index_remove,1);
+					}
+
+					//find array
+					// $scope.specificProductsSelected.indexOf(data[i].id) === -1 ? $scope.specificProductsSelected.push(data[i].id) : console.log("This item already exists");
+		       }
+		    }
+
+			//reset search result
+			$scope.searchSpecificProducts = [];
+		}
+
+		$scope.checkIsSelectedProduct = function(data)
+		{
+			//find object
+			var index = $scope.specificProductsSelectedObject.find(x => x.id === data.id);
+			if (index === undefined){
+				return false;
+			}else{
+				return true;
+			}
+		}
+
+		$scope.removeSpecificProducts = function(index)
+		{
+			//remove data from specificProductsSelectedObject
+			var removeObj = $scope.specificProductsSelectedObject.splice(index,1);
+			var data = removeObj[0];
+
+			//push data to removeSpecificProductsSelectedObject
+			var index = $scope.removeSpecificProductsSelectedObject.find(x => x.id === data.id);
+			if (index === undefined){
+				$scope.removeSpecificProductsSelectedObject.push(data);
+			}
+		}
+
+	}]);
+
+	/*
+	{#
+	var checked_pdf = $("#admin_news_type_1:checked").val();
+	if(checked_pdf==2){
+		showPdf();
+	}else{
+		hidePdf();
+	}
+	$("#admin_news_type_0").on( "ifClicked", function(){
+		hidePdf();
+	});
+	$("#admin_news_type_1").on( "ifClicked", function(){
+		showPdf();
+	});
+	function hidePdf(){
+		document.getElementById('filepath').style.display='none';
+	}
+	function showPdf(){
+		document.getElementById('filepath').style.display='block';
+	}
+	#}
+	*/
+</script>

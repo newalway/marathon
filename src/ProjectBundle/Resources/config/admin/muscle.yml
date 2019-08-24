@@ -1,0 +1,52 @@
+admin_muscle:
+  path: /
+  defaults: {_controller: ProjectBundle:AdminMuscle:index}
+  requirements:
+    _method: get
+
+admin_muscle_new:
+  path: /new
+  defaults: {_controller: ProjectBundle:AdminMuscle:new}
+
+admin_muscle_create:
+  path: /create
+  defaults: {_controller: ProjectBundle:AdminMuscle:create}
+  requirements:
+    _method: post
+
+admin_muscle_edit:
+  path: /{id}/edit
+  defaults: {_controller: ProjectBundle:AdminMuscle:edit}
+  requirements:
+    id: \d+
+
+admin_muscle_update:
+  path: /{id}
+  defaults: {_controller: ProjectBundle:AdminMuscle:update}
+  requirements:
+    _method: post
+    id: \d+
+
+admin_muscle_delete:
+  path: /{id}/delete
+  defaults: {_controller: ProjectBundle:AdminMuscle:delete}
+  requirements:
+    _method: get
+
+admin_muscle_group_delete:
+  path: /group-delete
+  defaults: {_controller: ProjectBundle:AdminMuscle:group_delete}
+  requirements:
+    _method: post
+
+admin_muscle_sort:
+  path: /sort
+  defaults: {_controller: ProjectBundle:AdminMuscle:sort}
+  requirements:
+    _method: get
+
+admin_muscle_sort_prosess:
+  path: /sort-prosess
+  defaults: {_controller: ProjectBundle:AdminMuscle:sort_prosess}
+  requirements:
+    _method: post

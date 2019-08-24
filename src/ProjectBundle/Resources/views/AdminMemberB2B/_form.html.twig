@@ -1,0 +1,73 @@
+<div class="box-body icheck">
+
+    <div class="form-group">
+		<label class="control-label col-md-3" for="first_name"><span class="require">*</span> {% trans %}member.personal.fname{% endtrans %}</label>
+		<div class="col-md-6">
+			{{form_widget(form.first_name, {'id' : 'first_name'})}}
+			<div class="error-form">{{form_errors(form.first_name)}}</div>
+		</div>
+	</div>
+
+    <div class="form-group">
+		<label class="control-label col-md-3" for="last_name"><span class="require">*</span> {% trans %}member.personal.lname{% endtrans %}</label>
+		<div class="col-md-6">
+			{{form_widget(form.last_name, {'id' : 'last_name'})}}
+			<div class="error-form">{{form_errors(form.last_name)}}</div>
+		</div>
+	</div>
+
+    <div class="form-group">
+		<label class="control-label col-md-3" for="company_name"><span class="require">*</span> {% trans %}member.personal.company_name{% endtrans %}</label>
+		<div class="col-md-6">
+			{{form_widget(form.company_name, {'id' : 'company_name'})}}
+			<div class="error-form">{{form_errors(form.company_name)}}</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label col-md-3" for="email"><span class="require">*</span> {% trans %}member.personal.email{% endtrans %}</label>
+		<div class="col-md-6">
+			{{form_widget(form.email, {'id' : 'email'})}}
+			<div class="error-form">{{form_errors(form.email)}}</div>
+		</div>
+	</div>
+
+	{% if form.vars.value.id is null %}
+        <div class="form-group">
+            <label class="control-label col-md-3" for="email"><span class="require">*</span> {% trans %}member.password{% endtrans %}</label>
+            <div class="col-md-6">
+                {{form_widget(form.plainPassword,{'id' : 'password'})}}
+                <div class="error-form">{{form_errors(form.plainPassword)}}</div>
+            </div>
+        </div>
+	{% endif %}
+
+    <div class="form-group">
+		<label class="control-label col-md-3" for="phone_number"><span class="require">*</span> {% trans %}member.personal.phone_number{% endtrans %}</label>
+		<div class="col-md-6">
+			{{form_widget(form.phone_number, {'id' : 'phone_number'})}}
+			<div class="error-form">{{form_errors(form.phone_number)}}</div>
+		</div>
+	</div>
+
+    {#
+    <div class="form-group">
+		<label class="control-label col-md-3" for="enabled"> Status</label>
+		<div class="col-md-9">
+			{{form_widget(form.enabled, {'id' : 'enabled'})}}
+			<div class="error-form">{{form_errors(form.enabled)}}</div>
+		</div>
+	</div>
+    #}
+
+</div>
+
+<div class="box-footer">
+	<div class="row">
+		<div class="col-md-offset-3 col-md-6">
+			{{form_widget(form.save, {'id' : 'save', 'label': btn_label_save})}}
+			{{form_widget(form.save_and_add, {'id' : 'save_and_add', 'label': btn_label_save_add})}}
+			<a href="{%if app.session.get('back_to_url')['admin_member_b2b'] is defined%}{{app.session.get('back_to_url')['admin_member_b2b']}}{%else%}{{path('admin_member_b2b')}}{%endif%}" class="btn btn-default">{{btn_label_close}} </a>
+		</div>
+	</div>
+</div>

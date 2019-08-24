@@ -1,0 +1,49 @@
+<div ng-app="shippingRateApp" ng-controller="shippingRateController">
+	<div class="box-body">
+
+		<div class="form-group">
+			<label class="control-label col-md-3" for="name"><span class="require">*</span> Name</label>
+			<div class="col-md-6 form-control-static">
+				{{form_widget(form.name, {'id' : 'name'})}}
+				<div class="error-form">{{form_errors(form.name)}}</div>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="control-label col-md-3" for="tracking_url"><span class="require">*</span> Tracking URL</label>
+			<div class="col-md-6 form-control-static">
+				{{form_widget(form.tracking_url, {'id' : 'tracking_url'})}}
+				<div class="error-form">{{form_errors(form.tracking_url)}}</div>
+			</div>
+			<div class="tags_select">
+	          <a href="#">#ID#</a>
+	        </div>
+		</div>
+
+	</div>
+
+	<div class="box-footer">
+		<div class="row">
+			<div class="col-md-offset-3 col-md-6">
+				{{form_widget(form.save, {'id' : 'save', 'label': 'Save'})}}
+				<a href="{% if app.session.get('back_to_url')['admin_shipping_carrier'] is defined%}
+								{{app.session.get('back_to_url')['admin_shipping_carrier']}}
+						 {% else %}{{path('admin_shipping_carrier')}}
+					 	 {% endif %}" class="btn btn-default">Close
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+jQuery(function() {
+	jQuery('.tags_select a').click(function() {
+		var caretPos = document.getElementById("tracking_url").selectionStart;
+		var textAreaTxt = jQuery("#tracking_url").val();
+		var txtToAdd = $(this).text();
+		jQuery("#tracking_url").val(textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos) );
+		return false;
+	});
+});
+</script>

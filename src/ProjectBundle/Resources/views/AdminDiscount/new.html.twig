@@ -1,0 +1,31 @@
+{% extends 'ProjectBundle::admin.html.twig'%}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{asset('bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css')}}" rel="stylesheet"/>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{asset('bundles/fosjsrouting/js/router.js')}}"></script>
+    <script src="{{path('fos_js_routing_js', {'callback': 'fos.Router.setData'})}}"></script>
+    <script src="{{asset('moment/moment.js')}}"></script>
+    <script src="{{asset('bootstrap-datetimepicker/js/bootstrap-datetimepicker.js')}}" type="text/javascript"></script>
+{% endblock %}
+
+{% use "ProjectBundle:AdminDiscount:blocks.html.twig" %}
+{% use "ProjectBundle::flash_message.html.twig" %}
+
+{% block content_header %}Add Discount{% endblock %}
+
+{% block breadcrumb_sub %}
+	{{ parent() }}
+	<li class="active">Add</li>
+{% endblock %}
+
+{% block content %}
+    <form id="data_form" action="{{path('admin_discount_create')}}" method="post" role="form" enctype="multipart/form-data" class="">
+        {{form_widget(form._token)}}
+        {% include 'ProjectBundle:AdminDiscount:_form.html.twig'%}
+    </form>
+{% endblock %}

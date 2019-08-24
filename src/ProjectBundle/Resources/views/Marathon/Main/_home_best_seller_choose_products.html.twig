@@ -1,0 +1,112 @@
+<style media="screen">
+        .title-best-seller{display: inline;}
+        .image-best-seller{padding: 0;}
+        .title-icon{position: absolute;}
+        .title-text{width: 50%;float: right;}
+        .coloum-check{border:none;margin-bottom: 20px;}
+        .coloum-check:nth-child(3n+2) , .coloum-check:nth-child(3n+1){border-right: 2px solid #eae7e7;}
+        .coloum-check:last-child{border:none;}
+
+        /*
+          ##Device = Desktops
+          ##Screen = 1281px to higher resolution desktops
+        */
+
+        @media (min-width: 1281px) {
+
+                .title-icon{max-width:150px;}
+                .coloum-check:nth-child(3n+2) , .coloum-check:nth-child(3n+1){border-right: 2px solid #eae7e7;}
+                .coloum-check:last-child{border:none;}
+        }
+        /*
+          ##Device = Laptops, Desktops
+          ##Screen = B/w 1025px to 1280px
+        */
+
+        @media (min-width: 1025px) and (max-width: 1280px) {
+
+                .title-icon{max-width:100px;}
+                .title-text{width: 60%;}
+
+
+        }
+        @media (min-width: 992px) and (max-width: 1024px) {
+                .title-icon{max-width:100px;}
+
+        }
+
+        /*
+          ##Device = Tablets, Ipads (portrait)
+          ##Screen = B/w 768px to 1024px
+        */
+
+        @media (min-width: 768px) and (max-width: 991px) {
+                .title-icon{max-width:130px;}
+                .coloum-check:nth-child(3n+2) , .coloum-check:nth-child(3n+1){border-right: none;}
+                .coloum-check:nth-child(2n+1) {border-right: 2px solid #eae7e7;}
+                .coloum-check:last-child{border:none;}
+        }
+
+        /*
+          ##Device = Low Resolution Tablets, Mobiles (Landscape)
+          ##Screen = B/w 481px to 767px
+        */
+
+        @media (min-width: 481px) and (max-width: 767px) {
+                .title-icon{max-width:120px;}
+                .coloum-check:nth-child(3n+2) , .coloum-check:nth-child(3n+1){border-right: none;}
+                .coloum-check:nth-child(2n+1) {border-right: none;}
+                .coloum-check:nth-child(n) {border-bottom: 2px solid #eae7e7;}
+                .coloum-check:last-child{border:none;}
+        }
+
+        /*
+          ##Device = Most of the Smartphones Mobiles (Portrait)
+          ##Screen = B/w 320px to 479px
+        */
+
+        @media (min-width: 320px) and (max-width: 480px) {
+                .title-icon{max-width:80px;}
+                .title-text{width: 70%;}
+                .coloum-check:nth-child(3n+2) , .coloum-check:nth-child(3n+1){border-right: none;}
+                .coloum-check:nth-child(2n+1) {border-right: none;}
+                .coloum-check:nth-child(n) {border-bottom: 2px solid #eae7e7;}
+                .coloum-check:last-child{border:none;}
+
+        }
+        @media  (max-width: 319px) {
+                .title-icon{max-width:50px;}
+                .title-text{width: 70%;}
+                .coloum-check:nth-child(3n+2) , .coloum-check:nth-child(3n+1){border-right: none;}
+                .coloum-check:nth-child(2n+1) {border-right: none;}
+                .coloum-check:nth-child(n) {border-bottom: 2px solid #eae7e7;}
+                .coloum-check:last-child{border:none;}
+        }
+</style>
+{% if item_best_seller %}
+<div class="container-fluid best-seller-section">
+        {% for  data in item_best_seller %}
+                {% set item = data[0] %}
+                {% set price_data = getPriceData(data) %}
+
+                <div  class="col-xs-12 col-sm-6 col-md-4 col-lg-4 coloum-check" >
+                        <a href="{{path('product_detail',{'id':item.id,'slug':item.getSlug})}}">
+                        <div class="single-shop-cta text-right ">
+                                <div class="title-best-seller">
+                                        <img class="img-responsive title-icon"alt="" src="{{asset('images/icon/best-seller.png')| imagine_filter('img_150x150')}}" >
+                                        <h3 class="title-text"> <small>{{item.getTitle}}</small></h3>
+
+                                </div>
+                                <div class="products-best-seller">
+                                        {% if item.image %}
+                                                <img class="image-best-seller" alt="" src="{{asset(item.image) | imagine_filter('img_480x480')}}" data-zoom-image="{{asset(item.image) | imagine_filter('img_1000x1000')}}">
+                                        {% else %}
+                                                <img class="image-best-seller" alt="" src="{{asset('images/marathon/products/480x480.jpg') | imagine_filter('img_480x480')}}" data-zoom-image="{{asset('images/marathon/products/1000x1000.png') | imagine_filter('img_1000x1000')}}">
+                                        {% endif %}
+                                </div>
+                        </div>
+                        </a>
+                </div>
+        {% endfor %}
+</div> {# .best-seller-section #}
+{% endif %}

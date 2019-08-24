@@ -1,0 +1,12 @@
+admin_setting:
+  path:  /
+  defaults: { _controller: ProjectBundle:AdminSetting:index }
+  requirements:
+    _method: get
+
+admin_update_setting:
+  path: /update
+  defaults: {_controller: ProjectBundle:AdminSetting:update}
+  requirements:
+    _method: post
+    id: \d+

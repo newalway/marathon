@@ -1,0 +1,88 @@
+admin_product:
+  path: /
+  defaults: {_controller: ProjectBundle:AdminProduct:index}
+  requirements:
+    _method: get
+
+admin_product_new:
+  path: /new
+  defaults: {_controller: ProjectBundle:AdminProduct:new}
+
+admin_product_create:
+  path: /create
+  defaults: {_controller: ProjectBundle:AdminProduct:create}
+  requirements:
+    _method: post
+
+admin_product_edit:
+  path: /{id}/edit
+  defaults: {_controller: ProjectBundle:AdminProduct:edit}
+  requirements:
+    id: \d+
+
+admin_product_update:
+  path: /{id}
+  defaults: {_controller: ProjectBundle:AdminProduct:update}
+  requirements:
+    _method: post
+    id: \d+
+
+admin_product_delete:
+  path: /{id}/delete
+  defaults: {_controller: ProjectBundle:AdminProduct:delete}
+  requirements:
+    _method: get
+
+admin_product_group_delete:
+  path: /group-delete
+  defaults: {_controller: ProjectBundle:AdminProduct:group_delete}
+  requirements:
+    _method: post
+
+admin_product_group_enable:
+  path: /group-enable
+  defaults: {_controller: ProjectBundle:AdminProduct:group_enable}
+  requirements:
+    _method: post
+
+admin_product_group_disable:
+  path: /group-disable
+  defaults: {_controller: ProjectBundle:AdminProduct:group_disable}
+  requirements:
+    _method: post
+
+admin_product_group_bestseller:
+  path: /group-bestseller
+  defaults: {_controller: ProjectBundle:AdminProduct:group_bestseller}
+  requirements:
+    _method: post
+
+admin_product_group_new:
+  path: /group-new
+  defaults: {_controller: ProjectBundle:AdminProduct:group_new}
+  requirements:
+    _method: post
+
+admin_product_sort:
+  path: /sort
+  defaults: {_controller: ProjectBundle:AdminProduct:sort}
+  requirements:
+    _method: get
+
+admin_product_sort_prosess:
+  path: /sort-prosess
+  defaults: {_controller: ProjectBundle:AdminProduct:sort_prosess}
+  requirements:
+    _method: post
+
+admin_product_sort_best_seller:
+  path: /sort-best-seller
+  defaults: {_controller: ProjectBundle:AdminProduct:sort_best_seller}
+  requirements:
+    _method: get
+
+admin_product_sort_best_seller_process:
+  path: /sort-best-seller-prosess
+  defaults: {_controller: ProjectBundle:AdminProduct:sort_best_seller_process}
+  requirements:
+    _method: post

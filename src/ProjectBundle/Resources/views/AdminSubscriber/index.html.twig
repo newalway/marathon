@@ -1,0 +1,101 @@
+{% extends 'ProjectBundle::admin.html.twig'%}
+
+{% block stylesheets %}
+{{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+{% endblock %}
+
+{% use "ProjectBundle:AdminSubscriber:blocks.html.twig" %}
+{% use "ProjectBundle::flash_message.html.twig" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 margin-10-0">
+    </div>
+</div>
+
+<br class="clearBoth">
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box" style="min-height: 1000px;">
+
+            <div class="box-body">
+                <div class="row">
+
+                    <form id="data_form_search" action="{{path('admin_subscriber')}}" method="get" role="form" enctype="multipart/form-data" class="form-horizontal"
+                        data-search_data_path="{{path('admin_subscriber')}}"
+                        data-search_export_excel_path="{{path('admin_subscriber_excel_dowload')}}">
+                        {% include 'ProjectBundle:AdminSubscriber:_form_search.html.twig' %}
+                    </form>
+
+                    <div class="col-md-12">
+                        <button type="button" class="btn bg-red" data-form_id="data_group" id="group_delete">
+                            <i class="fa fa-trash-o"></i> Delete
+                        </button>
+                        <!--
+                        <button type="button" class="btn bg-olive" data-form_id="data_group" id="group_enable">
+                            <i class="fa fa-unlock"></i> Active
+                        </button>
+                        <button type="button" class="btn bg-gray" data-form_id="data_group" id="group_disable">
+                            <i class="fa fa-lock"></i> Inactive
+                        </button> -->
+                    </div>
+
+                </div>
+            </div>
+
+            <form action="#" method="post" id="data_group" data-delete_path="{{path('admin_subscriber_group_delete')}}">
+                <div class="box-body icheck">
+                    <table id="dtbrole" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th width="19"> <input type="checkbox" id="select_all" /> </th>
+                                <th width="200">Name</th>
+                                <th width="200">Email</th>
+                                <th class="text-center" width="100">Created At</th>
+                                <th class="text-center" width="50">Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for data in paginated.currentpageresults %}
+                            <tr class="odd gradeX">
+                                <td>
+                                    <input type="checkbox" name="data_ids[]" class="check_all" value="{{data.id}}"/>
+                                </td>
+                                <td>
+                                    {{data.name}}
+                                </td>
+                                <td>
+                                    {% if data.email %}
+                                    <a href="mailto:{{data.email}}">{{data.email}}</a>
+                                    {% endif %}
+                                </td>
+                                <td class="text-center">{{data.createdAt|date('d/m/Y')}}<br />{{data.createdAt|date('H:i:s')}}</td>
+                                <td class="text-center"><a href="{{path('admin_subscriber_delete', {'id' : data.id})}}" onclick="return confirm('Are you sure you want to delete?');" title="Delete"><i class="fa fa-trash fa-2x"></i></a></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div><!-- /.box-body -->
+
+                <div class="box-footer clearfix">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="margin">Total : {{paginated.getNbResults}}</div>
+                        </div>
+                        <div class="col-md-9">
+                            {% if paginated.havetopaginate %}
+                            {{pagerfanta(paginated,'twitter_bootstrap3_translated')}}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </div><!-- /.box -->
+    </div>
+</div>
+{% endblock %}

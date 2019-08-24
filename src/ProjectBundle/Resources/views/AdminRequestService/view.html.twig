@@ -1,0 +1,136 @@
+{% extends 'ProjectBundle::admin.html.twig'%}
+
+{% block stylesheets %}
+  {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+{% endblock %}
+
+{% use "ProjectBundle:AdminRequestService:blocks.html.twig" %}
+{% use "ProjectBundle::flash_message.html.twig" %}
+{% block breadcrumb_sub %}
+	{{ parent() }}
+	<li class="active">View</li>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+	<div class="col-md-12">
+	  <div class="box box-primary">
+	    <div class="box-header">
+	      <h3 class="box-title">View Request Service (Repair)</h3>
+	    </div><!-- /.box-header -->
+
+      <div class="form-horizontal">
+        <div class="box-body">
+          <div class="form-group">
+        		<label class="control-label col-md-3">Created At</label>
+        		<div class="col-md-6 form-control-static">
+              {{data.CreatedAt|date('d/m/Y H:i:s')}}
+        		</div>
+        	</div>
+
+
+          <div class="form-group">
+        		<label class="control-label col-md-3">Customer Name</label>
+        		<div class="col-md-6 form-control-static">
+              {{data.firstName}} {{data.lastName}}
+        		</div>
+        	</div>
+
+          <div class="form-group">
+            <label class="control-label col-md-3">Address</label>
+            <div class="col-md-6 form-control-static">
+              {{data.address}}&nbsp;{{data.subDistrict}}&nbsp;{{data.district}}&nbsp;{{data.province}}&nbsp;{{data.postCode}}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-md-3">telephone</label>
+            <div class="col-md-6 form-control-static">
+              {{data.phone}}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-md-3">Email</label>
+            <div class="col-md-6 form-control-static">
+              {% if data.email %}
+              {{data.email}}
+              {% else %}
+              -
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-md-3">Product Name</label>
+            <div class="col-md-6 form-control-static">
+                {{data.productTitle}}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-md-3">Product Model</label>
+            <div class="col-md-6 form-control-static">
+                {{data.productModel}}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-md-3">Product Type</label>
+            <div class="col-md-6 form-control-static">
+              {% if data.productTextType %}
+                {{data.productTextType}}
+              {% else %}
+              -
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-md-3">Serail Number</label>
+            <div class="col-md-6 form-control-static">
+              {% if data.productSerialNumber %}
+              {{data.productSerialNumber}}
+              {% else %}
+              -
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-md-3">Product Warranty Number</label>
+            <div class="col-md-6 form-control-static">
+              {% if data.productWarrantyNumber %}
+                {{data.productWarrantyNumber}}
+              {% else %}
+              -
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-md-3">Detail</label>
+            <div class="col-md-6 form-control-static">
+                {{data.requestDetail|nl2br}}
+            </div>
+          </div>
+
+        </div>
+
+        <div class="box-footer">
+        	<div class="row">
+        		<div class="col-md-offset-3 col-md-6">
+        			<a href="{%if app.session.get('back_to_url')['admin_request_service'] is defined%}{{app.session.get('back_to_url')['admin_request_service']}}{%else%}{{path('admin_contact')}}{%endif%}" class="btn btn-default">{{btn_label_close}} </a>
+        		</div>
+        	</div>
+        </div>
+      </div>
+
+  	</div>
+  </div>
+</div>
+{% endblock %}

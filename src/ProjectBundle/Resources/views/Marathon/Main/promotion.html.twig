@@ -1,0 +1,62 @@
+{% extends "ProjectBundle:"~ view_layout ~":layout.html.twig" %}
+
+{% block title %}{% trans %}menu.promotion{% endtrans %} | {{ parent() }}{% endblock %}
+{% block promotion_active %}active{% endblock %}
+{% block m_promotion_active %}active{% endblock %}
+
+{% block breadcrumb_title1 %}{% trans %}menu.promotion{% endtrans %}{% endblock %}
+
+{% block breadcrumb_sub %}
+  {{ parent() }}
+  <li class="active">{% trans %}menu.promotion{% endtrans %}</li>
+{% endblock %}
+
+{% block content %}
+<section class="section-padding promotion-item">
+    <div class="container">
+
+        <div class="row clear-both">
+        {% for data in paginated.currentpageresults %}
+            <div class="col-sm-6 col-md-4 {% if loop.index0 is divisible by(2) %}sm-clear{% endif %} {% if loop.index0 is divisible by(3) %}md-clear lg-clear{% endif %}">
+                <div class="single-product-item text-center">
+                    <div class="img-holder">
+                        {% if data.getImage %}
+                            {% set image = asset(data.getImage)|imagine_filter('img_480x480') %}
+                        {% else %}
+                            {% set image = 'https://placehold.it/480x480' %}
+                        {% endif %}
+                        <img src="{{image}}" alt="{{data.getTitle}}" class="img-responsive" />
+                        <div class="overlay">
+                            <div class="icon-holder">
+                                <ul>
+                                    <li><a href="{{path('promotion_detail',{'id':data.id,'slug':data.getTitle|slug})}}"><i class="fa fa-search-plus"></i></a></li>
+                                </ul>
+                            </div>
+                            <!-- /.icon-holder -->
+                        </div>
+                        <!-- /.overlay -->
+                    </div>
+                    <!-- /.img-holder -->
+                    <div class="title">
+                        <a href="{{path('promotion_detail',{'id':data.id,'slug':data.getTitle|slug})}}"><h3>{{data.getTitle}}</h3></a>
+                        <p>
+                            {% if data.getShortDesc %}
+                                {{data.getShortDesc}}
+                            {% endif %}
+                        </p>
+                    </div>
+                    <!-- /.title -->
+                </div>
+                <!-- /.single-product-item text-center -->
+            </div>
+        {% endfor %}
+        </div>
+        <!-- /.row -->
+
+        {% if paginated.havetopaginate %}
+            {{pagerfanta(paginated,'twitter_bootstrap3_translated_template')}}
+        {% endif %}
+
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends '@HWIOAuth/layout.html.twig' %}
+
+{% block hwi_oauth_content %}
+<section class="section-padding">
+    <div class="container">
+        <div class="row">
+            <h3>{{ 'header.registration_success' | trans({'%username%': app.user.username}, 'HWIOAuthBundle') }}</h3>
+        </div>
+    </div>
+</section>
+{% endblock hwi_oauth_content %}

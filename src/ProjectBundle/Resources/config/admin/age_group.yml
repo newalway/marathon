@@ -1,0 +1,52 @@
+admin_age_group:
+  path: /
+  defaults: {_controller: ProjectBundle:AdminAgeGroup:index}
+  requirements:
+    _method: get
+
+admin_age_group_new:
+  path: /new
+  defaults: {_controller: ProjectBundle:AdminAgeGroup:new}
+
+admin_age_group_create:
+  path: /create
+  defaults: {_controller: ProjectBundle:AdminAgeGroup:create}
+  requirements:
+    _method: post
+
+admin_age_group_edit:
+  path: /{id}/edit
+  defaults: {_controller: ProjectBundle:AdminAgeGroup:edit}
+  requirements:
+    id: \d+
+
+admin_age_group_update:
+  path: /{id}
+  defaults: {_controller: ProjectBundle:AdminAgeGroup:update}
+  requirements:
+    _method: post
+    id: \d+
+
+admin_age_group_delete:
+  path: /{id}/delete
+  defaults: {_controller: ProjectBundle:AdminAgeGroup:delete}
+  requirements:
+    _method: get
+
+admin_age_group_group_delete:
+  path: /group-delete
+  defaults: {_controller: ProjectBundle:AdminAgeGroup:group_delete}
+  requirements:
+    _method: post
+
+admin_age_group_sort:
+  path: /sort
+  defaults: {_controller: ProjectBundle:AdminAgeGroup:sort}
+  requirements:
+    _method: get
+
+admin_age_group_sort_prosess:
+  path: /sort-prosess
+  defaults: {_controller: ProjectBundle:AdminAgeGroup:sort_prosess}
+  requirements:
+    _method: post

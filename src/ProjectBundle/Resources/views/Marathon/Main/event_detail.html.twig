@@ -1,0 +1,200 @@
+{% extends "ProjectBundle:"~ view_layout ~":layout.html.twig" %}
+
+{% block html_meta %}
+	{{ parent() }}
+	<meta property="og:url"                content="{{url('event_detail',{'id':data.id,'slug':data.getTitle|slug})}}" />
+	<meta property="og:type"               content="article" />
+	<meta property="og:title"              content="{{data.getTitle}}" />
+	<meta property="og:description"        content="{{data.getDescription|striptags|replace({"\n":'', "\r":''})}}" />
+	<meta property="og:image"              content="{{absolute_url(data.getImage)}}" />
+{% endblock %}
+
+{% block title %}{{data.getTitle}} | {% trans %}menu.event{% endtrans %}{% endblock %}
+{% block html_description %}{{data.getDescription|striptags|replace({"\n":'', "\r":''})}}{% endblock %}
+
+{% block health_tip_active %}active{% endblock %}
+{% block m_health_tip_active %}active{% endblock %}
+
+{% block breadcrumb_title2 %}{{data.eventCategory.getTitle}}{% endblock %}
+{% block breadcrumb_title1 %}{{data.getTitle}}{% endblock %}
+
+{% block breadcrumb_sub %}
+    {{ parent() }}
+    <li><a href="{{path('homepage')}}#event-cat">{% trans %}menu.event.category{% endtrans %}</a></li>
+	<li><a href="{{path('event_category_list',{'id':data.eventCategory.id,'slug':data.eventCategory.getTitle|slug})}}">{{data.eventCategory.getTitle}}</a></li>
+    <li class="active">{{data.getTitle}}</li>
+{% endblock %}
+
+{% block content %}
+<style media="screen">
+.inner-banner h2 {line-height: 65px;}
+</style>
+	<section class="sidebar-pages single-post-page">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-9 col-md-8">
+                    <div class="sidebar-page-content section-padding pb0">
+                        <div class="inner-page-wrapper section-padding pt0 white-bg">
+                            <div class="single-blog-post">
+                                <div class="img-holder">
+
+									{% if data.image %}
+                                    	<img src="{{asset(data.image) | imagine_filter('img_w_800')}}" alt="{{data.getTitle}}" />
+									{% else %}
+										<img src="//placehold.it/800x533" alt="{{data.getTitle}}">
+									{% endif %}
+
+                                    <div class="icon-holder">
+                                        <i class="fc-icon ftc-icon-dumbbells"></i>
+                                        <p>{% trans %}health.tips{% endtrans %}</p>
+                                    </div>
+                                </div>
+
+								{% if data.video and data.videoEmbed %}
+									<div class="content">
+										<div class="text-center">
+											<br/> {{ data.videoEmbed|raw }}
+										</div>
+									</div>
+								{% endif %}
+
+                                <div class="content">
+                                    <ul class="meta">
+                                        <li><a href=""><i class="fa fa-calendar"></i>{{data.publicDate|date('d F Y')}}</a></li>
+                                        {#<li><a href=""><i class="fa fa-user"></i>Mano</a></li>
+                                        <li><a href=""><i class="fa fa-tag"></i>Fitness Tips, Athlete, Jump</a></li>#}
+                                    </ul>
+
+                                    <h3>{{data.getTitle}}</h3>
+
+									<div class="clear-both">
+										{{data.getDescription|raw}}
+									</div>
+
+                                    <div class="share-box clear-both">
+                                        <label>Did You Like This Post? Share it :</label>
+                                        <ul class="social-icons">
+                                            <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                                            <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                                            {#<li><a href="#"><i class="fa fa-google-plus"></i></a></li>#}
+                                        </ul>
+                                        <!-- /.social-icons -->
+                                    </div>
+                                    <!-- /.share-box -->
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                        <!-- /.inner-page-wrapper -->
+                    </div>
+                    <!-- /.sidebar-page-content -->
+                </div>
+                <!-- /.col-md-9 -->
+                <div class="col-lg-3 col-md-4">
+                    <div class="sidebar-wrapper section-padding">
+                        <!-- /.single-sidebar -->
+                        <div class="single-sidebar post-widget">
+                            <div class="title">
+                                <h3>{% trans %}recent.event{% endtrans %}</h3>
+                            </div>
+                            <!-- /.title -->
+							{% if recent_event|length > 0 %}
+                            <ul class="recent-news">
+								{% for recent in recent_event %}
+                                <li>
+                                    <div class="box">
+                                        <div class="overlay">
+											<a href="{{path('event_detail',{'id':recent.id,'slug':recent.getTitle|slug})}}">
+												{% if recent.image %}
+			                                    	<img src="{{asset(recent.image) | imagine_filter('img_thumb_1_5')}}" alt="{{recent.getTitle}}" />
+												{% else %}
+													<img src="//placehold.it/120x80" alt="{{recent.getTitle}}">
+												{% endif %}
+
+	                                            <div class="content-box">
+	                                                <div class="icon-holder">
+	                                                    <i class="fc-icon ftc-icon-dumbbell"></i>
+	                                                </div>
+	                                                <div class="text">
+	                                                    <p>{{data.eventCategory.getTitle}}</p>
+	                                                </div>
+	                                            </div>
+											</a>
+                                        </div>
+                                    </div>
+                                    <div class="content">
+                                        <a href="{{path('event_detail',{'id':recent.id,'slug':recent.getTitle|slug})}}">
+                                            <p>{{recent.getTitle}}</p>
+                                        </a>
+                                        <span>{{recent.publicDate|date('d F Y')}}</span>
+                                    </div>
+                                </li>
+								{% endfor %}
+                            </ul>
+							{% endif %}
+                        </div>
+                        <!-- /.single-sidebar -->
+                    </div>
+                    <!-- /.sidebar-wrapper -->
+                </div>
+                <!-- /.col-md-3 -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container -->
+    </section>
+
+	{#<div class="container">
+		<div class="blog-detail">
+			<div class="row">
+				<div class="col-md-9">
+
+					<div class="box">
+						<h3 class="title">{{data.title}}</h3>
+						<div class="date date1">{{data.publicDate|date('d/m/Y')}}</div>
+						<div class="img">
+							<img src="{{asset(data.image) | imagine_filter('img_w_600')}}" alt="{{data.title}}" class="img-responsive"/>
+						</div>
+					</div>
+
+					<div class="clear-both desc">
+						{{data.description|raw}}
+					</div>
+
+				</div>
+
+				<div class="col-md-3">
+
+					<div class="clear-both share">
+						<div class="l">แชร์ :</div>
+						<div class="r">
+							<!-- Go to www.addthis.com/dashboard to customize your tools -->
+							<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5a8b867cd09da536"></script>
+							<div class="addthis_inline_share_toolbox"></div>
+						</div>
+					</div>
+
+
+					<div class="clear-both gallerys">
+						{% if data_image|length > 0 %}
+						<div class="row">
+							{% for img in data_image %}
+							<div class="col-xs-6 {% if loop.index0 is divisible by(2) %}clear-both{% endif %}">
+								<a href="{{asset(img.image) | imagine_filter('img_w_1000') }}" title="{{data.title}}" data-fancybox="gallery">
+									<img src="{{asset(img.image) | imagine_filter('img_w_480') }}" alt="{{data.title}}" class="img-responsive" />
+								</a>
+							</div>
+							{% endfor %}
+						</div>
+						{% endif %}
+					</div>
+
+				</div>
+
+			</div>
+
+    	</div>
+	</div>#}
+{% endblock %}

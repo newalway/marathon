@@ -1,0 +1,21 @@
+<div class="box-body">
+
+		<div class="form-group">
+		  <label class="control-label col-md-3" for="current_password"><span class="require">*</span> Current Password</label>
+		  <div class="input-group">
+		      <span class="input-group-addon"><i class="fa fa-key"></i></span>
+		      {{form_widget(form.current_password,{'id' : 'current_password', 'attr' : {'class' : 'form-control-static'}})}}
+		  </div>
+			{{form_errors(form.current_password)}}
+		</div>
+
+</div>
+
+<div class="box-footer">
+	<div class="row">
+		<div class="col-md-offset-3 col-md-7">
+			{{form_widget(form.save, {'id' : 'save', 'label': btn_label_save})}}
+			<a href="{{path('admin')}}" class="btn btn-default">{{btn_label_close}}</a>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,304 @@
+{% extends 'ProjectBundle::base.html.twig' %}
+
+{% block title %}อุปกรณ์ออกกำลังกาย มาราธอน(ประเทศไทย)จำกัด{% endblock %}
+{% block html_description %}บริษัท มาราธอน ( ประเทศไทย) จำกัด ผลิตและจำหน่ายอุปกรณ์กีฬาที่ครบวงจรที่สุดแห่งหนึ่งในประเทศ ไทย  อีกทั้งยังเป็นตัวแทนจำหน่ายอุปกรณ์ฟิตเนสชั้นนำและคุณภาพสูงจากต่างประเทศ เช่น อเมริกา, ฟินแลนด์, ญี่ปุ่น และไต้หวัน  นอกจากนี้ ยังเป็นผู้จำหน่ายอุปกรณ์ Fitness Test เพื่อใช้ทดสอบสมรรถภาพทางร่างกาย อีกด้วย{% endblock %}
+{% block html_keywords %}อุปกรณ์ออกกำลังกาย,สปอร์ต,อุปกรณ์กีฬา,ออกกำลังกาย,อุปกรณ์ กีฬา,จำหน่ายอุปกรณ์กีฬา,อุปกรณ์ฟิตเนส,เครื่องออกกำลังกาย,ลูกตะกร้อ,ตะกร้อพลาสติก,ลูกตะกร้อใยสังเคราะห์,ตะกร้อพลาสติกผิวนุ่ม,ลูกเปตอง,marathon,มาราธอน{% endblock %}
+
+{% block html_meta %}
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+	<link rel="icon" type="image/png" href="{{ asset('images/marathon/favicon.png') }}" />
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link href='https://fonts.googleapis.com/css?family=Roboto:400,300,500,600' rel='stylesheet' type='text/css'>
+{#
+	{% stylesheets output='css/complied/main_marathon.css'
+	 	'bootstrap-3.3.7-dist/css/bootstrap.min.css'
+		'ionicons-2.0.1/css/ionicons.min.css'
+		'OwlCarousel2-2.2.1/dist/assets/owl.carousel.min.css'
+		'OwlCarousel2-2.2.1/dist/assets/owl.theme.default.min.css'
+		'jquery.scrollbar-gh-pages/jquery.scrollbar.css'
+		'fancybox/dist/jquery.fancybox.min.css'
+		'fontawesome-free-5.0.12/css/fontawesome-all.min.css'
+		'selectBoxIt/jquery.selectBoxIt.css'
+	%}
+	<link rel="stylesheet" href="{{ asset_url }}">
+	{% endstylesheets %}
+#}
+	<link rel="stylesheet" href="{{ asset('stylesheet/style-marathon.min.css') }}">
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+{#
+	{% javascripts output='js/complied/main_marathon.js'
+		'@jquery_and_ui'
+		'@angular'
+		'@bootstrap'
+		'@owl_carousel'
+		'@masonry'
+		'@isotope_v3'
+		'@scrollbar_gh_pages'
+		'@fancybox'
+		'@selectboxit'
+	%}
+	<script src="{{ asset_url }}"></script>
+  {% endjavascripts %}
+#}
+	<script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+	<script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+
+	<script>
+		$(function(){
+			// $(window).scroll(function() {
+			// 	navbarMenu();
+			// });
+			navbarMenu();
+
+			back_to_top();
+			$('.backtotop').on( "click", function(e) {
+			  $('html,body').animate({scrollTop : 0},800);
+			  return false;
+			})
+			$(window).scroll(function () {
+			  back_to_top();
+			});
+
+			mainMinHeight();
+			$( window ).resize(function() {
+			  mainMinHeight();
+			});
+		})
+
+		function back_to_top() {
+			if($(window).scrollTop() > 180) {
+				$('.backtotop').fadeIn();
+			} else {
+				$('.backtotop').fadeOut();
+			}
+		}
+
+		function navbarMenu(){
+			var ele = $('header nav');
+			var h = ele.height();
+			$('header').css({'min-height':h});
+			// var scroll = $(window).scrollTop();
+			// if (scroll >= h) {
+			// 	ele.addClass("navbar-fixed-top");
+			// }else {
+			// 	ele.removeClass("navbar-fixed-top");
+			// }
+		}
+
+		function mainMinHeight(){
+			var h = $( window ).height() - 112 ;
+			$('main').css({'min-height': h + 'px' });
+		}
+
+	</script>
+{% endblock %}
+
+{% block body %}
+
+	{% block header %}
+
+		{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+			{% if is_granted('ROLE_CLIENT') or is_granted('ROLE_EDITOR') %}
+				{% set login_uri = path('member') %}
+			{% else %}
+				{% set login_uri = path('fos_user_security_login') %}
+			{% endif %}
+
+			{# {% if is_granted('ROLE_CLIENT') %}
+					<!-- # You're Hair member -->
+					{% set login_uri = path('member') %}
+					{% set login_title = 'For Member' %}
+			{% elseif is_granted('ROLE_EDITOR') %}
+					<!-- # You're Admin -->
+					{% set login_uri = path('admin') %}
+					{% set login_title = 'For Admin' %}
+			{% endif %} #}
+
+		{% elseif is_granted('IS_AUTHENTICATED_ANONYMOUSLY') %}
+			{% set login_uri = path('fos_user_security_login') %}
+		{% endif %}
+
+		<header>
+			<nav class="navbar navbar-inverse navbar-fixed-top">
+				<div class="navbar-top">
+					<div class="container">
+						<ul class="nav navbar-nav pull-left">
+							<li><a href="tel:+6624337992"><i class="fas fa-phone"></i> 02-433-7992-4</a></li>
+						</ul>
+						<ul class="nav pull-right">
+							<li><a href="{{path('track')}}">{% trans %}menu.track.my.order{% endtrans %}</a></li>
+							{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+								{% if is_granted('ROLE_EDITOR') %}
+								<li><a href="{{path('admin')}}">For Admin</a></li>
+								{% endif %}
+								<li class="dropdown">
+									<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+										{{'menu.account'|trans({'%fname%':app.user.firstName,'%lname%':app.user.lastName})}}
+										<span class="caret"></span>
+									</a>
+									<ul class="dropdown-menu dropdown-menu-right">
+										<li><a href="{{path('fos_user_profile_show')}}">{% trans %}member.personal{% endtrans %}</a></li>
+					          <li><a href="{{path('fos_user_profile_edit')}}">{% trans %}member.change.personal.info{% endtrans %}</a></li>
+					          <li><a href="{{path('fos_user_change_password')}}">{% trans %}member.change.password{% endtrans %}</a></li>
+										{% if is_granted('ROLE_CUSTOMER') %}
+					          <li><a href="{{path('address')}}">{% trans %}member.address.book{% endtrans %}</a></li>
+					          <li><a href="{{path('member_orders')}}">{% trans %}member.my.orders{% endtrans %}</a></li>
+										{% endif %}
+										<li><a href="{{path('fos_user_security_logout')}}">{% trans %}menu.logout{% endtrans %}</a></li>
+							    </ul>
+								</li>
+							{% elseif is_granted('IS_AUTHENTICATED_ANONYMOUSLY') %}
+								<li><a href="{{login_uri}}">{% trans %}menu.login{% endtrans %}</a></li>
+								<li><a href="{{path('fos_user_registration_register')}}">{% trans %}menu.signup{% endtrans %}</a></li>
+							{% endif %}
+							<li class="dropdown flat-lang">
+								<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+									{% if app.request.locale == 'en' %}
+										<img src="{{asset('images/marathon/flat-united-states-of-america.png')}}" alt="English" /> English
+									{% else %}
+										<img src="{{asset('images/marathon/flat-thailand.png')}}" alt="Thailand" /> ภาษาไทย
+									{% endif %}
+									<span class="caret"></span>
+								</a>
+								<ul class="dropdown-menu dropdown-menu-right">
+									<li><a>เลือกภาษา / Language</a></li>
+									<li><a href="{{ path(app.request.attributes.get('_route'), (app.request.attributes.get('_route_params')|merge({'_locale': 'en'}))|merge(app.request.query.all) )}}"><img src="{{asset('images/marathon/flat-united-states-of-america.png')}}" alt="English" /> English</a></li>
+									<li><a href="{{ path(app.request.attributes.get('_route'), (app.request.attributes.get('_route_params')|merge({'_locale': 'th'}))|merge(app.request.query.all) )}}"><img src="{{asset('images/marathon/flat-thailand.png')}}" alt="Thailand" /> ภาษาไทย</a></li>
+						    </ul>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="container nav-{{app.request.locale}}">
+
+					<button type="button" class="collapsed navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-web" aria-expanded="false">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+
+					<div class="pull-right">
+						<div class="dropdown menu-cart">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+								<img src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTguMS4xLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDQ1OS41MjkgNDU5LjUyOSIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNDU5LjUyOSA0NTkuNTI5OyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgd2lkdGg9IjUxMnB4IiBoZWlnaHQ9IjUxMnB4Ij4KPGc+Cgk8Zz4KCQk8cGF0aCBkPSJNMTcsNTUuMjMxaDQ4LjczM2w2OS40MTcsMjUxLjAzM2MxLjk4Myw3LjM2Nyw4Ljc4MywxMi40NjcsMTYuNDMzLDEyLjQ2N2gyMTMuMzVjNi44LDAsMTIuNzUtMy45NjcsMTUuNTgzLTEwLjIgICAgbDc3LjYzMy0xNzguNWMyLjI2Ny01LjM4MywxLjctMTEuMzMzLTEuNDE3LTE2LjE1Yy0zLjExNy00LjgxNy04LjUtNy42NS0xNC4xNjctNy42NUgyMDYuODMzYy05LjM1LDAtMTcsNy42NS0xNywxNyAgICBzNy42NSwxNywxNywxN0g0MTYuNWwtNjIuOSwxNDQuNUgxNjQuMzMzTDk0LjkxNywzMy42OThjLTEuOTgzLTcuMzY3LTguNzgzLTEyLjQ2Ny0xNi40MzMtMTIuNDY3SDE3Yy05LjM1LDAtMTcsNy42NS0xNywxNyAgICBTNy42NSw1NS4yMzEsMTcsNTUuMjMxeiIgZmlsbD0iI0ZGRkZGRiIvPgoJCTxwYXRoIGQ9Ik0xMzUuNDMzLDQzOC4yOThjMjEuMjUsMCwzOC41MzMtMTcuMjgzLDM4LjUzMy0zOC41MzNzLTE3LjI4My0zOC41MzMtMzguNTMzLTM4LjUzM1M5Ni45LDM3OC41MTQsOTYuOSwzOTkuNzY0ICAgIFMxMTQuMTgzLDQzOC4yOTgsMTM1LjQzMyw0MzguMjk4eiIgZmlsbD0iI0ZGRkZGRiIvPgoJCTxwYXRoIGQ9Ik0zNzYuMjY3LDQzOC4yOThjMC44NSwwLDEuOTgzLDAsMi44MzMsMGMxMC4yLTAuODUsMTkuNTUtNS4zODMsMjYuMzUtMTMuMzE3YzYuOC03LjY1LDkuOTE3LTE3LjU2Nyw5LjM1LTI4LjA1ICAgIGMtMS40MTctMjAuOTY3LTE5LjgzMy0zNy4xMTctNDEuMDgzLTM1LjdjLTIxLjI1LDEuNDE3LTM3LjExNywyMC4xMTctMzUuNyw0MS4wODMgICAgQzMzOS40MzMsNDIyLjQzMSwzNTYuMTUsNDM4LjI5OCwzNzYuMjY3LDQzOC4yOTh6IiBmaWxsPSIjRkZGRkZGIi8+Cgk8L2c+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPC9zdmc+Cg==" />
+								<span id="cart_all">1</span>
+							</a>
+							<ul class="dropdown-menu dropdown-menu-right">
+								<div class="media-pro">
+									{% for i in 1..5 %}
+			            <li>
+										<div class="media">
+											<div class="media-left">
+												<a href="#"><img src="http://via.placeholder.com/50x50" /></a>
+											</div>
+											<div class="media-body">
+												<a href="#">YK-BK-8718<br /><span class="price">80,000 ฿</span></a>
+											</div>
+											<div class="media-right text-center"><span>1</span></div>
+										</div>
+									</li>
+			            {% endfor %}
+								</div>
+		            <li class="cart-btn">
+									<a href="{{path('cart')}}" class="btn btn-marathon2 btn-hover">GO TO CART</a>
+									<a href="{{path('checkout')}}" class="btn btn-marathon btn-hover">CHECKOUT</a>
+								</li>
+		          </ul>
+						</div>
+					</div>
+
+					<div class="navbar-header">
+						<a href="{{path('homepage')}}" class="navbar-brand">Marathon</a>
+					</div>
+
+					<div class="collapse navbar-collapse" id="navbar-collapse-web">
+						<ul class="nav navbar-nav">
+							<li class="{% block home_active %}{% endblock %}"><a href="{{path('homepage')}}">{% trans %}menu.home{% endtrans %}</a></li>
+							<li class="{% block about_us_active %}{% endblock %}"><a href="{{path('about_us')}}">{% trans %}menu.about.us{% endtrans %}</a></li>
+							<li class="{% block product_active %}{% endblock %}"><a href="{{path('product')}}">{% trans %}menu.product{% endtrans %}</a></li>
+							<li class="{% block promotion_active %}{% endblock %}"><a href="{{path('promotion')}}">{% trans %}menu.promotion{% endtrans %}</a></li>
+							<li class="{% block health_tip_active %}{% endblock %}"><a href="{{path('blog')}}">{% trans %}menu.health.tips{% endtrans %}</a></li>
+							<li class="{% block service_active %}{% endblock %}"><a href="{{path('service')}}">{% trans %}menu.service{% endtrans %}</a></li>
+							{#<li class="{% block news_active %}{% endblock %}"><a href="#">{% trans %}menu.news{% endtrans %}</a></li>#}
+							<li class="{% block showroom_active %}{% endblock %}"><a href="{{path('showroom')}}">{% trans %}menu.showroom{% endtrans %}</a></li>
+							<li class="{% block contact_active %}{% endblock %}"><a href="{{path('contact')}}">{% trans %}menu.contact.us{% endtrans %}</a></li>
+						</ul>
+					</div>
+				</div>
+			</nav>
+		</header>
+
+	{% endblock %}
+
+	<main class="{% block main_class %}{% endblock %}">
+		{% block breadcrumb %}
+		<div class="container">
+			<ol class="breadcrumb">
+				<li><a href="{{path('homepage')}}">{% trans %}menu.home{% endtrans %}</a></li>
+				{% block breadcrumb_sub %}{% endblock %}
+			</ol>
+		</div>
+		{% endblock %}
+
+		{% block content %}{% endblock %}
+	</main>
+
+	<footer>
+    <div class="container">
+			<div class="col-sm-7 col-sm-push-5">
+				<div class="row">
+					<div class="col-sm-4">
+						<h4>{% trans %}menu.marathon.online{% endtrans %}</h4>
+						<ul>
+							<li><a href="{{path('product')}}">{% trans %}menu.product{% endtrans %}</a></li>
+							<li><a href="{{path('promotion')}}">{% trans %}menu.promotion{% endtrans %}</a></li>
+							<li><a href="{{path('about_us')}}">{% trans %}menu.about.us{% endtrans %}</a></li>
+							<li><a href="{{path('blog')}}">{% trans %}menu.health.tips{% endtrans %}</a></li>
+							<li><a href="{{path('showroom')}}">{% trans %}menu.showroom{% endtrans %}</a></li>
+							<li><a href="{{path('contact')}}">{% trans %}menu.contact.us{% endtrans %}</a></li>
+						</ul>
+					</div>
+					<div class="col-sm-4">
+						<h4>{% trans %}menu.service.customer{% endtrans %}</h4>
+						<ul>
+							<li><a href="{{path('service')}}">{% trans %}menu.service{% endtrans %}</a></li>
+							<li><a href="{{path('how_to_buy')}}">{% trans %}menu.how.to.buy{% endtrans %}</a></li>
+							<li><a href="{{path('shipping_delivery')}}">{% trans %}menu.shipping.delivery{% endtrans %}</a></li>
+							<li><a href="{{path('terms_conditions')}}">{% trans %}menu.terms.conditions{% endtrans %}</a></li>
+							<li><a href="{{path('privacy_policy')}}">{% trans %}menu.privacy.policy{% endtrans %}</a></li>
+						</ul>
+					</div>
+					<div class="col-sm-4">
+						<div class="social">
+							<h4>{% trans %}menu.follow.us{% endtrans %}</h4>
+							<a href="#"><i class="fab fa-facebook-square fa-2x"></i></a>
+							<a href="#"><i class="fab fa-instagram fa-2x"></i></a>
+							<a href="#"><i class="fab fa-twitter-square fa-2x"></i></a>
+							<a href="#"><i class="fab fa-youtube fa-2x"></i></a>
+							<a href="#"><i class="fab fa-line fa-2x"></i></a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-5 col-sm-pull-7">
+				<h1>Marathon</h1>
+				<div class="copyright">
+					© 2018 Marathon (Thailand) Co.,Ltd. All rights reserved
+				</div>
+			</div>
+
+		</div>
+	</footer>
+
+	<div class="fixed-action-btn">
+		<a href="#top" class="backtotop"><i class="ion-ios-arrow-up"></i></a>
+	</div>
+
+{% endblock %}

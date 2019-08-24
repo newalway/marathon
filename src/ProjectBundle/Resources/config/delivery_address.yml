@@ -1,0 +1,34 @@
+address:
+  path: /
+  defaults: {_controller: ProjectBundle:DeliveryAddress:index}
+  requirements:
+    _method: get
+
+# address_new:
+#   path: /new
+#   defaults: {_controller: ProjectBundle:DeliveryAddress:new}
+
+address_create:
+  path: /create
+  defaults: {_controller: ProjectBundle:DeliveryAddress:create}
+  requirements:
+    _method: post
+
+address_edit:
+  path: /{id}/edit
+  defaults: {_controller: ProjectBundle:DeliveryAddress:edit}
+  requirements:
+    id: \d+
+
+address_update:
+  path: /{id}
+  defaults: {_controller: ProjectBundle:DeliveryAddress:update}
+  requirements:
+    _method: post
+    id: \d+
+
+address_delete:
+  path: /{id}/delete
+  defaults: {_controller: ProjectBundle:DeliveryAddress:delete}
+  requirements:
+    _method: get

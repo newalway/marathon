@@ -1,0 +1,240 @@
+{% extends 'ProjectBundle::base.html.twig' %}
+
+{% block title %}{{order.orderNumber}} | {{ parent() }}{% endblock %}
+
+{% block stylesheets %}
+  <link href="{{ absolute_url(asset('bootstrap-3.3.7-dist/css/bootstrap.min.css')) }}" rel="stylesheet" type="text/css">
+  <link href="{{ absolute_url(asset('font-awesome-4.7.0/css/font-awesome.min.css')) }}" rel="stylesheet" type="text/css">
+  <link href="{{ absolute_url(asset('stylesheets/admin/base.css')) }}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block body_class %}body-pdf{% endblock %}
+
+{% block body %}
+{#
+  <img src="{{ absolute_url(asset('images/logo-new-02.png')) }}" alt="Japan Oishi Tanoshi Net" /><br />
+  <div class="row">
+    <div class="col-xs-6">
+      <b>บริษัท บางกอก ฟู้ด ซิสเต็ม จำกัด</b><br />
+      <small>
+        52 อาคารธนิยะพลาซ่าชั้น 27<br />
+        ถนนสีลม แขวงสุริยวงศ์ เขตบางรัก กรุงเทพฯ 10500
+
+      </small>
+    </div>
+    <div class="col-xs-6">
+      <div class="row">
+        <div class="col-xs-6 text-right"><b>Order Number</b></div>
+        <div class="col-xs-6">{{order.orderNumber}}</div>
+      </div>
+      <div class="row">
+        <div class="col-xs-6 text-right"><b>Order Date</b></div>
+        <div class="col-xs-6">{{order.orderdate|date('d/m/Y H:i:s')}}</div>
+      </div>
+      {% if order.shipdate %}
+        <div class="row">
+          <div class="col-xs-6 text-right"><b>Delivery Date</b></div>
+          <div class="col-xs-6">{{order.shipdate|date('d/m/Y')}}</div>
+        </div>
+      {% endif %}
+      {% if order.Payments|length > 0 %}
+      <div class="row">
+        <div class="col-xs-6 text-right"><b>Payment Methods</b></div>
+        <div class="col-xs-6">
+          {% for payment in order.Payments %}
+            {{payment.paymentoptiontitle}}<br />
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <hr />
+  {% if order.DeliveryAddressGuests|length > 0 %}
+  <div class="row">
+    {% for address in order.DeliveryAddressGuests %}
+    <div class="col-xs-6">
+      <h4>
+        <u >
+          {% if address.type == 1 %}
+            SHIPPING ADDRESS
+          {% else %}
+            BILLING ADDRESS
+          {% endif %}
+        </u>
+      </h4>
+      <div class="row row-5">
+        <div class="col-xs-3 col-5"><b>Name</b></div>
+        <div class="col-xs-9 col-5">{{address.firstname}} {{address.lastname}}</div>
+      </div>
+      {% if address.company %}
+        <div class="row row-5">
+          <div class="col-xs-3 col-5"><b>Company</b></div>
+          <div class="col-xs-9 col-5">{{address.company}}</div>
+        </div>
+      {% endif %}
+      <div class="row row-5">
+        <div class="col-xs-3 col-5"><b>Address</b></div>
+        <div class="col-xs-9 col-5">{{address.address}} <br/>{{address.district}} {{address.province}} {{address.postcode}}</div>
+      </div>
+      <!--
+      <div class="row row-5">
+        <div class="col-xs-3 col-5"><b>District</b></div>
+        <div class="col-xs-9 col-5">{{address.district}}</div>
+      </div>
+      <div class="row row-5">
+        <div class="col-xs-3 col-5"><b>Province</b></div>
+        <div class="col-xs-9 col-5">{{address.province}}</div>
+      </div>
+      {% if address.country %}
+        <div class="row row-5">
+          <div class="col-xs-3 col-5"><b>Country</b></div>
+          <div class="col-xs-9 col-5">{{address.country}}</div>
+        </div>
+      {% endif %}
+      <div class="row row-5">
+        <div class="col-xs-3 col-5"><b>Postcode</b></div>
+        <div class="col-xs-9 col-5">{{address.postcode}}</div>
+      </div> -->
+
+      {% if address.phone %}
+      <div class="row row-5">
+        <div class="col-xs-3 col-5"><b>Phone</b></div>
+        <div class="col-xs-9 col-5">{{address.phone}}</div>
+      </div>
+      {% endif %}
+      {% if address.email %}
+        <div class="row row-5">
+          <div class="col-xs-3 col-5"><b>Email</b></div>
+          <div class="col-xs-9 col-5">{{address.email}}</div>
+        </div>
+      {% endif %}
+      {% if address.taxpayerid %}
+      <div class="row row-5">
+        <div class="col-xs-3 col-5"><b>Tax Code</b></div>
+        <div class="col-xs-9 col-5">{{address.taxpayerid}}</div>
+      </div>
+      {% endif %}
+      {% if address.headoffice %}
+      <div class="row row-5">
+        <div class="col-xs-3 col-5"><b>Head Office</b></div>
+        <div class="col-xs-9 col-5">{{address.headoffice}}</div>
+      </div>
+      {% endif %}
+      {% if address.note %}
+      <div class="row row-5">
+        <div class="col-xs-3 col-5"><b>Order Note</b></div>
+        <div class="col-xs-9 col-5">{{address.note|nl2br}}</div>
+      </div>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  <br /><br />
+
+  <table class="table table-striped" style="ma">
+    <thead>
+      <tr>
+        <th class="text-center">No.</th>
+        <th>Image</th>
+        <th>Item Code</th>
+        <th>Item</th>
+        <th class="text-center">Qty</th>
+        <th class="text-right">Price</th>
+        <th class="text-right">Subtotal</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for item in order.getOrderDetails %}
+      <tr>
+        <td class="text-center">{{loop.index}}</td>
+        <td><img src="{{asset(item.Product.image | imagine_filter('img_h_50'))}}" alt="{{item.producttitle}}" /></td>
+        <td>{{item.Product.code}}</td>
+        <td>
+          {{item.producttitle}}
+          {% if item.size %}<br />Size: {{item.size}}{% endif %}
+          {% if item.color %}<br />Set: {{item.color}}{% endif %}
+        </td>
+        <td class="text-center">{{item.quantity}}</td>
+        <td class="text-right">{{item.price|price}}</td>
+        <td class="text-right">{{item.amount|price}}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+
+  <div class="row">
+    <div class="col-xs-2 col-xs-offset-8"><b>Subtotal</b></div>
+    <div class="col-xs-2 text-right">{{order.subtotal|price}}</div>
+  </div>
+
+  {% if order.discountcode %}
+    <div class="row">
+      <div class="col-xs-2 col-xs-offset-8"><b>Voucher</b> {{order.discountcode}}</div>
+      <div class="col-xs-2 text-right">- {{order.discountamount|price}}</div>
+    </div>
+  {% endif %}
+
+  <div class="row">
+    <div class="col-xs-2 col-xs-offset-8"><b>Shipping</b></div>
+    <div class="col-xs-2 text-right">
+      {% if order.shippingcost > 0 %}
+      {{order.shippingcost|price}}
+      {% else %}Free{% endif %}
+    </div>
+  </div>
+  <div class="row row">
+    <div class="col-xs-8 text-center"><b>({{order.totalprice|thaiconvert}})</b></div>
+    <div class="col-xs-2"><b>Total</b></div>
+    <div class="col-xs-2 text-right"><b>{{order.totalprice|price}}</b></div>
+  </div>
+
+  <hr />
+
+  {% if order.ConfirmPayments|length > 0 %}
+    <p style="page-break-after:always;"></p>
+    <h4 class="text-center">รายการแจ้งโอนเงิน หมายเลขสั่งซื้อ {{order.orderNumber}}</h4><br />
+    {% for confirm in order.ConfirmPayments %}
+      <div class="row">
+        <div class="col-xs-4"><b>Full Name</b></div>
+        <div class="col-xs-8">{{confirm.firstname}} {{confirm.lastname}}</div>
+      </div>
+      <div class="row">
+        <div class="col-xs-4"><b>Email</b></div>
+        <div class="col-xs-8">{{confirm.Email}}</div>
+      </div>
+      <div class="row">
+        <div class="col-xs-4"><b>Phone</b></div>
+        <div class="col-xs-8">{{confirm.Phone}}</div>
+      </div>
+      <div class="row">
+        <div class="col-xs-4"><b>Bank for Transfer</b></div>
+        <div class="col-xs-8">{{confirm.BankAccount.titleTh}}</div>
+      </div>
+      <div class="row">
+        <div class="col-xs-4"><b>Transfer Amount</b></div>
+        <div class="col-xs-8">{{confirm.amount|price}}</div>
+      </div>
+      <div class="row">
+        <div class="col-xs-4"><b>Transfer Datetime</b></div>
+        <div class="col-xs-8">{{confirm.datetransfer|date('d/m/Y')}} ({{confirm.timetransfer|date('H:i')}})</div>
+      </div>
+      {% if confirm.other %}
+      <div class="row">
+        <div class="col-xs-4"><b>Other</b></div>
+        <div class="col-xs-8">{{confirm.other|nl2br}}</div>
+      </div>
+      {% endif %}
+      <br /><br />
+      {% if confirm.attachfile %}
+      <div class="text-center margin-10-0">
+        <img src="{{absolute_url(asset(asset_files_paths ~ confirm.attachfile) | imagine_filter('img_w_600'))}}" />
+      </div>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+#}
+{% endblock %}

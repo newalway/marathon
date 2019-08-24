@@ -1,0 +1,45 @@
+{% extends "ProjectBundle:"~ view_layout ~":layout_member.html.twig" %}
+
+{% block title %}{% trans %}member.address.book{% endtrans %} | {{ parent() }}{% endblock %}
+{% block member_home_active %}active{% endblock %}
+{% block member_header %}{% trans %}member.address.book{% endtrans %}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('jquery.ThaiAddress.En-Th.js/css/jquery.ThaiAddress.En-Th.css') }}">
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+    <script src="{{asset('javascripts/geolocation.js')}}"></script>
+{% endblock %}
+
+{% block member_address_active %}active{% endblock %}
+
+{% block breadcrumb_sub %}
+  {{ parent() }}
+  <li class="active"><a href="{{path('address')}}">{% trans %}member.address.book{% endtrans %}</a></li>
+  <li class="active">{% trans %}member.address.book.edit{% endtrans %}</li>
+{% endblock %}
+
+{% block content_member %}
+<form action="{{path('address_edit',{'id':form.vars.value.id})}}" method="post" id="fos_user_profile_form" name="fos_user_profile_form" enctype="multipart/form-data" class="form-horizontal form-web">
+    {{form_widget(form._token)}}
+    {% include "ProjectBundle:"~ view_delivery_address ~":_content_addressForm.html.twig" %}
+</form>
+{% endblock %}
+
+
+{% block javascripts_body %}
+{{ parent() }}
+<script src="{{ asset('javascripts/base_product.js') }}"></script>
+<!-- jquery.Thailand -->
+<script src="{{asset('jquery.Thailand.js/dependencies/JQL.min.js')}}"></script>
+<script src="{{asset('jquery.Thailand.js/dependencies/typeahead.bundle.js')}}"></script>
+<script src="{{asset('jquery.ThaiAddress.En-Th.js/js/jquery.ThaiAddress.En-Th.js')}}"></script>
+<script>
+	$(function() {
+        initJueryThailandEnTh('{{asset('jquery.ThaiAddress.En-Th.js/js/thai_address_database_en_th.js')}}','{{app.request.locale|upper}}','fos_user_profile_form', 'district', 'amphure', 'province', 'postcode');
+	});
+</script>
+{% endblock %}

@@ -1,0 +1,69 @@
+user_api:
+    type: rest
+    resource: "@ProjectBundle/Controller/Api/ApiUserController.php"
+    name_prefix:  api_1_
+    prefix: /v1
+    requirements:
+      _format: json
+    options:
+      expose: true
+
+setting_option_api:
+    type: rest
+    resource: "@ProjectBundle/Controller/Api/ApiSettingOptionController.php"
+    name_prefix:  api_1_
+    prefix: /v1
+    requirements:
+      _format: json
+    options:
+      expose: true
+
+authentication_api:
+    type: rest
+    resource: "@ProjectBundle/Controller/Api/ApiAuthenticationController.php"
+    name_prefix:  api_1_
+    prefix: /v1
+    requirements:
+      _format: json
+    options:
+      expose: true
+
+hashtag_api:
+    type: rest
+    resource: "@ProjectBundle/Controller/Api/ApiHashTagController.php"
+    name_prefix:  api_1_
+    prefix: /v1
+    requirements:
+      _format: json
+    options:
+      expose: true
+
+product_api:
+    type: rest
+    resource: "@ProjectBundle/Controller/Api/ApiProductController.php"
+    name_prefix:  api_1_
+    prefix: /v1
+    requirements:
+      _format: json
+    options:
+      expose: true
+
+shipping_carrier_api:
+    type: rest
+    resource: "@ProjectBundle/Controller/Api/ApiShippingCarrierController.php"
+    name_prefix:  api_1_
+    prefix: /v1
+    requirements:
+      _format: json
+    options:
+      expose: true
+
+tracking_number_api:
+    type: rest
+    resource: "@ProjectBundle/Controller/Api/ApiTrackingNumberController.php"
+    name_prefix:  api_1_
+    prefix: /v1
+    requirements:
+      _format: json
+    options:
+      expose: true

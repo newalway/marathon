@@ -1,0 +1,31 @@
+admin_request_service:
+  path: /
+  defaults: {_controller: ProjectBundle:AdminRequestService:index}
+  requirements:
+    _method: get
+
+admin_request_service_view:
+  path: /{id}/view
+  defaults: {_controller: ProjectBundle:AdminRequestService:view}
+  requirements:
+    _method: get
+    id: \d+
+
+admin_request_service_excel_export:
+  path: /request-service-excel-export
+  defaults: {_controller: ProjectBundle:AdminRequestService:requestServiceExcel}
+  requirements:
+    _method: get
+
+admin_request_service_delete:
+  path: /{id}/delete
+  defaults: {_controller: ProjectBundle:AdminRequestService:delete}
+  requirements:
+    _method: get
+    id: \d+
+
+admin_request_service_group_delete:
+  path: /group-delete
+  defaults: {_controller: ProjectBundle:AdminRequestService:group_delete}
+  requirements:
+    _method: post

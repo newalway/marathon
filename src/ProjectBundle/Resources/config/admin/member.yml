@@ -1,0 +1,30 @@
+admin_member:
+  path: /
+  defaults: {_controller: ProjectBundle:AdminMember:index}
+  requirements:
+    _method: get
+
+admin_member_view:
+  path: /{id}/view
+  defaults: {_controller: ProjectBundle:AdminMember:view}
+  requirements:
+    _method: get
+    id: \d+
+
+admin_member_group_export_excel:
+  path: /group-export-excel
+  defaults: {_controller: ProjectBundle:AdminMember:group_export_excel}
+  requirements:
+    _method: post
+
+admin_member_group_enable:
+  path: /group-enable
+  defaults: {_controller: ProjectBundle:AdminMember:group_enable}
+  requirements:
+    _method: post
+
+admin_member_group_disable:
+  path: /group-disable
+  defaults: {_controller: ProjectBundle:AdminMember:group_disable}
+  requirements:
+    _method: post

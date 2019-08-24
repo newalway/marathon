@@ -1,0 +1,49 @@
+{% extends 'ProjectBundle::base.html.twig' %}
+
+{% block title %}{{order.orderNumber}} | {{ parent() }}{% endblock %}
+
+{% block stylesheets %}
+  <link href="{{ absolute_url(asset('bootstrap-3.3.7-dist/css/bootstrap.min.css')) }}" rel="stylesheet" type="text/css">
+  <link href="{{ absolute_url(asset('font-awesome-4.7.0/css/font-awesome.min.css')) }}" rel="stylesheet" type="text/css">
+  <link href="{{ absolute_url(asset('stylesheets/admin/base.css')) }}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block body_class %}body-cover-pdf{% endblock %}
+ {% block body_attr %}style="height:100%;"{% endblock %}
+
+{% block body %}
+  <div class="row cover-box">
+    <div class="col-xs-11 col-xs-offset-1">
+      <h3>บริษัท บางกอกฟู้ด ซิสเต็ม จำกัด</h3>
+      <p>
+        52 อาคารธนิยะพลาซ่าชั้น 27<br/>
+        ถนนสีลม แขวงสุริยวงศ์ เขตบางรัก กรุงเทพฯ<br/>
+        10500
+      </p>
+    </div>
+    <div class="col-xs-5 col-xs-offset-6 cover-box-delivery">
+      {% if order.DeliveryAddressGuests|length > 0 %}
+        <h2>กรุณาส่ง</h2>
+        {% for address in order.DeliveryAddressGuests %}
+          {% if address.type == 1 %}
+          <p>
+            {{address.firstname}} {{address.lastname}}
+            {% if address.phone %}
+              ({{address.phone}})
+            {% endif %}<br />
+            {% if address.company %}
+              {{address.company}}<br />
+            {% endif %}
+            {{address.address}}
+            เขต/อำเภอ {{address.district}}
+            {{address.province}}
+            {% if address.country %}ประเทศ {{address.country}}{% endif %}
+            {{address.postcode}}
+          </p>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+
+{% endblock %}

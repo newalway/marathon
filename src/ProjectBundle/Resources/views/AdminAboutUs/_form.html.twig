@@ -1,0 +1,35 @@
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+<div class="box-body icheck">
+  {#<div class="row">
+    <div class="col-md-7">
+      <div class="p-0-15">
+        {{ form_widget(form) }}
+      </div>
+    </div>
+  </div>#}
+
+	<div class="form-group">
+    <label class="control-label col-md-2" for="status"> Translation</label>
+		<div class="col-md-9">
+		    {{ form_widget(form.translations) }}
+    </div>
+	</div>
+
+  <div class="form-group">
+		<label class="control-label col-md-2" for="status"> Status</label>
+		<div class="col-md-9">
+			{{form_widget(form.status, {'id' : 'status'})}}
+			<div class="error-form">{{form_errors(form.status)}}</div>
+		</div>
+	</div>
+
+</div>
+
+<div class="box-footer">
+	<div class="row">
+		<div class="col-md-offset-2 col-md-10">
+			{{form_widget(form.save, {'id' : 'save', 'label': btn_label_save})}}
+		</div>
+	</div>
+</div>

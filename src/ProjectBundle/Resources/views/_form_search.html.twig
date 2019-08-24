@@ -1,0 +1,8 @@
+<div class="margin-bottom-10">
+	<div class="input-group">
+		<input id="q" name="search_data[q]" class="form-control" placeholder="Search.." type="text" value="{% if app.request.get('search_data')['q'] is defined %}{{app.request.get('search_data')['q']}}{% endif %}">
+		<span class="input-group-btn">
+		  <button type="submit" class="btn btn-primary btn-flat" data-form_id="data_form_search" id="search_data_path"><i class="fa fa-search"></i></button>
+		</span>
+	</div>
+</div>

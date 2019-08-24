@@ -1,0 +1,228 @@
+{% extends 'ProjectBundle::base.html.twig' %}
+
+{% block title %}{{ render(controller('ProjectBundle:Main:_setting_web',{'title':'website_site_name','is_translate':true})) }}{% endblock %}
+{% block html_description %}{{ render(controller('ProjectBundle:Main:_setting_web',{'title':'website_description','is_translate':true})) }}{% endblock %}
+{% block html_keywords %}{{ render(controller('ProjectBundle:Main:_setting_web',{'title':'website_keyword','is_translate':true})) }}{% endblock %}
+
+{% block og_url %}{{url('homepage')}}{% endblock %}
+{% block og_title %}{{ render(controller('ProjectBundle:Main:_setting_web',{'title':'og_title','is_translate':true})) }}{% endblock %}
+{% block og_description %}{{ render(controller('ProjectBundle:Main:_setting_web',{'title':'og_description','is_translate':true})) }}{% endblock %}
+{% block og_image %}{{ render(controller('ProjectBundle:Main:_setting_web',{'title':'og_image','is_translate':true})) }}{% endblock %}
+
+{% block html_meta %}
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+	<link rel="icon" type="image/png" href="{{ asset('images/marathon/favicon.png') }}" />
+	<link rel="alternate" href="{{url('homepage')}}" hreflang="{{app.request.locale}}-{{app.request.locale}}" />
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+
+	<link rel="stylesheet" href="{{asset('google-fonts/raleway-font.css')}}">
+	<link rel="stylesheet" href="{{asset('google-fonts/roboto-font.css')}}">
+	<link rel="stylesheet" href="{{asset('google-fonts/oregano-font.css')}}">
+	<link rel="stylesheet" href="{{asset('google-fonts/oswald-font.css')}}">
+	<link rel="stylesheet" href="{{asset('google-fonts/seaweed-script-font.css')}}">
+	<link rel="stylesheet" href="{{asset('google-fonts/lora-font.css')}}">
+	<link rel="stylesheet" href="{{asset('google-fonts/prompt-font.css')}}">
+	<!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:400,900italic,900,800italic,800,700italic,700,600italic,600,500italic,500,400italic,300italic,300,200italic,200">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900,900italic">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oregano:400,400italic">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oswald:400,300,700">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Seaweed+Script">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Prompt:200,400,300,700"> -->
+
+	{% stylesheets output='css/frontend_complied/marathon.css'
+		'template/assets/bootstrap/css/bootstrap.min.css'
+		'template/assets/font-awesome/css/font-awesome.min.css'
+		'template/assets/revolution/css/settings.css'
+		'template/assets/revolution/css/navigation.css'
+		'template/assets/jquery-ui-1.11.4/jquery-ui.min.css'
+		'template/assets/owl.carousel-2/assets/owl.carousel.css'
+		'template/assets/owl.carousel-2/assets/owl.theme.default.min.css'
+		'template/assets/animate.min.css'
+		'fancybox/dist/jquery.fancybox.min.css'
+		'template/assets/flaticon/flaticon.css'
+		'template/assets/Polyglot-Language-Switcher-master/css/polyglot-language-switcher.css'
+		'template/assets/nouislider/nouislider.css'
+		'template/assets/nouislider/nouislider.pips.css'
+		'template/assets/bootstrap-touch-spin/jquery.bootstrap-touchspin.css'
+		'template/assets/fitness-care-icon/style.css'
+		'template/assets/menuzord/css/menuzord.css'
+		'template/assets/bootstrap-select/dist/css/bootstrap-select.min.css'
+		'template/css/style.css'
+		'template/css/responsive.css'
+		'stylesheet/marathon-product.min.css'
+	%}
+	<link rel="stylesheet" href="{{ asset_url }}">
+	<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/brands.css" integrity="sha384-n9+6/aSqa9lBidZMRCQHTHKJscPq6NW4pCQBiMmHdUCvPN8ZOg2zJJTkC7WIezWv" crossorigin="anonymous"> -->
+	<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/fontawesome.css" integrity="sha384-vd1e11sR28tEK9YANUtpIOdjGW14pS87bUBuOIoBILVWLFnS+MCX9T6MMf0VdPGq" crossorigin="anonymous"> -->
+	<link rel="stylesheet" href="{{ asset('fontawesome-free-5.8.1-web/css/brands.css')}}">
+	<link rel="stylesheet" href="{{ asset('fontawesome-free-5.8.1-web/css/fontawesome.css')}}">
+	{% endstylesheets %}
+	<link rel="stylesheet" href="{{ asset('template/assets/revolution/css/layers.css')}}">
+	{#<link rel="stylesheet" href="{{ asset('template/assets/fancyapps-fancyBox/source/jquery.fancybox.css')}}">#}
+	<link rel="stylesheet" href="{{ asset('stylesheet/style-marathon.min.css') }}">
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	{% javascripts output='js/complied/marathon.js'
+		'@jquery_1_12_4_and_ui'
+		'@fancybox'
+		'@marathon_template'
+		'@angular'
+		'@zoom'
+		'@numeral'
+		'@web_custom'
+	%}
+	<script src="{{ asset_url }}"></script>
+	{% endjavascripts %}
+	<script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+	<script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+{% endblock %}
+
+{% block body %}
+	<header class="header header-v5 has-over-section stricky">
+		<div class="flag-lang">
+			<a href="{{path(app.request.attributes.get('_route'), (app.request.attributes.get('_route_params')|merge({'_locale': 'en'}))|merge(app.request.query.all))}}" title="English"><img src="{{ asset('images/marathon/flat-united-states-of-america.png')}}" alt="English" /></a>
+			<a href="{{path(app.request.attributes.get('_route'), (app.request.attributes.get('_route_params')|merge({'_locale': 'th'}))|merge(app.request.query.all))}}" title="ภาษาไทย"><img src="{{ asset('images/marathon/flat-thailand.png')}}" alt="ภาษาไทย" /></a>
+		</div>
+		<div class="container navi-container">
+			<nav class="navigation clearfix">
+				<div id="menuzord" class="menuzord">
+					<a href="{{path('homepage')}}" class="menuzord-brand">
+						<img src="{{ asset('images/marathon/logo-marathon.png')}}" alt="Marathon (Thailand)" />
+					</a>
+					<ul class="menuzord-menu">
+						<li>
+							<a href="{{path('homepage')}}" class="flip-flop-btn {% block home_active %}{% endblock %}"><span data-hover="{% trans %}menu.home{% endtrans %}">{% trans %}menu.home{% endtrans %}</span></a>
+						</li>
+
+						<li>
+							<a href="{{path('about_us')}}" class="flip-flop-btn {% block about_us_active %}{% endblock %}"><span data-hover="{% trans %}menu.about.us{% endtrans %}">{% trans %}menu.about.us{% endtrans %}</span></a>
+							<ul class="dropdown">
+								<li><a href="{{path('about_us')}}">{% trans %}history{% endtrans %}</a></li>
+								<li><a href="{{path('portfolio')}}">{% trans %}portfolio{% endtrans %}</a></li>
+							</ul>
+						</li>
+
+						<li>
+							<a href="{{path('promotion')}}" class="flip-flop-btn"><span data-hover="{% trans %}menu.promotion{% endtrans %}">{% trans %}menu.promotion{% endtrans %}</span></a>
+							{#<ul class="dropdown">
+								<li><a href="{{path('promotion')}}">{% trans %}promotion.all{% endtrans %}</a></li>
+								<li><a href="{{path('promotion')}}?type=bestsale">{% trans %}best.sale{% endtrans %}</a></li>
+								<li><a href="{{path('promotion')}}?type=bestprice">{% trans %}best.price{% endtrans %}</a></li>
+								<li><a href="{{path('promotion')}}?type=recommend">{% trans %}recommend{% endtrans %}</a></li>
+							</ul>#}
+						</li>
+
+						<li><a href="{{path('product')}}" class="flip-flop-btn {% block product_active %}{% endblock %}"><span data-hover="{% trans %}menu.product{% endtrans %}">{% trans %}menu.product{% endtrans %}</span></a></li>
+
+						<li><a href="{{path('blog')}}" class="flip-flop-btn {% block health_tip_active %}{% endblock %}"><span data-hover="{% trans %}menu.health.tips{% endtrans %}">{% trans %}menu.health.tips{% endtrans %}</span></a></li>
+
+						<li><a href="{{path('service')}}" class="flip-flop-btn {% block service_active %}{% endblock %}"><span data-hover="{% trans %}menu.service{% endtrans %}">{% trans %}menu.service{% endtrans %}</span></a></li>
+
+						<li><a href="{{path('showroom')}}" class="flip-flop-btn {% block showroom_active %}{% endblock %}"><span data-hover="{% trans %}menu.showroom{% endtrans %}">{% trans %}menu.showroom{% endtrans %}</span></a></li>
+
+						<li><a href="{{path('contact')}}" class="flip-flop-btn {% block contact_active %}{% endblock %}"><span data-hover="{% trans %}menu.contact.us{% endtrans %}">{% trans %}menu.contact.us{% endtrans %}</span></a></li>
+
+						<li class="user-button">
+							<a class="flip-flop-btn button-icon"><i class="glyphicon glyphicon-user"></i> <span class="text">Member</span></a>
+							<ul class="dropdown">
+								{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+
+									{% if is_granted('ROLE_EDITOR') %}
+										<li><a href="{{path('admin')}}">For Admin</a></li>
+
+									{% elseif is_granted('ROLE_CUSTOMER') or is_granted('ROLE_CLIENT') %}
+										<li><a href="{{path('fos_user_profile_show')}}">{% trans %}member.personal{% endtrans %}</a></li>
+							          	<li><a href="{{path('fos_user_profile_edit')}}">{% trans %}member.change.personal.info{% endtrans %}</a></li>
+
+										{% if app.user.issetpassword == 1 %}
+											<li class="{% block member_change_password_active %}{% endblock %}">
+												<a href="{{path('fos_user_change_password')}}">{% trans %}member.change.password{% endtrans %}</a>
+											</li>
+										{% else %}
+											<li class="{% block member_set_password_active %}{% endblock %}">
+												<a href="{{path('member_set_password')}}">{% trans %}member.set_password{% endtrans %}</a>
+											</li>
+										{% endif %}
+
+					          			<li><a href="{{path('address')}}">{% trans %}member.address.book{% endtrans %}</a></li>
+
+										{% if is_granted('ROLE_CUSTOMER') %}
+											<li><a href="{{path('member_orders')}}">{% trans %}member.my.orders{% endtrans %}</a></li>
+											<li><a href="{{path('track')}}">{% trans %}menu.track.my.order{% endtrans %}</a></li>
+										{% elseif is_granted('ROLE_CLIENT')  %}
+											<li><a href="{{path('member_orders')}}">{% trans %}member.my.rfq{% endtrans %}</a></li>
+											<li><a href="{{path('track')}}">{% trans %}track.my.rfq{% endtrans %}</a></li>
+										{% endif %}
+									{% endif %}
+
+								{% else %}
+									<li><a href="{{path('fos_user_security_login')}}">{% trans %}menu.login{% endtrans %}</a></li>
+									<li><a href="{{path('fos_user_registration_register')}}">{% trans %}menu.signup{% endtrans %}</a></li>
+									{# <li><a href="{{path('b2b_register')}}">{% trans %}b2b.menu{% endtrans %}</a></li> #}
+								{% endif %}
+
+								{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+									<li><a href="{{path('fos_user_security_logout')}}">{% trans %}menu.logout{% endtrans %}</a></li>
+								{% endif %}
+							</ul>
+						</li>
+
+						{{ render(controller('ProjectBundle:Cart:blog_cart' )) }}
+
+						<li class="search-button">
+							<a class="button-icon" data-toggle="collapse" href="#search-box" aria-expanded="false" aria-controls="search-box"><i class="fa fa-search"></i> <span class="text">Search</span></a>
+						</li>
+						<li class="flag-lang flag-mobile">
+							<a href="{{path(app.request.attributes.get('_route'), (app.request.attributes.get('_route_params')|merge({'_locale': 'en'}))|merge(app.request.query.all))}}" title="English"><img src="{{ asset('images/marathon/flat-united-states-of-america.png')}}" alt="English" /></a>
+							<a href="{{path(app.request.attributes.get('_route'), (app.request.attributes.get('_route_params')|merge({'_locale': 'th'}))|merge(app.request.query.all))}}" title="ภาษาไทย"><img src="{{ asset('images/marathon/flat-thailand.png')}}" alt="ภาษาไทย" /></a>
+						</li>
+					</ul>
+				</div>
+			</nav>
+		</div>
+
+		{{ render(controller('ProjectBundle:Product:box_search' )) }}
+
+	</header>
+
+	{% block breadcrumb %}
+	<section class="inner-banner pattern-3 pattern-banner">
+        <div class="container text-center">
+            <h2>{% block breadcrumb_title1 %}{% endblock %}</h2>
+            <p>{% block breadcrumb_title2 %}{% endblock %}</p>
+        </div>
+    </section>
+
+    <section class="bread-cumb">
+        <div class="container text-center">
+            <ul>
+                <li><a href="{{path('homepage')}}">{% trans %}menu.home{% endtrans %}</a></li>
+                {% block breadcrumb_sub %}{#<li><span>About Us</span></li>#}{% endblock %}
+            </ul>
+        </div>
+    </section>
+	{% endblock %}
+
+	{% block content %}{% endblock %}
+
+	<!--Footer area-->
+	{{ render(controller('ProjectBundle:Main:_footer')) }}
+    <!--End footer area-->
+
+	<!--Scroll to top-->
+	<div class="scroll-to-top scroll-to-target" data-target="html"><span class="fa fa-angle-up"></span></div>
+
+{% endblock %}
+
+{% block javascripts_body %}
+	{{ parent() }}
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.2/js.cookie.min.js"></script>
+
+	{{ render(controller('ProjectBundle:Main:_setting_web',{'title':'javascript_body'})) }}
+{% endblock %}

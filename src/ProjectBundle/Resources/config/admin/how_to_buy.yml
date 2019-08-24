@@ -1,0 +1,12 @@
+admin_how_to_buy:
+  path:  /
+  defaults: { _controller: ProjectBundle:AdminHowToBuy:index }
+  requirements:
+    _method: get
+
+admin_how_to_buy_update:
+  path: /update
+  defaults: {_controller: ProjectBundle:AdminHowToBuy:update}
+  requirements:
+    _method: post
+    id: \d+

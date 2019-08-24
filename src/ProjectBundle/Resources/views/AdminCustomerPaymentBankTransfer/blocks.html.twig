@@ -1,0 +1,7 @@
+{%block group_payment_active %}active{%endblock%}
+{% block group_payment_bank_transfer_active %}active{% endblock %}
+{%block content_header%}Customer payment By (Bank Transfer){%endblock%}
+
+{% block breadcrumb_sub %}
+	<li><a href="{{path('admin_customer_payment_bank_transfer_list')}}">Bank Transfer</a></li>
+{% endblock %}

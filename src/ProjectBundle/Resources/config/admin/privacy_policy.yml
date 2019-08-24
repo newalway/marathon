@@ -1,0 +1,12 @@
+admin_privacy_policy:
+  path:  /
+  defaults: { _controller: ProjectBundle:AdminPrivacyPolicy:index }
+  requirements:
+    _method: get
+
+admin_privacy_policy_update:
+  path: /update
+  defaults: {_controller: ProjectBundle:AdminPrivacyPolicy:update}
+  requirements:
+    _method: post
+    id: \d+

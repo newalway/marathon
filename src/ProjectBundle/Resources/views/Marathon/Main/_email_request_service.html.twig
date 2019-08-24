@@ -1,0 +1,44 @@
+Hi,<br/><br/>
+
+{{subject}}.<br/>
+ <br/><br/>
+Customer Name:&nbsp; {{data.firstName}}&nbsp;&nbsp;{{data.lastName}}<br/>
+Address:&nbsp;  {{data.address}}&nbsp;{{data.subDistrict}}&nbsp;{{data.district}}&nbsp;{{data.province}}&nbsp;{{data.postCode}}<br/>
+telephone:&nbsp; {{data.phone}}<br/>
+Email:&nbsp;{% if data.email %}
+      {{data.email}}
+      {% else %}
+      -
+      {% endif %}<br/>
+Product Name:&nbsp; {{data.productTitle}}<br/>
+Product Model:&nbsp;
+            {% if data.productModel %}
+                {{data.productModel}}
+            {% else %}
+                  -
+            {% endif %}<br/>
+Product Type:&nbsp;
+            {% if data.productTextType %}
+                {{data.productTextType}}
+            {% else %}
+                  -
+            {% endif %}<br/>
+Serail Number:&nbsp;
+            {% if data.productSerialNumber %}
+                  {{data.productSerialNumber}}
+            {% else %}
+                  -
+            {% endif %}<br/>
+Product Warranty Number:&nbsp;
+            {% if data.productWarrantyNumber %}
+                  {{data.productWarrantyNumber}}
+            {% else %}
+                   -
+            {% endif %}<br/>
+Detail: <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{data.requestDetail|nl2br}}<br/><br/><br/>
+
+<a href="{{ urls }}">View this message</a><br/><br/>
+
+Automatically generated email<br/>
+Marathon

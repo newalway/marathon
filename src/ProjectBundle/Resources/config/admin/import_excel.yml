@@ -1,0 +1,11 @@
+admin_import_excel:
+  path:  /
+  defaults: { _controller: ProjectBundle:AdminImportExcel:index }
+  requirements:
+    _method: get,post
+
+# admin_import_excel_insert:
+#   path:  /
+#   defaults: { _controller: ProjectBundle:AdminImportExcel:insert }
+#   requirements:
+#     _method: get,post

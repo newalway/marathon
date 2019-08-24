@@ -1,0 +1,68 @@
+
+    <div class="table-outer">
+        <table class="cart-table">
+            <thead class="cart-header">
+                <tr>
+                    <th class="text-center" colspan="2">{% trans %}product.title{% endtrans %}</th>
+                    <th class="text-center">{% trans %}product.quantity{% endtrans %}</th>
+                    <th class="price text-center">{% trans %}product.price{% endtrans %}</th>
+                    <th class="text-center" style="min-width: 50px;"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="product in arr_cart_data.products" ng-cloak>
+                    <td>
+                        <a ng-href="{{'{{getRouteProductDetail(product.product_id, product.slug, product.variant_option)}}'}}">
+                            <img class='img-responsive' ng-if="product.image_small" ng-src="{{'{{product.image_small}}'}}" alt="{{'{{product.title}}'}}" />
+                            <img class='img-responsive' ng-if="!product.image_small" ng-src="{{ asset('template/img/shop/thumb-1.jpg')}}" alt="{{'{{product.title}}'}}" />
+                        </a>
+                    </td>
+                    <td  class="text-center">
+                        <div class="">
+                            <!-- <figure class="prod-thumb">
+                            </figure> -->
+                            <h4 class="link-color">
+                            <a ng-href="{{'{{getRouteProductDetail(product.product_id, product.slug, product.variant_option)}}'}}">
+                                {{'{{product.title}}'}}
+                                <div ng-if="product.variant_option.length>0">
+                                    <small>{{'{{product.variant_option.join(" · ")}}'}}</small>
+                                </div>
+                            </a>
+                            </h4>
+                        </div>
+                    </td>
+                    <td class="qty text-center">
+
+                        {#{{'{{product.quantity}}'}}#}
+
+                        {#
+                        <input ng-model="product.quantity" ng-change="updateProductQuantity($event, product.quantity, product.product_id, product.sku_id, $index, 'update')" class="quantity-spinner" type="text" value="{{'{{product.quantity}}'}}" name="quantity">
+                        #}
+
+                        <div class="input-group">
+                            <div class="input-group-btn">
+                                <button ng-click="updateProductQuantity($event, product.quantity, product.product_id, product.sku_id, $index, 'decrease')" class="btn btn-default" style="" type="button"><i class="fa fa-minus"></i></button>
+                            </div>
+                            <input ng-model="product.quantity" ng-change="updateProductQuantity($event, product.quantity, product.product_id, product.sku_id, $index, 'update')" class=" text-center form-control" type="text" value="{{'{{product.quantity}}'}}" name="quantity" style="min-width:60px;">
+                            <div class="input-group-btn">
+                                <button ng-click="updateProductQuantity($event, product.quantity, product.product_id, product.sku_id, $index, 'increase')" class="btn btn-default" style="" type="button"><i class="fa fa-plus"></i></button>
+                            </div>
+                        </div>
+                        <div class="error_msg" ng-if="product.error_msg"><small>{{'{{product.error_msg}}'}}</small></div>
+
+                    </td>
+                    <td class="price text-center">
+                        {% if is_granted('ROLE_CLIENT') %}
+                            <i class="fa fa-minus" style="font-size:8px;"></i>
+                        {% else %}
+                            ฿{{'{{product.amount| currency:"":2}}'}}
+                        {% endif %}
+                    </td>
+                    <td class="text-center" style="min-width: 50px;">
+                        <a href="javascript:void(0)" ng-click="removeProduct(product.product_id, product.sku_id, $index)" class="remove-btn"><span class="fa fa-trash-o"></span></a>
+                    </td>
+                </tr>
+                <tr ng-if="arr_cart_data.products.length<=0"><td colspan="5" class="text-center">  No data in cart</td></tr>
+            </tbody>
+        </table>
+    </div>

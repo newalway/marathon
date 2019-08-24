@@ -1,0 +1,23 @@
+admin_subscriber:
+  path: /
+  defaults: {_controller: ProjectBundle:AdminSubscriber:index}
+  requirements:
+    _method: get
+
+admin_subscriber_delete:
+  path: /{id}/delete
+  defaults: {_controller: ProjectBundle:AdminSubscriber:delete}
+  requirements:
+    _method: get
+    id: \d+
+
+admin_subscriber_group_delete:
+  path: /group-delete
+  defaults: {_controller: ProjectBundle:AdminSubscriber:group_delete}
+  requirements:
+    _method: post
+
+admin_subscriber_excel_dowload:
+    path: /excel/subscriber_excel_dowload
+    defaults: {_controller: ProjectBundle:AdminSubscriber:subscriber_excel_dowload}
+    methods:   [GET, POST]

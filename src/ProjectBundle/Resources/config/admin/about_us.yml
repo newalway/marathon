@@ -1,0 +1,12 @@
+admin_about_us:
+  path:  /
+  defaults: { _controller: ProjectBundle:AdminAboutUs:index }
+  requirements:
+    _method: get
+
+admin_about_us_update:
+  path: /update
+  defaults: {_controller: ProjectBundle:AdminAboutUs:update}
+  requirements:
+    _method: post
+    id: \d+

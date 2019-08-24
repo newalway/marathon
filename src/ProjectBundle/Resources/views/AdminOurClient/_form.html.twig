@@ -1,0 +1,54 @@
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+<div class="box-body icheck">
+
+	<div class="form-group">
+	    <label class="control-label col-md-2"> Translation</label>
+		<div class="col-md-9">
+		    {{ form_widget(form.translations) }}
+	    </div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label col-md-2" for="image"> Image</label>
+		<div class="col-md-9">
+			{% if form.vars.value.image %}
+				<a href="{{asset(form.vars.value.image)}}" class="fancybox pull-left" style="margin-right: 10px;margin-bottom: 10px;" >
+					<img src="{{asset(form.vars.value.image) | imagine_filter('img_thumb')}}" alt="iamge" />
+				</a>
+				<span class="checkbox">
+					<input type="checkbox" id="removefileimage" name="removefileimage" value="1">
+					<label class="control-label" for="removefileimage">  Remove</label>
+				</span>
+			{% endif %}
+			<div class="input-group clearfix">
+				{{form_widget(form.image, {'id' : 'image'})}}
+				<span class="input-group-btn">
+					<button onclick="selectFileWithCKFinder('image');" class="btn btn-default" name="image_btn" id="image_btn" type="button">Browse Server</button>
+				</span>
+			</div>
+			<!-- <p class="help-block">size image 1920×1080 px</p> -->
+			<div class="error-form">{{form_errors(form.image)}}</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label col-md-2" for="status"> Status</label>
+		<div class="col-md-9">
+			{{form_widget(form.status, {'id' : 'status'})}}
+			<div class="error-form">{{form_errors(form.status)}}</div>
+		</div>
+	</div>
+
+</div>
+
+<div class="box-footer">
+	<div class="row">
+		<div class="col-md-offset-2 col-md-9">
+			{{form_widget(form.save, {'id' : 'save', 'label': btn_label_save})}}
+			{{form_widget(form.save_and_add, {'id' : 'save_and_add', 'label': btn_label_save_add})}}
+			{{form_widget(form.save_and_edit, {'id' : 'save_and_edit', 'label': btn_label_save_edit})}}
+			<a href="{%if app.session.get('back_to_url')['admin_our_client'] is defined%}{{app.session.get('back_to_url')['admin_our_client']}}{%else%}{{path('admin_our_client')}}{%endif%}" class="btn btn-default">{{btn_label_close}} </a>
+		</div>
+	</div>
+</div>

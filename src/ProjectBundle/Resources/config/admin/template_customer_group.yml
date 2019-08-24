@@ -1,0 +1,52 @@
+admin_template_customer_group:
+  path: /
+  defaults: {_controller: ProjectBundle:AdminTemplateCustomerGroup:index}
+  requirements:
+    _method: get
+
+admin_template_customer_group_new:
+  path: /new
+  defaults: {_controller: ProjectBundle:AdminTemplateCustomerGroup:new}
+
+admin_template_customer_group_create:
+  path: /create
+  defaults: {_controller: ProjectBundle:AdminTemplateCustomerGroup:create}
+  requirements:
+    _method: post
+
+admin_template_customer_group_edit:
+  path: /{id}/edit
+  defaults: {_controller: ProjectBundle:AdminTemplateCustomerGroup:edit}
+  requirements:
+    id: \d+
+
+admin_template_customer_group_update:
+  path: /{id}
+  defaults: {_controller: ProjectBundle:AdminTemplateCustomerGroup:update}
+  requirements:
+    _method: post
+    id: \d+
+
+admin_template_customer_group_delete:
+  path: /{id}/delete
+  defaults: {_controller: ProjectBundle:AdminTemplateCustomerGroup:delete}
+  requirements:
+    _method: get
+
+admin_template_customer_group_group_delete:
+  path: /group-delete
+  defaults: {_controller: ProjectBundle:AdminTemplateCustomerGroup:group_delete}
+  requirements:
+    _method: post
+
+admin_template_customer_group_sort:
+  path: /sort
+  defaults: {_controller: ProjectBundle:AdminTemplateCustomerGroup:sort}
+  requirements:
+    _method: get
+
+admin_template_customer_group_sort_prosess:
+  path: /sort-prosess
+  defaults: {_controller: ProjectBundle:AdminTemplateCustomerGroup:sort_prosess}
+  requirements:
+    _method: post

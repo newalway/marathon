@@ -1,0 +1,106 @@
+{% extends 'ProjectBundle::admin.html.twig'%}
+
+{% block stylesheets %}
+  {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+{% endblock %}
+
+{% use "ProjectBundle:AdminContact:blocks.html.twig" %}
+{% use "ProjectBundle::flash_message.html.twig" %}
+{% block content %}
+<div class="row">
+	<div class="col-md-8 margin-10-0">
+
+	</div>
+</div>
+<br class="clearBoth">
+<div class="row">
+  <div class="col-xs-12">
+    <div class="box" style="min-height: 1000px;">
+
+      <div class="box-body">
+		  	<div class="row">
+		  		<div class="col-md-8">
+						<button type="button" class="btn bg-red" data-form_id="data_group" id="group_delete">
+							<i class="fa fa-trash-o"></i> Delete
+						</button>
+					</div>
+          <div class="col-md-4">
+						<form id="data_form_search" action="{{path('admin_contact')}}" method="get" role="form" enctype="multipart/form-data" class="form-horizontal"
+              data-search_data_path="{{path('admin_contact')}}">
+              {% include 'ProjectBundle::_form_search.html.twig' %}
+            </form>
+					</div>
+    		</div>
+    	</div>
+
+      <form action="#" method="post" id="data_group" data-delete_path="{{path('admin_contact_group_delete')}}">
+	      <div class="box-body icheck">
+	      	<table id="dtbrole" class="table table-hover">
+	      		<thead>
+	          <tr>
+	            <th width="19"> <input type="checkbox" id="select_all" /> </th>
+              <th width="200">Name</th>
+              <th>Message</th>
+              <th width="100">Phone</th>
+              <th width="200">Email</th>
+              <th class="text-center" width="50">Created At</th>
+              <th class="text-center" width="50">View</th>
+							<th class="text-center" width="50">Delete</th>
+	          </tr>
+	          </thead>
+	          <tbody>
+              {% for data in paginated.currentpageresults %}
+                <tr class="odd gradeX">
+                  <td>
+                    <input type="checkbox" name="data_ids[]" class="check_all" value="{{data.id}}"/>
+                  </td>
+                  <td>
+                    {{data.name}}
+                    {% if data.status == 4 %}
+                      <span class="label label-warning">Unread</span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    {{data.message|nl2br}}
+                  </td>
+                  <td>
+                    {% if data.telephoneNumber %}
+                    <a href="tel:{{data.telephoneNumber}}">{{data.telephoneNumber}}</a>
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if data.email %}
+                    <a href="mailto:{{data.email}}">{{data.email}}</a>
+                    {% endif %}
+                  </td>
+                  <td class="text-center">{{data.createdAt|date('d/m/Y')}}<br />{{data.createdAt|date('H:i:s')}}</td>
+                  <td class="text-center"><a href="{{path('admin_contact_view', {'id' : data.id})}}" title="View"><i class="fa fa-file-text-o fa-2x"></a></td>
+                  <td class="text-center"><a href="{{path('admin_contact_delete', {'id' : data.id})}}" onclick="return confirm('Are you sure you want to delete?');" title="Delete"><i class="fa fa-trash fa-2x"></i></a></td>
+                </tr>
+              {% endfor %}
+						</tbody>
+	        </table>
+	      </div><!-- /.box-body -->
+
+        <div class="box-footer clearfix">
+          <div class="row">
+            <div class="col-md-3">
+              <div class="margin">Total : {{paginated.getNbResults}}</div>
+            </div>
+            <div class="col-md-9">
+              {% if paginated.havetopaginate %}
+                {{pagerfanta(paginated,'twitter_bootstrap3_translated')}}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+      </form>
+    </div><!-- /.box -->
+  </div>
+</div>
+{% endblock %}

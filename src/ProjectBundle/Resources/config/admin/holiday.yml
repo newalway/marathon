@@ -1,0 +1,24 @@
+admin_holiday:
+  path: /
+  defaults: {_controller: ProjectBundle:AdminHoliday:index}
+  methods:  [GET]
+
+admin_holiday_new:
+  path: /new
+  defaults: {_controller: ProjectBundle:AdminHoliday:new}
+  methods:  [GET,POST]
+
+admin_holiday_edit:
+  path: /{id}/edit
+  defaults: {_controller: ProjectBundle:AdminHoliday:edit}
+  methods:  [GET,POST]
+
+admin_holiday_delete:
+  path: /{id}/delete
+  defaults: {_controller: ProjectBundle:AdminHoliday:delete}
+  methods:  [GET]
+
+admin_holiday_group_delete:
+  path: /group-delete
+  defaults: {_controller: ProjectBundle:AdminHoliday:group_delete}
+  methods:  [POST]

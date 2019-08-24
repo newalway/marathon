@@ -1,0 +1,99 @@
+<div class="box-body icheck">
+	{#
+	<div class="form-group">
+		<label class="control-label col-md-3" for="name"><span class="require">*</span> Full Name</label>
+		<div class="col-md-6">
+			{{form_widget(form.name, {'id' : 'name'})}}
+			<div class="error-form">{{form_errors(form.name)}}</div>
+		</div>
+	</div>
+	#}
+
+	<div class="form-group">
+		<label class="control-label col-md-3" for="email"><span class="require">*</span> Email</label>
+		<div class="col-md-6">
+			{{form_widget(form.email, {'id' : 'email'})}}
+			<div class="error-form">{{form_errors(form.email)}}</div>
+		</div>
+	</div>
+
+	{% if form.vars.value.id is null %}
+		<div class="form-group">
+		  <label class="control-label col-md-3" for="password"><span class="require">*</span> Password</label>
+			<div class="col-md-6">
+				<div class="input-group">
+		      <span class="input-group-addon"><i class="fa fa-key"></i></span>
+		      {{form_widget(form.plainPassword.first,{'id' : 'password', 'attr' : {'class' : 'form-control-static'}})}}
+				</div>
+		    <div class="error-form">{{form_errors(form.plainPassword.first)}}</div>
+			</div>
+		</div>
+		<div class="form-group">
+		  <label class="control-label col-md-3" for="confirm-password"><span class="require">*</span> Confirm Password</label>
+		  <div class="col-md-6">
+				<div class="input-group">
+		      <span class="input-group-addon"><i class="fa fa-key"></i></span>
+		      {{form_widget(form.plainPassword.second,{'id' : 'confirm-password', 'attr' : {'class' : 'form-control-static'}})}}
+				</div>
+		    <div class="error-form">{{form_errors(form.plainPassword.second)}}</div>
+			</div>
+		</div>
+	{#{% else %}
+		<div class="form-group">
+			<label class="control-label col-md-3" for="password"></label>
+			<div class="col-md-6">
+				<div class="input-group">
+					<a href="{{path('admin_user_change_password', {'id':form.vars.value.id})}}" class="btn btn-default">Change Password </a>
+				</div>
+			</div>
+		</div>#}
+	{% endif %}
+
+	{#
+	<div class="form-group">
+		<label class="control-label col-md-3" for="telephone"> Telephone</label>
+		<div class="col-md-6">
+			{{form_widget(form.telephone, {'id' : 'telephone'})}}
+			<div class="error-form">{{form_errors(form.telephone)}}</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label col-md-3" for="position"><span class="require">*</span> Position</label>
+		<div class="col-md-6">
+			{{form_widget(form.position, {'id' : 'position'})}}
+			<div class="error-form">{{form_errors(form.position)}}</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label col-md-3" for="start_date"><span class="require">*</span> Start Time</label>
+		<div class="col-md-6 form-control-static">
+			{{form_widget(form.start_date, {'id' : 'start_date'})}}
+			<div class="error-form">{{form_errors(form.start_date)}}</div>
+		</div>
+	</div>
+	#}
+
+	{#{{dump(form.vars.value.roles)}}#}
+
+	<div class="form-group">
+		<label class="control-label col-md-3" for="roles"><span class="require">*</span> Roles</label>
+		<div class="col-md-6 form-control-static">
+			{{form_widget(form.roles, {'id' : 'roles'})}}
+			<div class="error-form">{{form_errors(form.roles)}}</div>
+		</div>
+	</div>
+
+
+</div>
+
+<div class="box-footer">
+	<div class="row">
+		<div class="col-md-offset-3 col-md-6">
+			{{form_widget(form.save, {'id' : 'save', 'label': btn_label_save})}}
+			{{form_widget(form.save_and_add, {'id' : 'save_and_add', 'label': btn_label_save_add})}}
+			<a href="{%if app.session.get('back_to_url')['admin_user'] is defined%}{{app.session.get('back_to_url')['admin_user']}}{%else%}{{path('admin_user')}}{%endif%}" class="btn btn-default">{{btn_label_close}} </a>
+		</div>
+	</div>
+</div>

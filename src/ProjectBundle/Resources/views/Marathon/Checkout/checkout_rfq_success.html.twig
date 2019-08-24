@@ -1,0 +1,251 @@
+{% extends "ProjectBundle:"~ view_layout ~":layout.html.twig" %}
+
+{% block title %}{% trans %}checkout.title{% endtrans %} | {{ parent() }}{% endblock %}
+{% block checkout_active %}active{% endblock %}
+{% block m_checkout_active %}active{% endblock %}
+
+{% block breadcrumb_title1 %}{% trans %}checkout.title{% endtrans %}{% endblock %}
+
+{% block breadcrumb_sub %}
+  {{ parent() }}
+  <li class="active">{% trans %}checkout.title{% endtrans %}</li>
+{% endblock %}
+
+{% block content %}
+
+<script src="{{ asset('jquery-print-me/jquery-printme.js') }}"></script>
+<section class="sidebar-pages pb0 track-section" id="dataPrint" >
+  {% if (customerOrder)%}
+  {% set  order = customerOrder[0] %}
+    <div class="container">
+
+        <div class="">
+        <hr />
+          <div class="alert alert-success alert-dismissible">
+            <div class="text-center">
+                  <i class="fa fa-5x fa-check-circle"></i>
+                <h1>{% trans %} checkout.thank {% endtrans %}</h1>
+                Thank you for you interest in ourt products.
+                {# Number #{{order.orderNumber}}<br /> #}
+            </div>
+          </div>
+        <hr />
+            <div class="row mb-20">
+                <div class="col-sm-6">
+                    Quotation No. {{order.orderNumber}}<br />
+                    {% trans %}order.placed.on{% endtrans %} {{ order.orderDate|date("d F Y") }}
+                    <button id="print">
+                      <i class="fa fa-1x fa-print" aria-hidden="true"></i>
+                    </button>
+                </div>
+                {% if order.shipDate %}
+                    <div class="col-sm-6 text-right">
+                        {% trans %}order.delivered.on{% endtrans %}
+                        {{ order.shipDate|date("d F Y") }}
+                    </div>
+                {% endif %}
+            </div>
+                <div class="col-md-8" >
+                    <div class="sidebar-page-content">
+                        <div class="inner-page-wrapper section-padding workout-schedules-area workout-v2 pt0 white-bg">
+                            <div class="tb tb-100 track-orders">
+                                <div class="tr">
+                                    <div class="th"></div>
+                                    <div class="th">{% trans %}order.items{% endtrans %}</div>
+                                    <div class="th text-center">{% trans %}order.qty{% endtrans %}</div>
+                                </div>
+                                <div class="tbody">
+                                    {% set sum = 0 %}
+                                    {% for orderItems in order.customerOrderItems %}
+                                        {% set qty = orderItems.quantity %}
+                                        <div class="tr">
+                                            <div class="td">
+                                                {% if orderItems.image %}
+                                                    <img src="{{orderItems.image|imagine_filter('img_thumb')}}" alt="" style="margin-top: 15px;"/>
+                                                {% else %}
+                                                    <img src="{{ asset('template/img/shop/thumb-1.jpg')}}" style="margin-top: 15px;"/>
+                                                {% endif %}
+                                            </div>
+                                            <div class="td">
+                                                {{orderItems.productTitle}}
+                                                {% if orderItems %}
+                                                    <br/><small>{{ orderItems.skuTitle|join(' · ') }}</small>
+                                                {% endif %}
+                                            </div>
+                                            <div class="td text-center">{{qty|number_format(0, '', ',') }}</div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            {% if (order.paymentOption == payment_bank_transfer_code) %}
+                                {% if (order.paid != 1) %}
+                                    <div class="col-md-12">
+                                        <h3>How to pay (Bank Transfer)</h3>
+                                        <p>- Online bank transfers. Log in to your online account and select the option for making a payment</p>
+                                        <p>- In-branch bank transfers. If you have the money in cash, you can pay it into the account of the person you owe it to in-branch.</p>
+                                        <table class="table table-striped">
+                                            <th>#</th>
+                                            <th colspan="2">Bank name</th>
+                                            <th>Account Number</th>
+                                            <th>Account name</th>
+                                            <th>branch</th>
+                                            {% for bank in bankAccount %}
+                                                <tr>
+                                                    <td width = "10">{{ loop.index }}.</td>
+                                                    <td width = "50">
+                                                    {% if bank.image %}
+                                                        <img src="{{bank.image|imagine_filter('img_small_thumb')}}" alt="">
+                                                    {% endif %}
+                                                    </td>
+                                                    <td>{{ bank.title }}</td>
+                                                    <td>{{ bank.accountNumber }}</td>
+                                                    <td>{{ bank.accountName }}</td>
+                                                    <td>{{ bank.branch }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </table>
+                                    </div>
+
+                                    <div class="col-md-12 text-center">
+                                        <form action="{{path('confirm_payment',{'orderId': order.orderNumber})}}" method="post">
+                                            <button class="btn btn-default">confirm payment</button>
+                                        </form>
+                                    </div>
+                                {% endif %}
+
+                            {% elseif order.paymentOption == payment_credit_code %}
+                                <!-- CRDT -->
+                                {% set epayment = order.customerPaymentEpayment %}
+                                {% if epayment.decision %}
+                                    <div class="col-md-12">
+                                        <h4>Payment Information</h4>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <table class="table tabel-striped">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="text-left" width="150px"><b>Card Number :</b></td>
+                                                    <td>{{epayment.cardNumber}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-left"><b>Card Issuer :</b></td>
+                                                    <td>{{epayment.cardIssuer}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-left"><b>Brand :</b></td>
+                                                    <td>{{epayment.cardScheme}}</td>
+                                                </tr>
+                                                {#
+                                                <tr>
+                                                    <td class="text-left"><b>Country :</b></td>
+                                                    <td>{{epayment.cardCountry}}</td>
+                                                </tr>
+                                                #}
+                                                <tr>
+                                                    <td class="text-left"><b>Amount :</b></td>
+                                                    <td>{% if epayment.authAmount %}{{epayment.currency}} {{epayment.authAmount|number_format(2, '.', ',')}}{% endif %}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-left"><b>Decision :</b></td>
+                                                    <td>{{epayment.decision}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2">
+                                                        {% if epayment.decision == 'ACCEPT' %}
+                                                            <h5 class="text-success">{{epayment.message}}</h5>
+                                                        {% else %}
+                                                            <h5 class="text-warning">{{epayment.message}}</h5>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+                            <hr />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="section-padding pt0">
+                        <div class="row">
+                            {% for orderDeliverys in order.customerOrderDeliverys %}
+                                {% if orderDeliverys.addressType == 1 %}
+                                    <div class="col-sm-6 col-md-12 mb-20">
+                                        <div class="single-sidebar search-widget">
+                                            <div class="title">
+                                                <h3>Shipping Address</h3>
+                                            </div>
+                                            <!-- /.title -->
+
+                                                <h4>{{orderDeliverys.firstName}} {{orderDeliverys.lastName}}
+                                                    {% if orderDeliverys.companyName %} <br/>{{orderDeliverys.companyName}}{% endif %}
+                                                    {% if orderDeliverys.headOffice %}&nbsp;&nbsp;({{orderDeliverys.headOffice}}){% endif %}
+                                                </h4>
+                                                <p>
+                                                    {{orderDeliverys.address}}, {{orderDeliverys.district}}, {{orderDeliverys.amphure}},
+                                                    {{orderDeliverys.province}} {#,{{orderDeliverys.country}}#}
+                                                    {{orderDeliverys.postCode}}<br />{{orderDeliverys.phone}}
+                                                </p>
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                                {% if orderDeliverys.addressType == 2 %}
+                                    <div class="col-sm-6 col-md-12 mb-20">
+                                        <div class="single-sidebar search-widget">
+                                            <div class="title">
+                                                <h3>Billing Address</h3>
+                                            </div>
+                                            <!-- /.title -->
+                                                <h4>{{orderDeliverys.firstName}} {{orderDeliverys.lastName}}
+                                                    {% if orderDeliverys.companyName %} <br/>{{orderDeliverys.companyName}}{% endif %}
+                                                    {% if orderDeliverys.headOffice %}&nbsp;&nbsp;({{orderDeliverys.headOffice}}){% endif %}
+                                                </h4>
+                                                <p>
+                                                    {{orderDeliverys.address}}, {{orderDeliverys.district}}, {{orderDeliverys.amphure}},
+                                                    {{orderDeliverys.province}} {#,{{orderDeliverys.country}}#}
+                                                    {{orderDeliverys.postCode}}<br />{{orderDeliverys.phone}}
+                                                    {% if orderDeliverys.taxPayerId %}
+                                                        <br/>{% trans %}member.taxpayerid{% endtrans %} {{orderDeliverys.taxPayerId}}
+                                                    {% endif %}
+                                                </p>
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                            {% else %}
+                                No data
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+
+                  <hr />
+                    <div class="container alert alert-danger alert-dismissible">
+                      <div class="text-center">
+                            <i class="fa fa-5x fa-exclamation-circle"></i>
+                          <h1>{% trans %} checkout.warning {% endtrans %}</h1>
+                          {% trans %} checkout.notsuccsess {% endtrans %}
+                      </div>
+                    </div>
+                  <hr />
+
+            {% endif %}
+        </div>
+    </section>
+    <script type="text/javascript">
+  	$(document).ready(function () {
+
+  		$("#print").click(function(){
+  			$("#dataPrint").printMe({ "path": ["{{asset('template/assets/bootstrap/css/bootstrap.min.css')}}","{{asset('stylesheet/style-marathon.min.css')}}","{{asset('stylesheet/marathon-product.min.css')}}","{{asset('template/assets/font-awesome/css/font-awesome.min.css')}}"]  });
+  		});
+
+  	});
+  	</script>
+{% endblock %}

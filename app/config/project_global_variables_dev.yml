@@ -1,0 +1,12 @@
+parameters:
+    #FB App : Develop App (dev@zap-interactive.com)
+    facebook_client_id: "1044606455736157"
+    facebook_client_secret: "2f16cd0574f489a71d89a836409bcc1f"
+
+    #Google App : Web client 1 - Marathon project (num@zap-interactive.com)
+    google_client_id: "976615058428-e4fd7p50ban9afpebe30a76mr5c15p51.apps.googleusercontent.com"
+    google_client_secret: "n0aKWDoyeeliOjQo5EgeYuHt"
+
+    #Google App : OAuth client - localhost project (num@zap-interactive.com)
+    #google_client_id: "990249891803-s3ft35iq28pfcr768c3u17rbuda7d2ak.apps.googleusercontent.com"
+    #google_client_secret: "yqWXj10Sg2IlemDf8bb3ePQ5"

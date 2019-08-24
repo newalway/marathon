@@ -1,0 +1,37 @@
+
+<div class="row">
+	<div class="col-md-10">
+		<div class="box">
+			<div class="box-header with-border">
+				<h3 class="box-title">Status</h3>
+				<div class="box-tools pull-right"></div>
+			</div>
+			<!-- /.box-header -->
+			<div class="box-body">
+				<div class="row ">
+					<div class="col-md-6">
+						<div class="form-group icheck">
+							<!-- <label class="" for="status"><span class="require">*</span> Status</label> -->
+							{{form_widget(form.status, {'id' : 'status'})}}
+							<div class="error-form">{{form_errors(form.status)}}</div>
+							<!-- <p class="help-block">Customers will enter this discount code at checkout.</p> -->
+						</div>
+					</div>
+					<div class="col-md-6"></div>
+				</div>
+			</div>
+		</div>
+
+	</div> <!-- /.col-md-10 -->
+
+	<div class="col-md-2">
+	</div>
+
+	<div class="row">
+		<div class="col-md-offset-2 col-md-9">
+			{{form_widget(form.save, {'id' : 'save', 'label': btn_label_save})}}
+			<a href="{%if app.session.get('back_to_url')['admin_discount'] is defined%}{{app.session.get('back_to_url')['admin_discount']}}{%else%}{{path('admin_discount')}}{%endif%}" class="btn btn-default">{{btn_label_close}} </a>
+		</div>
+	</div>
+
+</div>

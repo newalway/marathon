@@ -1,0 +1,108 @@
+{% extends 'ProjectBundle::admin.html.twig'%}
+
+{% block stylesheets %}
+  {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+{% endblock %}
+
+{% use "ProjectBundle:AdminOurClient:blocks.html.twig" %}
+{% use "ProjectBundle::flash_message.html.twig" %}
+{% block content %}
+<div class="row">
+	<div class="col-md-8 margin-10-0">
+		<a href="{{path('admin_our_client_new')}}" class="btn btn-instagram" title="Add"><i class="fa fa-plus"></i> Add</a>
+    <a href="{{path('admin_our_client_sort')}}" class="btn bg-purple" title="sort"><i class="fa fa-list-ol"></i> Sort</a>
+	</div>
+</div>
+<br class="clearBoth">
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box" style="min-height: 1000px;">
+
+            <div class="box-body">
+    		  	<div class="row">
+    		  		<div class="col-md-8">
+    					<button type="button" class="btn bg-red" data-form_id="data_group" id="group_delete">
+    						<i class="fa fa-trash-o"></i> Delete
+    					</button>
+                        <button type="button" class="btn bg-olive" data-form_id="data_group" id="group_enable">
+    						<i class="fa fa-unlock"></i> Publish
+    					</button>
+    					<button type="button" class="btn bg-gray" data-form_id="data_group" id="group_disable">
+    						<i class="fa fa-lock"></i> Unpublish
+    					</button>
+    				</div>
+                    <div class="col-md-4">
+    					<form id="data_form_search" action="{{path('admin_our_client')}}" method="get" role="form" enctype="multipart/form-data" class="form-horizontal" data-search_data_path="{{path('admin_our_client')}}">
+                            {% include 'ProjectBundle::_form_search.html.twig' %}
+                        </form>
+    				</div>
+        		</div>
+        	</div>
+
+            <form action="#" method="post" id="data_group" data-delete_path="{{path('admin_our_client_group_delete')}}" data-enable_path="{{path('admin_our_client_group_enable')}}" data-disable_path="{{path('admin_our_client_group_disable')}}">
+	            <div class="box-body icheck">
+  	                <table id="dtbrole" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th width="19"> <input type="checkbox" id="select_all" /> </th>
+                                <th>Image</th>
+                                <th>Title</th>
+                                <th class="text-center" width="50">Status</th>
+                                <th class="text-center" width="50">Edit</th>
+                                <th class="text-center" width="50">Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for data in paginated.currentpageresults %}
+                        <tr class="odd gradeX">
+                            <td>
+                                <input type="checkbox" name="data_ids[]" class="check_all" value="{{data.id}}"/>
+                            </td>
+                            <td>
+                                {% if data.image %}
+                                <a href="{{asset(data.image)}}" data-fancybox="group" class="pull-left" style="margin-right: 10px;margin-bottom: 10px;" >
+                            		<img src="{{asset(data.image) | imagine_filter('img_small_thumb')}}" alt="{{data.getTitle}}" />
+                            	</a>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{{path('admin_our_client_edit', {'id' : data.id})}}">{{data.getTitle}}</a>
+                            </td>
+                            <td class="text-center">
+                                {{ data.status|status|raw }}
+                            </td>
+                            <td class="text-center">
+                                <a href="{{path('admin_our_client_edit', {'id' : data.id})}}" title="Edit"><i class="fa fa-pencil-square-o fa-2x"></i></a>
+                            </td>
+                            <td class="text-center">
+                                <a href="{{path('admin_our_client_delete', {'id' : data.id})}}" onclick="return confirm('Are you sure you want to delete?');" title="Delete"><i class="fa fa-trash fa-2x"></i></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div><!-- /.box-body -->
+
+                <div class="box-footer clearfix">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="margin">Total : {{paginated.getNbResults}}</div>
+                        </div>
+                        <div class="col-md-9">
+                            {% if paginated.havetopaginate %}
+                                {{pagerfanta(paginated,'twitter_bootstrap3_translated')}}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </div><!-- /.box -->
+    </div>
+</div>
+{% endblock %}

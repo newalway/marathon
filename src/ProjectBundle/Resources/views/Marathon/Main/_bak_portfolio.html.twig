@@ -1,0 +1,179 @@
+{% extends "ProjectBundle:"~ view_layout ~":layout.html.twig" %}
+
+{% block title %}{{data.getTitle}} | {{ parent() }}{% endblock %}
+{% block about_us_active %}active{% endblock %}
+{% block m_about_us_active %}active{% endblock %}
+{% block portfolio_active %}active{% endblock %}
+{% block m_portfolio_active %}active{% endblock %}
+
+{% block breadcrumb_title1 %}{{data.getTitle}}{% endblock %}
+
+{% block breadcrumb_sub %}
+    {{ parent() }}
+    <li class="active">{{data.getTitle}}</li>
+{% endblock %}
+
+{% block content %}
+    <section class="section-padding portfolio">
+        <div class="container">
+            {{data.getContent|raw}}
+            {#<h2 class="text-center portfolio-h2">
+                อุปกรณ์ฟิตเนส และเครื่องออกกำลังกาย<br />
+                บริษัท มาราธอน (ประเทศไทย) จำกัด
+            </h2>
+            <h1 class="text-center portfolio-h1">ได้รับความไว้วางใจจาก</h1>#}
+
+            {#<div class="row portfolio-row">
+                <div class="col col-sm-6 col-md-4">กระทรวงมหาดไทย</div>
+                <div class="col col-sm-6 col-md-4">ศูนย์วิทยาศาสตร์เพื่อการศึกษา</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">ศูนย์ฝึกกรมรักษาดินแดน</div>
+                <div class="col col-sm-6 col-md-4 md-clear lg-clear">กรมสื่อสารทหารเรือ</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">กรมทางพิเศษแห่งประเทศไทย</div>
+                <div class="col col-sm-6 col-md-4">การท่าเรื่อแห่งประเทศไทย</div>
+                <div class="col col-sm-6 col-md-4 sm-clear md-clear lg-clear">การไฟฟ้าฝ่ายผลิตแห่งประเทศไทย</div>
+                <div class="col col-sm-6 col-md-4">การปิโตเลียมแห่งประเทศไทย</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">กองกำลังทหารพรานกองทัพภาคที่ 1</div>
+                <div class="col col-sm-6 col-md-4 md-clear lg-clear">กองกำลังทหารพรานกองทัพภาคที่ 2</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">กองคลังสำนักงานข้าราชการพลเรือน</div>
+                <div class="col col-sm-6 col-md-4">สำนักปลัดกระทรวงการคลัง</div>
+                <div class="col col-sm-6 col-md-4 sm-clear md-clear lg-clear">กรมแผนที่ทหารกรมยุทธโยธาทหารบก</div>
+                <div class="col col-sm-6 col-md-4">สำนักปลัดสำนักนายกรัฐมนตรี</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">สำนักงบประมาณ, สำนัก กพ.</div>
+                <div class="col col-sm-6 col-md-4 md-clear lg-clear">สำนักงานสาธารณสุขจังหวัดระนอง</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">สำนักทดสอบกลางองค์การส่วนบริหาร จ.แพร่</div>
+                <div class="col col-sm-6 col-md-4">องค์การสงเคราะห์ทหารผ่านศึก</div>
+                <div class="col col-sm-6 col-md-4 sm-clear md-clear lg-clear">สนามกีฬากองทัพบก</div>
+                <div class="col col-sm-6 col-md-4">ศูนย์การฝึกกำลังสำรองกรมรักษาดินแดง</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">ศูนย์กีฬาแห่งจุฬาลงกรณ์มหาวิทยาลัย</div>
+                <div class="col col-sm-6 col-md-4 md-clear lg-clear">การกีฬาแห่งประเทศไทยจังหวัดแพร่</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">กองการกีฬากรมสวัสดิการทหารเรือ</div>
+                <div class="col col-sm-6 col-md-4">สมาคมจักรยานสมัครเล่นแห่งประเทศไทย</div>
+                <div class="col col-sm-6 col-md-4 sm-clear md-clear lg-clear">สโมสรข้าราชการกระทรวงอุตสาหกรรม</div>
+                <div class="col col-sm-6 col-md-4">ส่วนออกกำลังกายเพื่อสุขภาพ</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">สหกรณ์การไฟฟ้าฝ่ายผลิต</div>
+                <div class="col col-sm-6 col-md-4 md-clear lg-clear">สถาบันการพลศึกษา วิทยาเขตเชียงใหม่</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">สถาบันการพลศึกษา วิทยาเขตเพชรบูรณ์</div>
+                <div class="col col-sm-6 col-md-4">สถาบันการพลศึกษา วิทยาเขตลำปาง</div>
+                <div class="col col-sm-6 col-md-4 sm-clear md-clear lg-clear">สถาบันการพลศึกษา วิทยาเขตศรีสะเกษ</div>
+                <div class="col col-sm-6 col-md-4">สถาบันการพลศึกษา วิทยาเขตสมุทรสาคร</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">สถาบันการพลศึกษา วิทยาเขตอ่างทอง</div>
+                <div class="col col-sm-6 col-md-4 md-clear lg-clear">คณะพยาบาลมหาวิทยาลัยธรรมศาสตร์</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">คณะพยาบาลมหาวิทยาลัยศรีนครินทรวิโรฒ</div>
+                <div class="col col-sm-6 col-md-4">คณะครุศาสตร์สถาบันราชภัฏเชียงใหม่</div>
+                <div class="col col-sm-6 col-md-4 sm-clear md-clear lg-clear">สถาบันราชภัฏกำแพงเพชร</div>
+                <div class="col col-sm-6 col-md-4">สำนักงานการกีฬากองทัพเรือพระราชวังเดิม</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">สถาบันราชภัฏบ้านสมเด็จเจ้าพระยา</div>
+                <div class="col col-sm-6 col-md-4 md-clear lg-clear">วิทยาลัยพยาบาลสภากาชาดไทย</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">สำนักวิชาวิทยาศาสตร์การกีฬา</div>
+                <div class="col col-sm-6 col-md-4">สถาบันเทคโนโลยีพระจอมเกล้าพระนครเหนือ</div>
+                <div class="col col-sm-6 col-md-4 sm-clear md-clear lg-clear">กรมอนามัยกระทรวงสาธารณสุข</div>
+                <div class="col col-sm-6 col-md-4">กองการพยาบาลสภากาชาดไทย</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">สำนักงานสาธารณสุขจังหวัดนนทบุรี</div>
+                <div class="col col-sm-6 col-md-4 md-clear lg-clear">ศูนย์บริการพัฒนาสุขภาพค่ายรามคำแหง</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">แผนกกายภาพบำบัดศิริราชพยาบาล</div>
+                <div class="col col-sm-6 col-md-4">แผนกโรคไต โรงพยาบาลจุฬาลงกรณ์</div>
+                <div class="col col-sm-6 col-md-4 sm-clear md-clear lg-clear">โรงพยาบาลอ่างทอง</div>
+                <div class="col col-sm-6 col-md-4">โรงพยาบาลน่าน</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">โรงพยาบาลบางบัวทอง</div>
+                <div class="col col-sm-6 col-md-4 md-clear lg-clear">โรงพยาบาลศาลายา</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">โรงพยาบาลแม่และเด็กราชบุรี</div>
+                <div class="col col-sm-6 col-md-4">โรงพยาบาลเกาะสีชัง</div>
+                <div class="col col-sm-6 col-md-4 sm-clear md-clear lg-clear">โรงพยาบาลเจ้าพระยา จำกัด (มหาชน)</div>
+                <div class="col col-sm-6 col-md-4">โรงพยาบาลโรคทรวงอก</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">โรงพยาบาลพญาไท 2</div>
+                <div class="col col-sm-6 col-md-4 md-clear lg-clear">โรงพยาบาลมิชชั่น</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">กระทรวงการท่องเที่ยวและกีฬา</div>
+                <div class="col col-sm-6 col-md-4">การกีฬาแห่งประเทศไทย (กกท.)</div>
+                <div class="col col-sm-6 col-md-4 sm-clear md-clear lg-clear">บริษัท กรีนสปอต จำกัด</div>
+                <div class="col col-sm-6 col-md-4">บริษัท ไปรษณีย์ไทย จำกัด</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">คณะวิทยาศาสตร์การกีฬา จุฬาลงกรณ์</div>
+                <div class="col col-sm-6 col-md-4 md-clear lg-clear">สหกรณ์ออมทรัพย์ตำรวจ</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">สโมสรธนาคารกรุงเทพ</div>
+                <div class="col col-sm-6 col-md-4">สถาบันราชภัฏเลย</div>
+                <div class="col col-sm-6 col-md-4 sm-clear md-clear lg-clear">สถาบันราชภัฏนครราชสีมา</div>
+                <div class="col col-sm-6 col-md-4">สถาบันราชภัฏสุรินทร์</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">สถาบันการพลศึกษา วิทยาเขตกรุงเทพ</div>
+                <div class="col col-sm-6 col-md-4 md-clear lg-clear">สถาบันการพลศึกษา วิทยาเขตกระบี่</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">สถาบันการพลศึกษา วิทยาเขตชลบุรี</div>
+                <div class="col col-sm-6 col-md-4">สถาบันการพลศึกษา วิทยาเขตชัยภูมิ</div>
+                <div class="col col-sm-6 col-md-4 sm-clear md-clear lg-clear">และอื่นๆ</div>
+            </div>#}
+
+            {#<div class="row portfolio-row">
+                <div class="col col-sm-6 col-md-4">Ministry of Interior</div>
+                <div class="col col-sm-6 col-md-4">Science Center for Education</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">ศูนย์ฝึกกรมรักษาดินแดน</div>
+                <div class="col col-sm-6 col-md-4 md-clear lg-clear">กรมสื่อสารทหารเรือ</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">กรมทางพิเศษแห่งประเทศไทย</div>
+                <div class="col col-sm-6 col-md-4">Port Authority of Thailand</div>
+                <div class="col col-sm-6 col-md-4 sm-clear md-clear lg-clear">Electricity Generating Authority of Thailand</div>
+                <div class="col col-sm-6 col-md-4">PTT Public Company Limited</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">กองกำลังทหารพรานกองทัพภาคที่ 1</div>
+                <div class="col col-sm-6 col-md-4 md-clear lg-clear">กองกำลังทหารพรานกองทัพภาคที่ 2</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">กองคลังสำนักงานข้าราชการพลเรือน</div>
+                <div class="col col-sm-6 col-md-4">สำนักปลัดกระทรวงการคลัง</div>
+                <div class="col col-sm-6 col-md-4 sm-clear md-clear lg-clear">กรมแผนที่ทหารกรมยุทธโยธาทหารบก</div>
+                <div class="col col-sm-6 col-md-4">สำนักปลัดสำนักนายกรัฐมนตรี</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">สำนักงบประมาณ, สำนัก กพ.</div>
+                <div class="col col-sm-6 col-md-4 md-clear lg-clear">Ranong Provincial Public Health Office</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">สำนักทดสอบกลางองค์การส่วนบริหาร จ.แพร่</div>
+                <div class="col col-sm-6 col-md-4">องค์การสงเคราะห์ทหารผ่านศึก</div>
+                <div class="col col-sm-6 col-md-4 sm-clear md-clear lg-clear">Army Sport Stadium</div>
+                <div class="col col-sm-6 col-md-4">ศูนย์การฝึกกำลังสำรองกรมรักษาดินแดง</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">ศูนย์กีฬาแห่งจุฬาลงกรณ์มหาวิทยาลัย</div>
+                <div class="col col-sm-6 col-md-4 md-clear lg-clear">การกีฬาแห่งประเทศไทยจังหวัดแพร่</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">Army Welfare Sport Department</div>
+                <div class="col col-sm-6 col-md-4">สมาคมจักรยานสมัครเล่นแห่งประเทศไทย</div>
+                <div class="col col-sm-6 col-md-4 sm-clear md-clear lg-clear">สโมสรข้าราชการกระทรวงอุตสาหกรรม</div>
+                <div class="col col-sm-6 col-md-4">ส่วนออกกำลังกายเพื่อสุขภาพ</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">EGAT Saving and Credit Cooperative Limited</div>
+                <div class="col col-sm-6 col-md-4 md-clear lg-clear">Institute of Physical Education Chiangmai</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">Institute of Physical Education Phetchabun</div>
+                <div class="col col-sm-6 col-md-4">Institute of Physical Education Lampang</div>
+                <div class="col col-sm-6 col-md-4 sm-clear md-clear lg-clear">Institute of Physical Education Sisaket</div>
+                <div class="col col-sm-6 col-md-4">Institute of Physical Education Samut Sakhon</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">Institute of Physical Education Angthong</div>
+                <div class="col col-sm-6 col-md-4 md-clear lg-clear">Faculty of Nursing Thammasat University</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">Faculty of Nursing Srinakharinwirot University</div>
+                <div class="col col-sm-6 col-md-4">Faculty of Education Chiang Mai Rajabhat University</div>
+                <div class="col col-sm-6 col-md-4 sm-clear md-clear lg-clear">Kamphaeng Phet Rajabhat University</div>
+                <div class="col col-sm-6 col-md-4">สำนักงานการกีฬากองทัพเรือพระราชวังเดิม</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">Bansomdejchaopraya Rajabhat University</div>
+                <div class="col col-sm-6 col-md-4 md-clear lg-clear">The Thai Red Cross College Of Nursing</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">สำนักวิชาวิทยาศาสตร์การกีฬา</div>
+                <div class="col col-sm-6 col-md-4">King Mongkut's University of Technology North Bangkok</div>
+                <div class="col col-sm-6 col-md-4 sm-clear md-clear lg-clear">Department of health</div>
+                <div class="col col-sm-6 col-md-4">กองการพยาบาลสภากาชาดไทย</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">Nonthaburi Provincial Health Office</div>
+                <div class="col col-sm-6 col-md-4 md-clear lg-clear">ศูนย์บริการพัฒนาสุขภาพค่ายรามคำแหง</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">แผนกกายภาพบำบัดศิริราชพยาบาล</div>
+                <div class="col col-sm-6 col-md-4">Nephro Chula - Chulalongkorn Hospital</div>
+                <div class="col col-sm-6 col-md-4 sm-clear md-clear lg-clear">Angthong Hospital</div>
+                <div class="col col-sm-6 col-md-4">Nan Hospital</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">Bang Bua Thong Hospital</div>
+                <div class="col col-sm-6 col-md-4 md-clear lg-clear">Salaya Hospital</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">Children and Mom Hospital Ratchaburi</div>
+                <div class="col col-sm-6 col-md-4">Sichang Hospital</div>
+                <div class="col col-sm-6 col-md-4 sm-clear md-clear lg-clear">Chaophya Hospital</div>
+                <div class="col col-sm-6 col-md-4">Central Chest Institute of Thailand</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">Phyathai 2 Hospital</div>
+                <div class="col col-sm-6 col-md-4 md-clear lg-clear">Mission Hospital</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">Ministry of Tourism & Sports</div>
+                <div class="col col-sm-6 col-md-4">Sports Authority of Thailand (SAT)</div>
+                <div class="col col-sm-6 col-md-4 sm-clear md-clear lg-clear">Green Spot Co.,Ltd.</div>
+                <div class="col col-sm-6 col-md-4">Thailand Post</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">Faculty of Sports Science – Chulalongkorn University</div>
+                <div class="col col-sm-6 col-md-4 md-clear lg-clear">The Savings and Credit Cooperative of Royal Thai Police Headquarters Limited</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">Bangkok Bank Club</div>
+                <div class="col col-sm-6 col-md-4">Loei Rajabhat University</div>
+                <div class="col col-sm-6 col-md-4 sm-clear md-clear lg-clear">Nakhon Ratchasima Rajabhat University</div>
+                <div class="col col-sm-6 col-md-4">Surindra Rajabhat University</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">Institute Of Physical Education Bangkok Campus</div>
+                <div class="col col-sm-6 col-md-4 md-clear lg-clear">Institute Of Physical Education Krabi Campus</div>
+                <div class="col col-sm-6 col-md-4 sm-clear">Institute Of Physical Education Chonburi Campus</div>
+                <div class="col col-sm-6 col-md-4">Institute Of Physical Education Chaiyaphum Campus</div>
+                <div class="col col-sm-6 col-md-4 sm-clear md-clear lg-clear">Others</div>
+            </div>#}
+        </div>
+    </section>
+{% endblock %}

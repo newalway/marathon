@@ -1,0 +1,35 @@
+{%extends 'ProjectBundle::admin.html.twig'%}
+
+{% block stylesheets %}
+  {{ parent() }}
+{% endblock %}
+
+{%block javascripts%}
+  {{ parent() }}
+  <script src="{{asset('bundles/fosjsrouting/js/router.js')}}"></script>
+  <script src="{{path('fos_js_routing_js', {'callback': 'fos.Router.setData'})}}"></script>
+{%endblock%}
+
+{% use "ProjectBundle:AdminOurClient:blocks.html.twig" %}
+{% use "ProjectBundle::flash_message.html.twig" %}
+{%block breadcrumb_sub%}
+	{{ parent() }}
+	<li class="active">Edit</li>
+{%endblock%}
+
+{%block content%}
+<div class="row">
+	<div class="col-md-12">
+	  <div class="box box-primary">
+	    <div class="box-header">
+	      <h3 class="box-title">Edit</h3>
+	    </div><!-- /.box-header -->
+	    <!-- form start -->
+      <form id="data_form" action="{{path('admin_our_client_update', {'id': form.vars.value.id})}}" method="post" role="form" enctype="multipart/form-data" class="form-horizontal">
+	      {{form_widget(form._token)}}
+	      {%include 'ProjectBundle:AdminOurClient:_form.html.twig'%}
+	    </form>
+	  </div><!-- /.box -->
+	</div>
+</div>
+{%endblock%}

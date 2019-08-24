@@ -1,0 +1,255 @@
+{% extends "ProjectBundle:"~ view_layout ~":layout.html.twig" %}
+
+{#
+{% block javascripts %}
+	{{ parent() }}
+    <!-- <script src="{{ asset('matchHeight/jquery.matchHeight.js') }}" type="text/javascript"></script> -->
+{% endblock %}
+#}
+
+{% block title %}{% trans %}menu.showroom{% endtrans %} | {{ parent() }}{% endblock %}
+{% block showroom_active %}active{% endblock %}
+{% block m_showroom_active %}active{% endblock %}
+
+{% block breadcrumb_title1 %}{% trans %}menu.showroom{% endtrans %}{% endblock %}
+
+{% block breadcrumb_sub %}
+    {{ parent() }}
+    <li class="active">{% trans %}menu.showroom{% endtrans %}</li>
+{% endblock %}
+
+{% block content %}
+<section ng-app="showroomApp" class="experienced-trainer-area has-dynamic-divider showroom-area" data-count-element="3">
+    <div ng-controller="showroomCtrl" ng-init="init('{{cookie_coordinates.lat}}', '{{cookie_coordinates.lng}}')" class="container">
+
+        <div ng-show="data_showroom_showmap" class="row">
+            <div ng-repeat="showroom in arr_showrooms" {# ng-init="$last && finished()" #} class="col-sm-6 col-md-4 dynamic-divider-element" ng-class="{ 'lg-clear': ($index%3)==0 ,'md-clear': ($index%3)==0 ,'sm-clear': ($index%2)==0  }">
+                <div class="single-item">
+                    <div class="img-holder">
+                        <ng-map zoom="17" center="[{{'{{showroom.latitude}}'}}, {{'{{showroom.longitude}}'}}]">
+                            <marker icon="{{'{{icon_image}}'}}" position="[{{'{{showroom.latitude}}'}}, {{'{{showroom.longitude}}'}}]" title="{{'{{showroom.title}}'}}" style="padding-bottom: 90%;"></marker>
+                        </ng-map>
+
+                        <div class="overlay-content">
+                            <ul>
+                                <li ng-show="showroom.phone">{% trans %}showroom.tel{% endtrans %} {{'{{showroom.phone}}'}}</li>
+                                <li ng-show="showroom.fax">{% trans %}showroom.fax{% endtrans %} {{'{{showroom.fax}}'}}</li>
+                                <li ng-show="showroom.mobile">{% trans %}showroom.mobile{% endtrans %} {{'{{showroom.mobile}}'}}</li>
+                            </ul>
+                            <div class="overlay-buttom" style="width: 100%;">
+                                <div class="trainer-name">
+                                    <div class="name pull-left">
+                                        <h3>
+                                            {{'{{showroom.title}}'}}
+                                        </h3>
+                                    </div>
+                                </div>
+                                <p ng-show="showroom.address">{{'{{showroom.address}}'}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content">
+                        <div class="trainer-name">
+                            <div class="name pull-left">
+                                <h3>
+                                    {{'{{showroom.title}}'}}
+                                </h3>
+                            </div>
+                        </div>
+                        <p ng-show="showroom.address">{{'{{showroom.address}}'}}</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+    <style>
+        .try-height{
+            float: left;
+            position: relative;
+            background-color: #ffddcc;
+        }
+    </style>
+{% endblock %}
+
+{% block javascripts_body %}
+    {{ parent() }}
+    {# https://ngmap.github.io/ #}
+    <script src="{{ asset('javascripts/ng-map.min.js')}}"></script>
+    <script src="http://maps.googleapis.com/maps/api/js?key={{google_maps_api_key}}&language={{app.request.locale}}"></script>
+
+    <script>
+
+        var app = angular.module('showroomApp', ['ngMap']);
+
+        app.factory('showroom_data', ['$http', function showroom_data($http) {
+            return {
+                find_showroom_distance: function(lat, lng, set_cookie){
+                    return $http({
+                        method:'GET',
+                        url: Routing.generate('find_showroom_distance', { lat:lat, lng:lng, set_cookie:set_cookie } ),
+                        headers: {
+                            'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'
+                        }
+                    });
+                }
+            }
+        }]);
+
+        app.controller('showroomCtrl',['$scope', '$sce', '$http', 'showroom_data', function($scope, $sce, $http, showroom_data, ngMap){
+            $scope.init = function(cookie_coordinate_lat, cookie_coordinate_lng)
+            {
+                $scope.data_showroom_showmap = false;
+
+                $scope.arr_showrooms = {};
+                $scope.cookie_coordinate = {lat:cookie_coordinate_lat, lng:cookie_coordinate_lng};
+
+                $scope.getShowroomLocation();
+
+                $scope.icon_image = {
+                  url: "{{ app.request.getSchemeAndHttpHost() ~ asset('images/marathon/map-marker-mini.png') }}",
+                  size: [40, 45],
+                  origin: [0,0],
+                  anchor: [0, 45]
+                };
+            }
+
+            // geolocation
+            $scope.getShowroomLocation = function(){
+                if ("geolocation" in navigator){
+                    // geolocation is available
+                    if (navigator.geolocation){
+                        navigator.geolocation.getCurrentPosition(
+                            // $scope.displayLocationInfo, $scope.handleLocationError, { maximumAge: 1500000, timeout: 0 }
+                            $scope.displayLocationInfo, $scope.handleLocationError
+                        );
+                    }else{
+                        // Geolocation is not supported by this browser
+                        $scope.tryGoogleAPIGeolocation();
+                    }
+                }else{
+                    //  Browser does not support geolocation
+                    $scope.tryGoogleAPIGeolocation();
+                }
+            }
+
+            // geolocation
+            $scope.displayLocationInfo = function(position, set_cookie) {
+                set_cookie = (typeof set_cookie !== 'undefined') ?  set_cookie : 0;
+
+                var lat = position.coords.latitude;
+                var lng = position.coords.longitude;
+
+                showroom_data.find_showroom_distance(lat, lng, set_cookie).then(function onSuccess(response){
+                    $scope.setDataShowrooms(response);
+                }).catch(function onError(response) {
+                });
+            }
+
+            // geolocation
+            $scope.handleLocationError = function(error) {
+                console.log('error.code: '+error.code+' '+error.message);
+                switch (error.code) {
+                    case error.TIMEOUT:
+                        // #timeout was hit, meaning nothing's in the cache
+                        // #now make a non-cached request to get the actual position
+                        navigator.geolocation.getCurrentPosition($scope.displayLocationInfo, $scope.handleLocationError);
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        // #Unable to retrieve user location
+                        $scope.tryGoogleAPIGeolocation();
+                        break;
+                    case error.PERMISSION_DENIED:
+                        // #User denied geolocation prompt
+                        $scope.tryGoogleAPIGeolocation();
+                        break;
+                    case error.UNKNOWN_ERROR:
+                        // #undefined
+                        $scope.tryGoogleAPIGeolocation();
+                        break;
+                }
+            }
+
+            // google geolocation
+            $scope.tryGoogleAPIGeolocation = function() {
+                if($scope.cookie_coordinate.lat !='' && $scope.cookie_coordinate.lng !=''){
+                    //cookie valid
+                    console.log('cookie valid');
+                    var position = {coords: {latitude: $scope.cookie_coordinate.lat, longitude: $scope.cookie_coordinate.lng}};
+                    $scope.displayLocationInfo(position);
+                }else{
+                     //cookie expired
+                    $http.post('https://www.googleapis.com/geolocation/v1/geolocate?key={{geolocation_api_key}}').then(function onSuccess(success){
+                        console.log("Google API Geolocation");
+                        var position = {coords: {latitude: success.data.location.lat, longitude: success.data.location.lng}};
+                        $scope.displayLocationInfo(position, 1);
+                    }, function errorCallback(err) {
+                        console.log("Google API Geolocation error!");
+                        $scope.ipLookUp();
+                    });
+                }
+            }
+
+            // geolocation
+            $scope.displayLocationInfoWithoutLatLng = function() {
+                showroom_data.find_showroom_distance('', '', 0).then(function onSuccess(response){
+                    $scope.setDataShowrooms(response);
+                }).catch(function onError(response) {
+                });
+            }
+
+            // geolocation set data to show
+            $scope.setDataShowrooms = function(response){
+                $scope.arr_showrooms = response.data.arr_showrooms;
+                $scope.data_showroom_showmap = true;
+            }
+
+            // IP address lookup
+            $scope.ipLookUp = function(){
+                $http({method: 'GET', url: 'http://ip-api.com/json'
+                }).then(function successCallback(response) {
+                    // this callback will be called asynchronously
+                    var position = {coords: {latitude: response.data.lat, longitude: response.data.lon}};
+                    $scope.displayLocationInfo(position, 1);
+                }, function errorCallback(err) {
+                    // // called asynchronously if an error occurs
+                    console.log('ip-api request failed ', err);
+                    $scope.displayLocationInfoWithoutLatLng();
+                });
+
+                /*
+                $http({method: 'GET', url: 'https://ipinfo.io/geo?token=542c42b197dc75'
+                }).then(function successCallback(response) {
+                    if (typeof response.data.loc !== 'undefined') {
+                        // this callback will be called asynchronously
+                        var loc = response.data.loc.split(',');
+                        var position = {coords: {latitude: loc[0], longitude: loc[1]}};
+                        $scope.displayLocationInfo(position, 1);
+                    }else{
+                        console.log('Ipinfo request failed');
+                        $scope.displayLocationInfoWithoutLatLng();
+                    }
+                }, function errorCallback(err) {
+                    // // called asynchronously if an error occurs
+                    console.log('Ipinfo request failed');
+                    $scope.displayLocationInfoWithoutLatLng();
+                });
+                */
+            }
+
+            /*
+            $scope.finished = function(){
+                console.log('repeat finished');
+            }
+            */
+
+        }]);
+
+    </script>
+{% endblock %}

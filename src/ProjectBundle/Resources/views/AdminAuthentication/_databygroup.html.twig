@@ -1,0 +1,28 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="box box-default">
+			<div class="box-header">
+				<h3 class="box-title">{{group_data.grouptype}}</h3>
+			</div><!-- /.box-header -->
+
+				<div class="box-body">
+					{% for data in datas %}
+						<div class="form-group">
+							<label class="control-label col-md-3" for="status">{{data.title}}</label>
+							<div class="col-md-7 form-control-static">
+							{% if data.inputtype == 'password' %}
+								 <input type="password" value="{{data.value}}" name="data[{{data.name}}]" id="{{data.name}}" class="form-control">
+							{% elseif data.inputtype == 'text' %}
+								<input type="text" value="{{data.value}}" name="data[{{data.name}}]" id="{{data.name}}" class="form-control">
+							{% elseif data.inputtype == 'boolean' %}
+								<input type="radio" name="data[{{data.name}}]" value="true" {% if data.value == 'true' %}checked{% endif %}> True &nbsp;&nbsp;
+								<input type="radio" name="data[{{data.name}}]" value="false" {% if data.value == 'false' %}checked{% endif %}> False &nbsp;&nbsp;
+							{% endif %}
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+
+		</div><!-- /.box -->
+	</div>
+</div>

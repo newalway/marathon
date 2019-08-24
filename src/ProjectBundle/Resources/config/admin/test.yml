@@ -1,0 +1,7 @@
+admin_test:
+  path: /
+  defaults: { _controller: ProjectBundle:AdminTest:index }
+
+admin_test_product:
+  path: /product
+  defaults: {_controller: ProjectBundle:AdminTest:product}

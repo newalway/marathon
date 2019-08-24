@@ -1,0 +1,36 @@
+<div class="container fos-container">
+    <h2 class="text-center">{{ 'change_password.title'|trans }}</h2>
+    <p>&nbsp;</p>
+    <div class="fos-box">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+
+                <form name="fos_user_resetting_form" method="post" action="{{ path('fos_user_resetting_reset', {'token': token}) }}" class="fos_user_resetting_form">
+                    {{form_widget(form._token, {'id' : 'fos_user_resetting_form__token'})}}
+                    <div class="form-group">
+                        <label for="fos_user_resetting_form_plainPassword_first" class="required">{{ 'form.new_password'|trans({}, 'FOSUserBundle') }}</label>
+                        {{form_widget(form.plainPassword.first, {'id' : 'fos_user_resetting_form_plainPassword_first','attr':{'class':'form-control'}})}}
+                        <div class="text-error text-red">{{form_errors(form.plainPassword.first)}}</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="fos_user_resetting_form_plainPassword_second" class="required">{{ 'form.new_password_confirmation'|trans({}, 'FOSUserBundle') }}</label>
+                        {{form_widget(form.plainPassword.second, {'id' : 'fos_user_resetting_form_plainPassword_second','attr':{'class':'form-control'}})}}
+                        <div class="text-error text-red">{{form_errors(form.plainPassword.second)}}</div>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" id="_submit" name="_submit" class="btn btn-marathon">{{ 'resetting.reset.submit'|trans({}, 'FOSUserBundle') }}</button>
+                    </div>
+                </form>
+
+                {#{{ form_start(form, { 'action': path('fos_user_resetting_reset', {'token': token}), 'attr': { 'class': 'fos_user_resetting_reset' } }) }}
+                    <div class="forget-pw-change">
+                        {{ form_widget(form) }}
+                    </div>
+                    <button type="submit" id="_submit" name="_submit" class="btn btn-marathon">{{ 'resetting.reset.submit'|trans({}, 'FOSUserBundle') }}</button>
+                {{ form_end(form) }}#}
+            </div>
+        </div>
+    </div>
+    <p>&nbsp;</p>
+    <br/>
+</div>

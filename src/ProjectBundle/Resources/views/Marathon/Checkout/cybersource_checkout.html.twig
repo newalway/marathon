@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="{{app.request.locale}}">
+<head>
+	<meta charset="UTF-8">
+	<title>Checkout</title>
+	<script src="{{ asset('javascripts/jquery-1.12.4/jquery.js') }}"></script>
+</head>
+<body>
+	<form id="payment_confirmation" action="{{process_trans_endpoint}}" method="post"/>
+		{% for key, value in payment_params %}
+			<input type="hidden" name="{{key}}" value="{{value}}">
+			{# <div class=""><span>{{key}}</span>=<span>{{value}}</span></div> #}
+		{% endfor %}
+		<input type="submit" id="btn_confirm" value="Confirm" style="display:none"/>
+	</form>
+
+<script>
+$(document).ready(function(){
+	$('#payment_confirmation').find('input[type="submit"]').trigger('click');
+})
+</script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{% extends "ProjectBundle:"~ view_layout ~":layout_member.html.twig" %}
+
+{% block title %}Profile Edit | {{ parent() }}{% endblock %}
+{% block member_header %}Profile Edit{% endblock %}
+
+{% block member_profile_edit_active %}active{% endblock %}
+
+{% block breadcrumb_sub %}
+  {{ parent() }}
+  <li class="active">Change Personal info</li>
+{% endblock %}
+
+{% block content_member %}
+  {% include "@FOSUser/Profile/edit_content.html.twig" %}
+{% endblock %}

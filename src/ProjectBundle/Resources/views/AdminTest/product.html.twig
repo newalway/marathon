@@ -1,0 +1,84 @@
+{% extends 'ProjectBundle::admin.html.twig' %}
+
+{% block stylesheets %}
+  {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+{% endblock %}
+
+{% block home_active %}active{% endblock %}
+
+{% block content_header %}Test Product{% endblock %}
+
+{% block content %}
+    <form class="" id="formSearch" action="{{path('product')}}" method="get" {#ng-app="searchApp"#} >
+        <div class="sidebar-wrapper section-padding">
+            <div class="panel">
+                <div class="input-group ">
+                    {{ form_widget(form.searchBox, { 'attr': {'placeholder': 'Search', 'class':'form-control'}})}}
+                    <span class="input-group-btn">
+                        <button type="submit" id="btnSearch"class="btn btn-marathon"><i class="fa fa-search" aria-hidden="true"></i></button>
+                    </span>
+                </div>
+            </div>
+
+            {#
+            <div class="">
+                {{category_tree|raw}}
+            </div>
+            #}
+
+            <div class="">
+                {% for category in obj_category_tree %}
+                    <a href="{{path('admin_test_product')}}?product_category_id={{category.id}}"> <div class="level_{{category.getLvl()}}">{{category.getTitle()}}</div> </a>
+                {% endfor %}
+            </div>
+            <hr/>
+            <script>
+                $(document).ready(
+                    function(){
+                        $('.level_2').each(function(){$(this).text('― '+$(this).text());});
+                        $('.level_3').each(function(){$(this).text('―― '+$(this).text());});
+                        $('.level_4').each(function(){$(this).text('――― '+$(this).text());});
+                        $('.level_5').each(function(){$(this).text('―――― '+$(this).text());});
+                        $('.level_6').each(function(){$(this).text('――――― '+$(this).text());});
+                        $('.level_7').each(function(){$(this).text('―――――― '+$(this).text());});
+                        $('.level_8').each(function(){$(this).text('――――――― '+$(this).text());});
+                    }
+                );
+            </script>
+
+        </div>
+
+        <div class="col-lg-9 col-sm-8 col-xs-12">
+            <div class="sidebar-page-content section-padding pb0">
+                <div class="inner-page-wrapper section-padding pt0">
+                    {% for rs in paginated.currentpageresults %}
+                        {% set data = rs[0] %}
+                        {% set price_data = getPriceData(rs) %}
+                        <div class="title">
+                            <a href="#">
+                                <div>{{data.getTitle}}</div>
+                            </a>
+                            <div class="">
+                                {% if price_data.price and price_data.price > 0 %}
+                                    {% if (price_data.compare_at_price > price_data.price) %}
+                                        <del class="before-rate">
+                                            ฿{{ price_data.compare_at_price|number_format(2, '.', ',') }}
+                                        </del>
+                                    {% endif %}
+                                    ฿{{ price_data.price|number_format(2, '.', ',') }}
+                                {% else %}
+                                    &nbsp;
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}

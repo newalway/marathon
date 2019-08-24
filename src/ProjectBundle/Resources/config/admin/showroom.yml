@@ -1,0 +1,64 @@
+admin_showroom:
+  path: /
+  defaults: {_controller: ProjectBundle:AdminShowroom:index}
+  requirements:
+    _method: get
+
+admin_showroom_new:
+  path: /new
+  defaults: {_controller: ProjectBundle:AdminShowroom:new}
+
+admin_showroom_create:
+  path: /create
+  defaults: {_controller: ProjectBundle:AdminShowroom:create}
+  requirements:
+    _method: post
+
+admin_showroom_edit:
+  path: /{id}/edit
+  defaults: {_controller: ProjectBundle:AdminShowroom:edit}
+  requirements:
+    id: \d+
+
+admin_showroom_update:
+  path: /{id}
+  defaults: {_controller: ProjectBundle:AdminShowroom:update}
+  requirements:
+    _method: post
+    id: \d+
+
+admin_showroom_delete:
+  path: /{id}/delete
+  defaults: {_controller: ProjectBundle:AdminShowroom:delete}
+  requirements:
+    _method: get
+
+admin_showroom_group_delete:
+  path: /group-delete
+  defaults: {_controller: ProjectBundle:AdminShowroom:group_delete}
+  requirements:
+    _method: post
+
+admin_showroom_group_enable:
+  path: /group-enable
+  defaults: {_controller: ProjectBundle:AdminShowroom:group_enable}
+  requirements:
+    _method: post
+
+admin_showroom_group_disable:
+  path: /group-disable
+  defaults: {_controller: ProjectBundle:AdminShowroom:group_disable}
+  requirements:
+    _method: post
+
+admin_showroom_sort:
+  path: /sort
+  defaults: {_controller: ProjectBundle:AdminShowroom:sort}
+  requirements:
+    _method: get
+
+admin_showroom_sort_prosess:
+  path: /sort-prosess
+  defaults: {_controller: ProjectBundle:AdminShowroom:sort_prosess}
+  requirements:
+    _method: post

@@ -1,0 +1,64 @@
+admin_banner:
+  path: /
+  defaults: {_controller: ProjectBundle:AdminBanner:index}
+  requirements:
+    _method: get
+
+admin_banner_new:
+  path: /new
+  defaults: {_controller: ProjectBundle:AdminBanner:new}
+
+admin_banner_create:
+  path: /create
+  defaults: {_controller: ProjectBundle:AdminBanner:create}
+  requirements:
+    _method: post
+
+admin_banner_edit:
+  path: /{id}/edit
+  defaults: {_controller: ProjectBundle:AdminBanner:edit}
+  requirements:
+    id: \d+
+
+admin_banner_update:
+  path: /{id}
+  defaults: {_controller: ProjectBundle:AdminBanner:update}
+  requirements:
+    _method: post
+    id: \d+
+
+admin_banner_delete:
+  path: /{id}/delete
+  defaults: {_controller: ProjectBundle:AdminBanner:delete}
+  requirements:
+    _method: get
+
+admin_banner_group_delete:
+  path: /group-delete
+  defaults: {_controller: ProjectBundle:AdminBanner:group_delete}
+  requirements:
+    _method: post
+
+admin_banner_group_enable:
+  path: /group-enable
+  defaults: {_controller: ProjectBundle:AdminBanner:group_enable}
+  requirements:
+    _method: post
+
+admin_banner_group_disable:
+  path: /group-disable
+  defaults: {_controller: ProjectBundle:AdminBanner:group_disable}
+  requirements:
+    _method: post
+
+admin_banner_sort:
+  path: /sort
+  defaults: {_controller: ProjectBundle:AdminBanner:sort}
+  requirements:
+    _method: get
+
+admin_banner_sort_prosess:
+  path: /sort-prosess
+  defaults: {_controller: ProjectBundle:AdminBanner:sort_prosess}
+  requirements:
+    _method: post

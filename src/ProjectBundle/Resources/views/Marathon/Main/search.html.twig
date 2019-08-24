@@ -1,0 +1,160 @@
+{% extends "ProjectBundle:"~ view_layout ~":layout.html.twig" %}
+
+{% block title %}Search{% endblock %}
+{% block search_active %}active{% endblock %}
+{% block m_search_active %}active{% endblock %}
+
+{% block breadcrumb_sub %}
+  {{ parent() }}
+  <li class="active">Search</li>
+{% endblock %}
+
+{% block content %}
+<div ng-app="searchApp" ng-controller="searchController" ng-init="init('{{app.request.get('q')}}')">
+  <div class="grey lighten-4 search-box">
+    <div class="container">
+      <form method="get" action="{{path('search')}}">
+        <div class="row">
+          <div class="col s8 m9 l10">
+            <div class="input-field">
+              <label class="grey-text thin">ค้นหา</label>
+              <input type="text" name="q" id="q" value="{{app.request.get('q')}}" ng-model="q" ng-init="q='{{app.request.get('q')}}'" />
+            </div>
+          </div>
+          <div class="col s4 m3 l2">
+            <button type="submit" class="waves-effect waves-light btn-large btn-block btn-milbon" style="width:100%;" >ค้นหา</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+	<div class="container">
+    <div class="row">
+      <div class="col s12 m5 push-m7 l3 offset-l1 push-l8 search-result">
+        จำกัดผลลัพธ์ของคุณ
+        <ul ng-class="{'active':isVisibleActive}">
+          <li ng-cloak ng-show="result.product > 0" ng-class="{'active':isVisible == 'product'}">
+            <div class="chip">
+              <span ng-click="toggle('product')">PRODUCTS ({{'{{result.product}}'}})</span>
+              <i class="material-icons" ng-click="toggleClose('product')">close</i>
+            </div>
+          </li>
+          <li ng-cloak ng-show="result.style > 0" ng-class="{'active':isVisible == 'style'}">
+            <div class="chip">
+              <span ng-click="toggle('style')">STYLE ({{'{{result.style}}'}})</span>
+              <i class="material-icons" ng-click="toggleClose()">close</i>
+            </div>
+          </li>
+          <li ng-cloak ng-show="result.news > 0" ng-class="{'active':isVisible == 'news'}">
+            <div class="chip">
+              <span ng-click="toggle('news')">NEWS ({{'{{result.news}}'}})</span>
+              <i class="material-icons" ng-click="toggleClose()">close</i>
+            </div>
+          </li>
+          <li ng-cloak ng-show="result.salon > 0" ng-class="{'active':isVisible == 'salon'}">
+            <div class="chip">
+              <span ng-click="toggle('salon')">SALON ({{'{{result.salon}}'}})</span>
+              <i class="material-icons" ng-click="toggleClose()">close</i>
+            </div>
+          </li>
+          <li ng-cloak ng-show="result.blog > 0" ng-class="{'active':isVisible == 'blog'}">
+            <div class="chip">
+              <span ng-click="toggle('blog')">BLOG ({{'{{result.blog}}'}})</span>
+              <i class="material-icons" ng-click="toggleClose()">close</i>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="col s12 m7 pull-m5 l8 pull-l4" ng-class="{'search-active':isVisibleActive}">
+        <div class="search-sum" ng-cloak>{{'{{all_result}}'}} <span class="grey-text thin">ผลลัพธ์</span></div>
+
+        <div class="red-text" ng-hide="all_result > 0" ng-cloak><b>ไม่พบข้อมูล</b></div>
+
+        <div class="search-list" ng-show="result.product > 0" ng-class="{'active':isVisible == 'product'}" ng-cloak >
+          <h5>PRODUCTS</h5>
+          <div class="section" ng-repeat="product in productItems">
+            <a ng-href="{{path('product')}}?id={{'{{product.id}}'}}&brand={{'{{product.brand.id}}'}}">
+              <img ng-src="{{'{{product.image}}'}}" ng-show="product.image" alt="{{'{{product.title}}'}}" class="search-img" />
+              <h6 class="milbon-text">{{'{{product.title}}'}}</h6>
+              <p class="grey-text lighten-2" ng-show="product.description" dotdotdot ng-cloak >{{'{{product.description|htmlToPlaintext}}'}}</p>
+            </a>
+          </div>
+          <div class="center">
+            <a class="waves-effect waves-light search-more" ng-class="nextPageDisabledClass('product',result.product)" ng-click="loadMore('product',items.product)"><i class="material-icons">add</i> โหลดเพิ่มเติม</a>
+          </div>
+        </div>
+
+        <div class="search-list" ng-show="result.style > 0" ng-class="{'active':isVisible == 'style'}" ng-cloak >
+          <h5>STYLE</h5>
+          <div class="section" ng-repeat="style in styleItems">
+            <a ng-href="/style/{{'{{style.id}}'}}/{{'{{style.title|slugFilter}}'}}">
+              <img ng-src="{{'{{style.image}}'}}" ng-show="style.image" alt="{{'{{style.title}}'}}" class="search-img" />
+              <h6 class="milbon-text">{{'{{style.title}}'}}</h6>
+              <p class="grey-text lighten-2" ng-show="style.description" dotdotdot ng-cloak >{{'{{style.description|htmlToPlaintext}}'}}</p>
+            </a>
+          </div>
+          <div class="center">
+            <a class="waves-effect waves-light search-more" ng-class="nextPageDisabledClass('style',result.style)" ng-click="loadMore('style',items.style)"><i class="material-icons">add</i> โหลดเพิ่มเติม</a>
+          </div>
+        </div>
+
+        <div class="search-list" ng-show="result.news > 0" ng-class="{'active':isVisible == 'news'}" ng-cloak >
+          <h5>NEWS</h5>
+          <div class="section" ng-repeat="news in newsItems">
+            <a ng-href="/news/{{'{{news.id}}'}}/{{'{{news.title|slugFilter}}'}}">
+              <img ng-src="{{'{{news.image}}'}}" ng-show="news.image" alt="{{'{{news.title}}'}}" class="search-img" />
+              <h6 class="milbon-text">{{'{{news.title}}'}}</h6>
+              <p class="grey-text lighten-2" ng-show="news.description" dotdotdot ng-cloak >{{'{{news.description|htmlToPlaintext}}'}}</p>
+            </a>
+          </div>
+          <div class="center">
+            <a class="waves-effect waves-light search-more" ng-class="nextPageDisabledClass('news',result.news)" ng-click="loadMore('news',items.news)"><i class="material-icons">add</i> โหลดเพิ่มเติม</a>
+          </div>
+        </div>
+
+        <div class="search-list" ng-show="result.salon > 0" ng-class="{'active':isVisible == 'salon'}" ng-cloak >
+          <h5>SALON</h5>
+          <div class="section" ng-repeat="salon in salonItems">
+            <a ng-href="{{path('salon')}}?search={{'{{salon.title}}'}}">
+              <img ng-src="{{'{{salon.image}}'}}" ng-show="salon.image" alt="{{'{{salon.title}}'}}" class="search-img" />
+              <h6 class="milbon-text">{{'{{salon.title}}'}}</h6>
+              <p class="grey-text lighten-2" dotdotdot ng-cloak >
+                {{'{{salon.address}}'}}
+                {{'{{salon.description|htmlToPlaintext}}'}}
+              </p>
+            </a>
+          </div>
+          <div class="center">
+            <a class="waves-effect waves-light search-more" ng-class="nextPageDisabledClass('salon',result.salon)" ng-click="loadMore('salon',items.salon)"><i class="material-icons">add</i> โหลดเพิ่มเติม</a>
+          </div>
+        </div>
+
+        <div class="search-list" ng-show="result.blog > 0" ng-class="{'active':isVisible == 'blog'}" ng-cloak >
+          <h5>BLOG</h5>
+          <div class="section" ng-repeat="blog in blogItems">
+            <a  ng-href="/blog/{{'{{blog.id}}'}}/{{'{{blog.title|slugFilter}}'}}">
+              <img ng-src="{{'{{blog.image}}'}}" ng-show="blog.image" alt="{{'{{blog.title}}'}}" class="search-img" />
+              <h6 class="milbon-text">{{'{{blog.title}}'}}</h6>
+              <p class="grey-text lighten-2" ng-show="blog.description" dotdotdot ng-cloak >{{'{{blog.description|htmlToPlaintext}}'}}</p>
+            </a>
+          </div>
+          <div class="center">
+            <a class="waves-effect waves-light search-more" ng-class="nextPageDisabledClass('blog',result.blog)" ng-click="loadMore('blog',items.blog)"><i class="material-icons">add</i> โหลดเพิ่มเติม</a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+	</div>
+
+</div>
+
+<script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+<script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+<script src="{{ asset('javascripts/jquery.dotdotdot.js') }}"></script>
+<script src="{{ asset('javascripts/searchApp.js') }}"></script>
+
+{% endblock %}

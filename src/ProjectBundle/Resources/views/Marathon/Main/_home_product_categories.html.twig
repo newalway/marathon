@@ -1,0 +1,264 @@
+<link rel="stylesheet" type="text/css" href="{{asset('stylesheet/slick/slick.css')}}"/>
+<script type="text/javascript" src="{{asset('matchHeight/jquery.matchHeight.js')}}"></script>
+<script type="text/javascript" src="{{asset('javascripts/slick/slick.min.js')}}"></script>
+
+<style type="text/css">
+    .slider { width: 100%;margin: 0px auto;}
+    .slick-slide {margin: 0px 10px 0 10px;}
+    .slick-slide img {width: 100%;}
+    /* .slick-slide {transition: all ease-in-out .3s;opacity: .2;}
+    .slick-active {opacity: .5;}
+    .slick-current {opacity: 1;} */
+    .category-title{padding: 15px;}
+    .category-description{padding: 10px;}
+    .slick-current {border-top: 4px solid #ffc013}
+    .tp-leftarrow.tparrows{top:40%;left: 20px;}
+    .tp-rightarrow.tparrows{top:40%;right: 20px;}
+    .slideshow > a {color:#000;}
+
+    .slick-arrow.slick-prev {
+      left: 100px;
+      background: red; /*to notice it, is white*/
+      z-index: 1;
+    }
+    .slick-arrow.slick-next {
+      right: 100px;
+      background: red; /*to notice it, is white*/
+    }
+    @media screen and (max-width: 480px) {.slider {margin: 10px auto;}}
+    @media screen and (max-width: 375px) {.slider {margin: 50px auto;}}
+    @media screen and (max-width: 320px) {.slider {margin: 50px auto;}}
+</style>
+
+{#<section class="popular-shop-item mixit-gallery section-padding home-product">
+	<div class="container">
+		<div class="clearfix">
+			<div class="section-title text-left">
+				<h1><span>{% trans %}products{% endtrans %}</span></h1>
+
+				<ul class="gallery-filter list-inline text-left">
+					<li class="filter" data-filter="all"><span>{% trans %}show.all{% endtrans %}</span></li>
+					<!-- <li class="filter" data-filter=".featured"><span>{% trans %}featured{% endtrans %}</span></li> -->
+
+					{% for product_category in product_categories %}
+						<li class="filter" data-filter=".{{product_category.id}}"><span>{{product_category.getTitle}}</span></li>
+					{% endfor %}
+					<!-- <li class="filter" data-filter=".new-arrival"><span>{% trans %}new.arrival{% endtrans %}</span></li> -->
+				</ul>
+			</div>
+		</div>
+		<!-- /.clearfix -->
+		<div class="row">
+			<div class="">
+
+		{% for product_category in product_categories %}
+
+			<div class="col-md-4 col-sm-6 mix {{product_category.id}} {{loop.index0 % 3 == 0 ? "lg-clear"}} {{loop.index0 % 3 == 0 ? "md-clear"}} {{loop.index0 % 2 == 0 ? "sm-clear"}} ">
+				<div class="single-product-item text-center">
+					<div class="img-holder productZoom">
+
+						{% if product_category.image %}
+							{% set image = asset(product_category.image)|imagine_filter('img_480x480') %}
+							{% set image_zoom = asset(product_category.image)|imagine_filter('img_1000x1000') %}
+						{% else %}
+							{% set image = 'https://placehold.it/480x480' %}
+							{% set image_zoom = 'https://placehold.it/1000x1000' %}
+						{% endif %}
+
+						<img src="{{image}}" alt="{{product_category.getTitle}}" class="img-responsive" data-zoom-image="{{image_zoom}}" />
+
+						<!-- /.overlay -->
+					</div>
+					<!-- /.img-holder -->
+
+					<div class="title">
+						<a href="{{path('product_category',{'id':product_category.id,'slug':product_category.getSlug})}}">
+							<h3>{{product_category.getTitle}}</h3>
+							<span>{{product_category.getDescription}}</span>
+						</a>
+						<h2>&nbsp;</h2>
+					</div>
+
+					<!-- /.title -->
+				</div>
+				<!-- /.single-product-item text-center -->
+			</div><!-- /.col-md-4 -->
+			{% else %}
+				<div class="col-md-12 text-center">No Data</div>
+		{% endfor %}
+		</div>
+
+	</div>
+		<!-- /.row -->
+	</div>
+	<!-- /.container -->
+</section>#}
+
+
+<section class="popular-shop-item  section-padding home-product">
+    <div class="container">
+
+        <div class="clearfix">
+            <div class="section-title text-left">
+            <h1><span>{% trans %}products{% endtrans %}</span></h1>
+              <ul class="gallery-filter  list-inline text-left bullets">
+                {% for product_category in product_categories %}
+                  {% if (loop.index0 == 0) %}
+                  	  <li id="pc{{loop.index0}}" class="filter pc{{loop.index0}} active"><span>{{product_category.getTitle}}</span></li>
+                  {% else %}
+                      <li id="pc{{loop.index0}}" class="filter pc{{loop.index0}}"><span>{{product_category.getTitle}}</span></li>
+                  {% endif %}
+                {% endfor %}
+              </ul>
+            </div>
+
+        </div>
+        <div class="row regular slider">
+        		{% for product_category in product_categories %}
+          			<div class="slideshow">
+                        {% if product_category.templateCustomerGroups|length > 0 %}
+                            {% set product_category_link = path('product_category',{'id':product_category.id,'slug':product_category.getSlug}) %}
+                        {% else %}
+                            {% set product_category_link = path('product', {'product_search[ddlPriceSort]':'', 'product_search[searchBox]':'', 'product_search[productCategories][]': product_category.id }) %}
+                        {% endif %}
+                        <a href="{{product_category_link}}">
+            				<div class="single-product-item text-center">
+                                <div class="category-title">
+                                    <h3>{{product_category.getTitle  }}</h3>
+                                </div>
+
+                					<div class="img-holder productZoom">
+
+                						{% if product_category.image %}
+                							{% set image = asset(product_category.image)|imagine_filter('img_480x480') %}
+                							{% set image_zoom = asset(product_category.image)|imagine_filter('img_1000x1000') %}
+                						{% else %}
+                							{% set image = 'https://placehold.it/480x480' %}
+                							{% set image_zoom = 'https://placehold.it/1000x1000' %}
+                						{% endif %}
+
+                						      <img src="{{image}}" alt="{{product_category.getTitle}}" class="img-responsive" data-zoom-image="{{image_zoom}}" />
+                						<!-- /.overlay -->
+                					</div>	<!-- /.img-holder -->
+                					<div class="category-description">{# .title #}
+
+                    					<span>{{product_category.getDescription  }}</span>
+
+                					</div><!-- /.title -->
+            				</div><!-- /.single-product-item text-center -->
+                        		</a>
+          			</div><!-- /.slideshow -->
+        			{% else %}
+        				<div class="col-md-12 text-center">No Data</div>
+        		{% endfor %}
+        </div> {#end .regular .slider#}
+    </div>
+</section>
+<script type="text/javascript">
+
+function MatchHeight() {
+  $('.single-product-item').matchHeight({});
+    $('.slideshow').matchHeight({});
+}
+
+$( document ).ready(function() {
+    MatchHeight();
+        $(".regular").slick({
+          infinite: true,
+          slidesToScroll: 1,
+          dots: false,
+          centerMode: false,
+          slidesToShow: 5,
+          //initialSlide:0,
+          autoplay: true,
+          autoplaySpeed: 5000,
+          infinite: true,
+          arrows: true,
+          nextArrow: '<div class="tp-rightarrow tparrows"></div>',
+          prevArrow: '<div class="tp-leftarrow tparrows"></div>',
+          mobileFirst:true,//add this one
+        	//asNavFor: '.bullets',
+          responsive: [
+            {
+                breakpoint: 1200,
+                settings: {
+                    slidesToShow: 5,
+                    slidesToScroll: 1,
+                }
+            },
+            {
+                breakpoint: 1024,
+                settings: {
+                    slidesToShow: 4,
+                    slidesToScroll: 1,
+                }
+            },
+            {
+                breakpoint: 600,
+                settings: {
+                    slidesToShow: 3,
+                    slidesToScroll: 1
+                }
+            },
+            {
+                breakpoint: 480,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 1
+                }
+            },
+            {
+                breakpoint: 380,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1
+                }
+            },
+            {
+                breakpoint: 320,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1
+                }
+            },
+            {
+                breakpoint: 300,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1
+                }
+            },
+          ],
+
+        });
+
+        // $('.tp-rightarrow').on('click', function(){
+        //    $('.regular').slick('slickNext');
+        // });
+        // $('.tp-leftarrow').on('click', function(){
+        //   $('.regular').slick('slickPrev');
+        // });
+        if ($('.regular .slideshow').length <= 5) {
+            $(".slick-current").css({"border-top": "none"});
+             $("li.filter").removeClass('active');
+        }
+
+        $('.filter').click(function() {
+          var slideIndex = this.getAttribute('id').replace('pc','');
+          if ($('.regular .slideshow').length > 5) {
+              $('.regular').slick('slickGoTo', parseInt(slideIndex), false);
+          }
+        });
+
+        $('.regular').on('afterChange', function(event, slick, currentSlide, nextSlide){
+        //debugger;
+          if ($('.regular .slideshow').length > 5) {
+              $("li.filter").removeClass('active');
+              $('li.filter.pc'+slick.currentSlide).addClass('active');
+          }
+        });
+
+});
+
+
+</script>

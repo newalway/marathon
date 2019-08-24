@@ -1,0 +1,81 @@
+{% extends 'ProjectBundle::admin.html.twig'%}
+
+{% block stylesheets %}
+  {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <script></script>
+{% endblock %}
+
+{% use "ProjectBundle:AdminCustomerPaymentEpayment:blocks.html.twig" %}
+{% use "ProjectBundle::flash_message.html.twig" %}
+
+{% block content %}
+<div class="row">
+	<div class="col-md-8 margin-10-0">
+		<a href="" class="btn btn-info" title="Refresh"><i class="fa fa-refresh"></i> Refresh</a>
+	</div>
+</div>
+
+<br class="clearBoth">
+
+<div class="row" {#ng-app="adminOrderApp" ng-controller="adminOrderController"#}>
+  <div class="col-xs-12">
+    <div class="box" >
+	      <div class="box-body">
+	      	<table border="0" class="table table-hover">
+	      		<thead>
+	          		<tr>
+              			<th class="text-center"width="160px">Order Number</th>
+						<th class="text-center"width="160px">Name</th>
+						<th class="text-center"width="160px">amount</th>
+						<th class="text-center"width="160px">CreatedDate</th>
+						<th class="text-center" width="50">Status</th>
+              			<th class="text-center" width="50">View</th>
+              			{#<th class="text-center" width="50">Delete</th>#}
+	          		</tr>
+	          	</thead>
+	          	<tbody>
+					{% for epayment in paginated.currentpageresults %}
+
+					<tr class="text-center">
+                		<td>
+                  			<a href="{{path('admin_customer_order_view', {'id' : epayment.CustomerOrder.id})}}" title="View">{{epayment.CustomerOrder.orderNumber}}</a>
+                		</td>
+						<td class="text-center">{{epayment.CustomerOrder.user.firstName}} {{epayment.CustomerOrder.user.lastName}}</td>
+						<td class="text-center">{{epayment.amount|number_format(0, '', ',')}} ฿</td>
+						<td class="text-center">{{epayment.createdAt|date('d M Y')}}</td>
+						<td class="text-center">{{epayment.status}}</td>
+
+                		<td class="text-center"><a href="{{path('admin_customer_order_view', {'id' : epayment.CustomerOrder.id})}}" title="View"><i class="fa fa-file-text-o fa-2x"></a></td>
+                		{#<td class="text-center"><a href="" onclick="return confirm('Are you sure you want to delete?');" title="Delete"><i class="fa fa-trash fa-2x"></i></a></td>#}
+					</tr>
+					{% else %}
+					<tr class="text-center"><td>No data</td></tr>
+					{% endfor %}
+				</tbody>
+	        </table>
+
+	      </div><!-- /.box-body -->
+
+      	<div class="box-footer clearfix">
+	      	<div class="row">
+	        	<div class="col-md-3">
+	        		<div class="margin">Total : {{paginated.getNbResults}}</div>
+	      		</div>
+	      		<div class="col-md-9">
+      				{% if paginated.havetopaginate %}
+				        {{pagerfanta(paginated,'twitter_bootstrap3_translated')}}
+							{% endif %}
+						</div>
+					</div>
+				</div>
+    </div><!-- /.box -->
+  </div>
+</div>
+
+
+
+{% endblock %}

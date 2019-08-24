@@ -1,0 +1,43 @@
+<div class="member-box fos-address-book">
+    <h4>
+        {% trans %}member.address.book{% endtrans %}
+        <small class="fw-n tt-u"><a href="{{path('address')}}"><span class="label label-warning">{#<i class="fa fa-pencil" aria-hidden="true"></i>#}{% trans %}see.more{% endtrans %}</span></a></small>
+    </h4>
+    <div class="row">
+
+
+            <div class="col-sm-6">
+                <div class="addr-box">
+                    <div class="section-title">
+                        <h1><span>{% trans %}member.default.shipping.address{% endtrans %}</span></h1>
+                    </div>
+                {% if default_shipping_address %}
+                    <label>{{default_shipping_address.firstName}}  {{default_shipping_address.lastName}}</label>
+                    <p>{{default_shipping_address.address}},  {{default_shipping_address.district}}, {{default_shipping_address.amphure}},
+                    {{default_shipping_address.province}} {#,  {% if default_shipping_address.countryCode %}{{default_shipping_address.countryCode.country}}{% endif %}#}
+                    {{default_shipping_address.postCode}} <br />{{default_shipping_address.phone}}</p>
+                    {% else %}
+                    {% trans %}member.no.default.shipping.address{% endtrans %}
+                {% endif %}
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="addr-box">
+                    <div class="section-title">
+                        <h1><span>{% trans %}member.default.billing.address{% endtrans %}</span></h1>
+                    </div>
+                {% if default_billing_address %}
+                    <label>{{default_billing_address.firstName}}  {{default_billing_address.lastName}}</label>
+                    <p>{{default_billing_address.address}},  {{default_billing_address.district}}, {{default_billing_address.amphure}},
+                    {{default_billing_address.province}} {#,  {% if default_billing_address.countryCode %}{{default_billing_address.countryCode.country}}{% endif %}#}
+                    {{default_billing_address.postCode}} <br />{{default_billing_address.phone}}</p>
+                    {% else %}
+                    {% trans %}member.no.default.billing.address{% endtrans %}
+                {% endif %}
+                </div>
+            </div>
+
+
+    </div>
+</div>

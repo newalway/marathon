@@ -1,0 +1,187 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <meta name="x-apple-disable-message-reformatting">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="telephone=no" name="format-detection">
+    <title></title>
+
+    <!--[if (mso 16)]>
+<style type="text/css">
+a {text-decoration: none;}
+</style>
+<![endif]-->
+<!--[if gte mso 9]><style>sup { font-size: 100% !important; }</style><![endif]-->
+<!--[if !mso]><!-- -->
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i" rel="stylesheet">
+<!--<![endif]-->
+
+</head>
+<style media="screen">
+    .container{max-width: 650px;position:relative;margin:0 auto;}
+    .panel {
+    margin-bottom: 20px;
+    background-color: #fff;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    box-shadow: 0 1px 1px rgba(0,0,0,.05);
+}
+.panel-body {
+    padding: 15px;
+}
+.panel-default {
+    border-color: #ddd;
+}
+.col-left {
+    float: left;
+    width: 49%;
+}
+.col-right {
+    float: right;
+    width: 49%;
+}
+.group:after {
+    content:"";
+    display: table;
+    clear: both;
+}
+img {
+    max-width: 100%;
+    height: auto;
+}
+@media screen and (max-width: 480px) {
+    .col-left,
+    .col-right {
+        float: none;
+        width: auto;
+    }
+}
+</style>
+<body>
+    <div class="container">
+        <!--[if gte mso 9]>
+			<v:background xmlns:v="urn:schemas-microsoft-com:vml" fill="t">
+				<v:fill type="tile" color="#eeeeee"></v:fill>
+			</v:background>
+		<![endif]-->
+        <table class="es-wrapper" width="100%" cellspacing="0" cellpadding="0" border="0">
+            <tbody>
+                <tr>
+                    <td colspan="3" class="esd-stripe" style="background-color: #523112;text-align:center;" height="75" >
+                        <a href="{{app.request.getSchemeAndHttpHost()}}" class="menuzord-brand"><img src="{{ app.request.uriForPath('/../images/marathon/logo-marathon.png')}}" alt="Marathon (Thailand)" /> </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="esd-block-image es-p25t es-p25b es-p35r es-p35l" align="center">
+                        <a target="_blank" href="{{app.request.getSchemeAndHttpHost()}}"> <img style="margin-top:35px;"src="https://tlr.stripocdn.email/content/guids/CABINET_75694a6fc3c4633b3ee8e3c750851c02/images/67611522142640957.png" alt="" style="display: block;" width="120"> </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="esd-block-text es-p10b" align="center">
+                        <h2>Thank you for using Marathon Web Ordering</h2>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="esd-block-text es-p15t es-p20b" align="left">
+                        <h4 align="center">Quotation No. {{ order.ordernumber }}</h4>
+                    </td>
+                </tr>
+                <tr style="background-color:#D3D3D3;">
+                    <td colspan="2" align="center">
+                        <h4>Items</h4>
+                    </td>
+                    <td >
+                        <h4>Qty</h4>
+                    </td>
+                </tr>
+                {% for product in arr_cart_data.products %}
+                    <tr>
+                        <td width="16%" style="padding: 5px 10px 5px 0" >
+                            <p>
+                                {% if product.image_small %}
+                                    <img src="{{client_protocal}}:{{product.image_small}}" alt="" style="" width="50px;"/>
+                                {% endif %}
+                            </p>
+                        </td>
+                        <td  align="left">
+                            <p>
+                                {{product.title}}
+                                {% if product.variant_option|length > 0 %}
+                                    <br/><small>{{ product.variant_option|join(' · ') }}</small>
+                                {% endif %}
+                            </p>
+                        </td>
+                        <td width="20%" style="padding: 5px 0"  align="left">
+                            <p>{{product.quantity}}</p>
+                        </td>
+                    </tr>
+                {% endfor %}
+
+                {% if arr_cart_data.summary.discount_amount %}
+                    <tr>
+                        <td colspan="2" style="padding: 5px 10px 5px 0" align="left">
+                            <p>Discount {% if arr_cart_data.summary.discount_code %} Code: {{arr_cart_data.summary.discount_code}}{% endif %}</p>
+                        </td>
+                        <td style="padding: 5px 0" align="left">
+                            <p>- ฿{{arr_cart_data.summary.discount_amount|number_format(2, '.', ',') }}</p>
+                        </td>
+                    </tr>
+                {% endif %}
+
+                <tr>
+                    <td colspan="3">
+                        <div class="group">
+                            <div class="col-left">
+                                <h4>Shipping Address</h4>
+                                {% set shipping_address = arr_cart_data.delivery_information.shipping_address %}
+                                {% if shipping_address  %}
+                                    <p>
+                                        {{shipping_address.firstName}} {{shipping_address.lastName}}
+                                        {% if shipping_address.companyName %}<br />{{shipping_address.companyName}}{% endif %}
+                                        {% if shipping_address.headOffice %}|({{shipping_address.headOffice}}){% endif %}<br/><br/>
+                                        {{shipping_address.address}}, {{shipping_address.district}}, {{shipping_address.amphure}}<br />
+                                        {{shipping_address.province}} {#, {{shipping_address.countryCode.country}}#} {{shipping_address.postCode}}<br />
+                                        Phone {{shipping_address.phone}}
+                                    </p>
+                                {% endif %}
+                            </div>
+                            <div class="col-right">
+                                <h4>Billing Address</h4>
+                                {% set billing_address = arr_cart_data.delivery_information.billing_address %}
+                                {% if billing_address  %}
+                                    <p>
+                                        {{billing_address.firstName}} {{billing_address.lastName}}
+                                        {% if billing_address.companyName %}<br />{{billing_address.companyName}}{% endif %}
+                                        {% if billing_address.headOffice %}|({{billing_address.headOffice}}){% endif %}<br/><br/>
+
+                                        {{billing_address.address}}, {{billing_address.district}}, {{billing_address.amphure}}<br />
+                                        {{billing_address.province}} {#, {{billing_address.countryCode.country}}#} {{billing_address.postCode}}<br />
+                                        Phone {{billing_address.phone}}
+                                        {% if billing_address.taxPayerId %}
+                                            <br/>{% trans %}member.taxpayerid{% endtrans %} {{billing_address.taxPayerId}}
+                                        {% endif %}
+                                    </p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+
+            </tbody>
+            <tfoot>
+                <tr style="background-color:#523112;color:#ffffff;">
+                    <td colspan="3"   style="background-color:#523112;color:#ffffff;" align="center" height="75">
+                        <p><strong>Pinklao 149, Baromrat-Chonnanee Rd.,Arun Amarin</strong></p>
+                        <p><strong>Bangkoknoi, Bangkok 10700</strong></p>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</body>
+
+</html>

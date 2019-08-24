@@ -1,0 +1,195 @@
+bank_account_routes:
+  resource: "@ProjectBundle/Resources/config/admin/bank_account.yml"
+  prefix:   /bankaccount
+
+admin_report_routes:
+  resource: "@ProjectBundle/Resources/config/admin/report.yml"
+  prefix:   /report
+
+admin_request_service_routes:
+ resource: "@ProjectBundle/Resources/config/admin/request_service.yml"
+ prefix:   /requestservice
+
+admin_impport_excel_routes:
+  resource: "@ProjectBundle/Resources/config/admin/import_excel.yml"
+  prefix:   /import-excel
+
+admin_payment_gateway_routes:
+  resource: "@ProjectBundle/Resources/config/admin/payment_gateway.yml"
+  prefix:   /payment-gateway
+
+admin_customer_payment_epayment_routes:
+  resource: "@ProjectBundle/Resources/config/admin/customer_payment_epayment.yml"
+  prefix:   /customer-payment-epayment
+
+admin_customer_payment_bank_transfer_routes:
+  resource: "@ProjectBundle/Resources/config/admin/customer_payment_bank_transfer.yml"
+  prefix:   /customer-payment-bank-transfer
+
+admin_holiday_routes:
+  resource: "@ProjectBundle/Resources/config/admin/holiday.yml"
+  prefix:   /holiday
+
+admin_shipping_rate_routes:
+  resource: "@ProjectBundle/Resources/config/admin/shipping_rate.yml"
+  prefix:   /shipping-rate
+
+admin_shipping_carrier_routes:
+  resource: "@ProjectBundle/Resources/config/admin/shipping_carrier.yml"
+  prefix:   /shipping-carrier
+
+admin_customer_orders_routes:
+  resource: "@ProjectBundle/Resources/config/admin/customer_order.yml"
+  prefix:   /customer_order
+
+admin_quotation_routes:
+  resource: "@ProjectBundle/Resources/config/admin/quotation.yml"
+  prefix:   /quotation
+
+admin_muscle_routes:
+  resource: "@ProjectBundle/Resources/config/admin/muscle.yml"
+  prefix:   /muscle
+
+admin_age_group_routes:
+  resource: "@ProjectBundle/Resources/config/admin/age_group.yml"
+  prefix:   /age_group
+
+admin_customer_group_routes:
+    resource: "@ProjectBundle/Resources/config/admin/customer_group.yml"
+    prefix:   /customer_group
+
+admin_template_customer_group_routes:
+    resource: "@ProjectBundle/Resources/config/admin/template_customer_group.yml"
+    prefix:   /template_customer_group
+
+admin_about_us_routes:
+  resource: "@ProjectBundle/Resources/config/admin/about_us.yml"
+  prefix:   /about_us
+
+admin_portfolio_routes:
+  resource: "@ProjectBundle/Resources/config/admin/portfolio.yml"
+  prefix:   /portfolio
+
+admin_service_routes:
+  resource: "@ProjectBundle/Resources/config/admin/service.yml"
+  prefix:   /service
+
+admin_how_to_buy_routes:
+  resource: "@ProjectBundle/Resources/config/admin/how_to_buy.yml"
+  prefix:   /how-to-buy
+
+admin_shipping_delivery_routes:
+  resource: "@ProjectBundle/Resources/config/admin/shipping_delivery.yml"
+  prefix:   /shipping-delivery
+
+admin_terms_conditions_routes:
+  resource: "@ProjectBundle/Resources/config/admin/terms_conditions.yml"
+  prefix:   /terms-conditions
+
+admin_privacy_policy_routes:
+  resource: "@ProjectBundle/Resources/config/admin/privacy_policy.yml"
+  prefix:   /privacy-policy
+
+admin_product_category_routes:
+  resource: "@ProjectBundle/Resources/config/admin/product_category.yml"
+  prefix:   /product_category
+
+blog_routes:
+  resource: "@ProjectBundle/Resources/config/admin/blog.yml"
+  prefix:   /health-tips
+
+promotion_routes:
+  resource: "@ProjectBundle/Resources/config/admin/promotion.yml"
+  prefix:   /promotion
+
+brand_routes:
+  resource: "@ProjectBundle/Resources/config/admin/brand.yml"
+  prefix:   /brand
+
+discount_routes:
+  resource: "@ProjectBundle/Resources/config/admin/discount.yml"
+  prefix:   /discount
+
+product_routes:
+  resource: "@ProjectBundle/Resources/config/admin/product.yml"
+  prefix:   /products
+
+sku_routes:
+  resource: "@ProjectBundle/Resources/config/admin/sku.yml"
+  prefix:   /sku
+
+equipment_routes:
+  resource: "@ProjectBundle/Resources/config/admin/equipment.yml"
+  prefix:   /equipment
+
+power_routes:
+  resource: "@ProjectBundle/Resources/config/admin/power.yml"
+  prefix:   /power
+
+member_routes:
+ resource: "@ProjectBundle/Resources/config/admin/member.yml"
+ prefix:   /member
+
+member_b2b_routes:
+  resource: "@ProjectBundle/Resources/config/admin/member_b2b.yml"
+  prefix:   /member-business
+
+contact_routes:
+  resource: "@ProjectBundle/Resources/config/admin/contact.yml"
+  prefix:   /contact
+
+authentication_routes:
+  resource: "@ProjectBundle/Resources/config/admin/authentication.yml"
+  prefix:   /authentication
+
+setting_routes:
+  resource: "@ProjectBundle/Resources/config/admin/setting.yml"
+  prefix:   /setting
+
+social_network_routes:
+  resource: "@ProjectBundle/Resources/config/admin/social_network.yml"
+  prefix:   /social_network
+
+admin_website_setting_routes:
+  resource: "@ProjectBundle/Resources/config/admin/website_setting.yml"
+  prefix:   /website_setting
+
+user_routes:
+  resource: "@ProjectBundle/Resources/config/admin/user.yml"
+  prefix:   /user
+
+banner_routes:
+  resource: "@ProjectBundle/Resources/config/admin/banner.yml"
+  prefix:   /banner
+
+showroom_routes:
+  resource: "@ProjectBundle/Resources/config/admin/showroom.yml"
+  prefix:   /showroom
+
+our_client_routes:
+  resource: "@ProjectBundle/Resources/config/admin/our_client.yml"
+  prefix:   /our-client
+
+admin_subscriber_routes:
+  resource: "@ProjectBundle/Resources/config/admin/subscriber.yml"
+  prefix:   /subscriber
+
+admin_layout_shop_routes:
+  resource: "@ProjectBundle/Resources/config/admin/layout_shop.yml"
+  prefix:   /layout_shop
+
+admin_event_category_routes:
+  resource: "@ProjectBundle/Resources/config/admin/event_category.yml"
+  prefix:   /event_category
+
+admin_event_routes:
+  resource: "@ProjectBundle/Resources/config/admin/event.yml"
+  prefix:   /event
+
+admin_test_routes:
+  resource: "@ProjectBundle/Resources/config/admin/test.yml"
+  prefix:   /test
+
+admin:
+  path:     /
+  defaults: { _controller: ProjectBundle:AdminMain:index }

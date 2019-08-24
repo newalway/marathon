@@ -1,0 +1,32 @@
+{% extends "FOSUserBundle::bundle-layout.html.twig" %}
+
+{% block title %}{% trans %}member.personal.register{% endtrans %} | {{ parent() }}{% endblock %}
+
+{% block body_class %}{{ parent() }} fos-regis{% endblock %}
+
+{% block breadcrumb_title1 %}{% trans %}b2b.registration{% endtrans %}{% endblock %}
+
+{% block breadcrumb_sub %}
+  {{ parent() }}
+  <li class="active">{% trans %}b2b.registration{% endtrans %}</li>
+{% endblock %}
+
+{% block content %}
+
+<div class="container fos-container text-center">
+    <div class="fos-regis-confirm">
+        <i class="ion-ios-checkmark" style="font-size:3em;"></i>
+
+        <h2>{% trans %}b2b.regis_success_title{% endtrans %}</h2>
+
+        <p>
+            {% trans %}b2b.regis_success_txt{% endtrans %}<br/>
+            {% trans with {'%email%': b2b_quotation_mail_address} %}b2b.regis_success_txt2{% endtrans %}<br/><br/>
+            <br/><br/>
+            {#<a href="{{path('fos_user_security_login')}}" class="btn btn-primary btn-flat">{% trans %}regis.login{% endtrans %}</a>#}
+        </p>
+
+    </div>
+</div>
+
+{% endblock content %}

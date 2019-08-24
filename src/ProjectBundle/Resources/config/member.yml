@@ -1,0 +1,39 @@
+address_routes:
+    resource: '@ProjectBundle/Resources/config/delivery_address.yml'
+    prefix:     /address
+
+member:
+  path: /
+  defaults: {_controller: ProjectBundle:Member:index}
+  requirements:
+    _method: get
+
+member_generate_token:
+  path: /generate/token
+  defaults: {_controller: ProjectBundle:Member:member_generate_token}
+  requirements:
+    _method: get
+
+member_generate_token_update:
+  path: /generate/token/update
+  defaults: {_controller: ProjectBundle:Member:member_generate_token_update}
+  requirements:
+    _method: post
+
+member_set_password:
+  path: /set/password
+  defaults: {_controller: ProjectBundle:Member:member_set_password}
+  requirements:
+    _method: get
+
+member_orders:
+  path: /orders
+  defaults: {_controller: ProjectBundle:Member:orders}
+  requirements:
+    _method: get
+
+member_social_connections:
+  path: /social-connections
+  defaults: {_controller: ProjectBundle:Member:member_social_connections}
+  requirements:
+    _method: get

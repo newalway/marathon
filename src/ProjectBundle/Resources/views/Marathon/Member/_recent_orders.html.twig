@@ -1,0 +1,84 @@
+<div class="member-box fos-order">
+    <h4>
+        {% if is_granted('ROLE_CUSTOMER') %}
+            {% trans %}member.recent.orders{% endtrans %}
+        {% elseif is_granted('ROLE_CLIENT')  %}
+            {% trans %}member.recent.rfq{% endtrans %}
+        {% endif %}
+        <small class="fw-n tt-u"><a href="{{path('member_orders')}}"><span class="label label-warning">{% trans %}see.more{% endtrans %}</span></a></small>
+    </h4>
+    <div class="row row-title">
+        {% if is_granted('ROLE_CUSTOMER') %}
+            <div class="col-sm-3">
+                <b>{% trans %}order.txt{% endtrans %} #</b>
+            </div>
+            <div class="col-sm-2">
+                <b>{% trans %}order.placed.on{% endtrans %}</b>
+            </div>
+            <div class="col-sm-2">
+                <b>{% trans %}order.items{% endtrans %}</b>
+            </div>
+            <div class="col-sm-2">
+                <b>{% trans %}order.total{% endtrans %}</b>
+            </div>
+            <div class="col-sm-3"></div>{#ROLE_CLIENT#}
+        {% elseif is_granted('ROLE_CLIENT')  %}
+            <div class="col-sm-3">
+                <b>{% trans %}member.number{% endtrans %} #</b>
+            </div>
+            <div class="col-sm-3">
+                <b>{% trans %}order.placed.on{% endtrans %}</b>
+            </div>
+            <div class="col-sm-3">
+                <b>{% trans %}order.items{% endtrans %}</b>
+            </div>
+            <div class="col-sm-3"></div>{#ROLE_CLIENT#}
+        {% endif %}
+    </div>
+    {% for order in orders %}
+     <div class="row row-list">
+        {% if is_granted('ROLE_CUSTOMER') %}
+            <div class="col-sm-3">
+                <b class="order-no">{% trans %}order.txt{% endtrans %} #</b>
+                {{order.orderNumber}}
+            </div>
+            <div class="col-sm-2">
+                <b class="placed-on">{% trans %}order.placed.on{% endtrans %}</b>
+                {{ order.orderDate |date('d/m/Y')}}
+            </div>
+            <div class="col-sm-2">
+                <b class="items">{% trans %}order.items{% endtrans %}</b>
+                {{order.itemCount}}
+            </div>
+            <div class="col-sm-3">
+                <b class="total">{% trans %}order.total{% endtrans %}</b> ฿{{order.totalPrice|number_format(2, '.', ',') }}
+            </div>
+            <div class="col-sm-2">
+                <a href="{{path('track',{'no':order.orderNumber})}}" class="manage">{% trans %}order.manage{% endtrans %}</a>
+            </div>
+        {% elseif is_granted('ROLE_CLIENT')  %}
+            <div class="col-sm-3">
+                <b class="order-no">{% trans %}member.number{% endtrans %} #</b>
+                {{order.orderNumber}}
+            </div>
+            <div class="col-sm-3">
+                <b class="placed-on">{% trans %}order.placed.on{% endtrans %}</b>
+                {{ order.orderDate |date('d/m/Y')}}
+            </div>
+            <div class="col-sm-3">
+                <b class="items">{% trans %}order.items{% endtrans %}</b>
+                {{order.itemCount}}
+            </div>
+            <div class="col-sm-3">
+                <a href="{{path('track',{'no':order.orderNumber})}}" class="manage">{% trans %}order.manage{% endtrans %}</a>
+            </div>
+        {% endif %}
+    </div>
+    {% else %}
+    <div class="row row-list">
+        <div class="col-sm-12">
+            <div class="text-center">{% trans %}order.none{% endtrans %}</div>
+        </div>
+    </div>
+    {% endfor %}
+</div>

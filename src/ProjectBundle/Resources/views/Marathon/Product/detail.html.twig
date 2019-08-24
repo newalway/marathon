@@ -1,0 +1,705 @@
+{% extends "ProjectBundle:"~ view_layout ~":layout.html.twig" %}
+
+{# doctrine mixed result #}
+{% set data = product[0] %}
+
+{% block title %}{{data.getTitle}} | {% trans %}menu.product{% endtrans %} | {{ parent() }}{% endblock %}
+{% block product_active %}active{% endblock %}
+{% block m_product_active %}active{% endblock %}
+
+{% block breadcrumb_title1 %}{% trans %}menu.product{% endtrans %}{% endblock %}
+
+{% block breadcrumb_sub %}
+  {{ parent() }}
+  <li><a href="{{path('product')}}">{% trans %}menu.product{% endtrans %}</a></li>
+  <li class="active">{{data.getTitle}}</li>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+{% endblock %}
+
+{% block content %}
+<section  ng-app="productDetailApp" class="sidebar-pages popular-shop-item product-detail">
+    <div class="container">
+        <div class="section-padding pb0">
+            <div class="inner-page-wrapper section-padding pt0 white-bg">
+
+                <div ng-controller="productDetailCtrl" ng-init="init('{{data.id}}', {% if is_granted('ROLE_CLIENT') %}true{% else %}false{% endif %})">
+                    <div class="product-content-box clearfix">
+                        <div class="img-box">
+                            <div class="single-product-carousel-content-box1 owl-theme owl-carousel">
+                                <!-- Images default -->
+                                {% if data.image %}
+                                    {% set image = asset(data.image)|imagine_filter('img_w_500') %}
+                                    {% set image_zoom = asset(data.image)|imagine_filter('img_w_1000') %}
+                                {% else %}
+                                    {% set image = 'https://placehold.it/480x480' %}
+                                    {% set image_zoom = 'https://placehold.it/1000x1000' %}
+                                {% endif %}
+                                <div class="item productZoom">
+                                    <img src="{{image}}" alt="{{data.getTitle}}" data-zoom-image="{{image_zoom}}" />
+                                </div>
+                                <!-- Gallery images -->
+                                {% if data.productImages|length > 0 %}
+                                    {% for product_image in data.productImages %}
+                                    <div class="item productZoom">
+                                        <!-- Images default -->
+                                        {% if product_image.image %}
+                                            {% set image_g = asset(product_image.image)|imagine_filter('img_w_500') %}
+                                            {% set image_zoom_g = asset(product_image.image)|imagine_filter('img_w_1000') %}
+                                        {% else %}
+                                            {% set image_g = 'https://placehold.it/500x500' %}
+                                            {% set image_zoom_g = 'https://placehold.it/1000x1000' %}
+                                        {% endif %}
+                                        <img src="{{image_g}}" alt="{{data.getTitle}}" data-zoom-image="{{image_zoom_g}}" />
+                                    </div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                            <!-- /.single-product-carousel-content-box owl-theme-owl-carousel -->
+                            <div class="single-product-carousel-thumbnail-box1 owl-theme owl-carousel">
+                                <!-- Images default -->
+                                <div class="item">
+                                {% if data.image %}
+                                    <img src="{{asset(data.image) | imagine_filter('img_150x150')}}" alt="{{data.getTitle}}" />
+                                {% else %}
+                                    <img src="https://placehold.it/150x150" alt="{{data.getTitle}}" />
+                                {% endif %}
+                                </div>
+                                <!-- Gallery images thumb -->
+                                {% if data.productImages|length > 0 %}
+                                    {% for img_thumb in data.productImages %}
+                                    <div class="thumb-item">
+                                        <img src="{{asset(img_thumb.image) | imagine_filter('img_150x150')}}" alt="{{data.getTitle}}" />
+                                    </div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                            <!-- /.single-product-carousel-thumbnail-box owl-theme owl-carousel -->
+                        </div>
+
+                        <div class="content-box">
+                            <h2>{{data.getTitle}}</h2>
+                            {% if data.brand %}
+                                <p>{% trans %}product.brand{% endtrans %} : {{data.brand.getTitle}}</p>
+                            {% endif %}
+
+                            {#<div class="review-box">
+                                <ul class="list-inline">
+                                    <li><i class="fa fa-star"></i></li>
+                                    <li><i class="fa fa-star"></i></li>
+                                    <li><i class="fa fa-star"></i></li>
+                                    <li><i class="fa fa-star"></i></li>
+                                    <li><i class="fa fa-star"></i></li>
+                                </ul>
+                                <span>(2 Customers Review)</span>
+                            </div>#}
+
+                            <span class="price" ng-if="showprice.price && showprice.price > 0" ng-cloak>
+                                ฿{{'{{showprice.total_price|currency:"":2}}'}}
+                                <del ng-if="showprice.compare_at_price > showprice.price">
+                                    ฿{{'{{showprice.total_compare_at_price|currency:"":2}}'}}
+                                </del>
+
+                                <span ng-if="frm.quantity>1">
+                                    (Qty {{'{{frm.quantity}}'}})
+                                </span>
+
+                                <text ng-show="varian_option_selected.status=='off'">
+                                    Unavailable
+                                </text>
+
+                                {% if is_granted('ROLE_CLIENT') %}
+                                    <p>* ราคาสำหรับลูกค้าทั่วไป</p>
+                                {% endif %}
+                            </span>
+
+                            {% if data.equipment %}
+                                <p>{% trans %}product.equipment{% endtrans %} : {{data.Equipment.getTitle}}</p>
+                            {% endif %}
+
+                            {% if data.power %}
+                                <p>{% trans %}product.power{% endtrans %} : {{data.power.getTitle}}</p>
+                            {% endif %}
+
+                            {% if data.getShortDesc %}
+                                <p>{{data.getShortDesc|nl2br}}</p>
+                            {% endif %}
+                            {% if is_variant %}
+                                <div ng-repeat="v in arr_sku_variant_data.variant_data" ng-cloak>
+                                    <span>{{'{{v.option_name}}'}}</span>
+                                    <span>
+                                        {# <!-- select option -->
+                                        <select ng-model="v.selected" ng-change="setVariantSelectedData()" name="variant_data[]">
+                                            <option ng-repeat="vo in v.option_value" value="{{'{{vo.toLowerCase()}}'}}">{{'{{vo}}'}}</option>
+                                        </select> #}
+
+                                        <!-- radio -->
+    									<span class="boxed">
+    										<label ng-repeat="vo in v.option_value" class="text-center" ng-class="{activeRadio: v.selected == vo.toLowerCase()}" style="cursor: pointer;">
+    											<input type="radio" ng-model="v.selected"  ng-change="setVariantSelectedData()" value="{{'{{vo.toLowerCase()}}'}}">
+    											<span>{{'{{vo}}'}}</span>
+    										</label>
+    									</span>
+                                    </span>
+                                </div>
+                            {% endif %}
+
+                            <div ng-if="showprice.price && showprice.price > 0" class="location-box">
+                                <form ng-submit="submitAddToCart(0)" method="post" enctype="multipart/form-data">
+                                    {{form_widget(form._token)}}
+                                    <div class="add-to-cart-box" ng-cloak>
+                                        <input ng-model="frm.quantity" ng-change="setShowPriceData()" type="number" name="add_to_cart['quantity']" min="1">
+                                        <button ng-disabled="varian_option_selected.status=='off'" type="button" ng-click="submitAddToCart(1)" class="thm-btn">Order Now</button>
+                                        <button ng-disabled="varian_option_selected.status=='off'" type="submit" class="thm-btn add-to-cart">Add To Cart</button>
+                                        <span>{{'{{error_msg}}'}}</span>
+
+                                         {# <a href="#" class="thm-btn">Add To Cart</a>
+                                         <button type="button" class="thm-btn">Order Now</button> #}
+                                    </div>
+                                </form>
+                                {# <p>Check Delivery Option at Your Location:</p>
+                                <form action="#">
+                                    <input type="text" placeholder="Pincode">
+                                    <button type="submit">Check</button>
+                                    <br />
+                                    <span>Expected Delivery in 4-10 Days</span>
+                                </form> #}
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="product-tab-box">
+                        <div class="tab-title">
+                            <ul role="tablist">
+                                <li class="active" data-tab-name="description"><a href="#description" aria-controls="description" role="tab" data-toggle="tab">{% trans %}product.description{% endtrans %}</a></li>
+                                {% if showrooms|length > 0 %}
+                                    <li  id="showrooms_tab" ng-click="getShowroomLocation()" data-tab-name="review-box">
+                                        <a  href="#showrooms-box" aria-controls="review-box" role="tab" data-toggle="tab">{% trans %}product.showroom_location{% endtrans %} {# ({{showrooms|length}}) #} </a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                        <div class="tab-content">
+                            <div class="single-tab-content tab-pane fade in active" id="description">
+                                <div class="row">
+                                    {% if customer_groups|length %}
+                                    <div class="col-sm-6 col-md-4">
+                                        <h3>{% trans %}product.customer_group{% endtrans %}</h3>
+                                        <ul>
+                                            {% for cg in customer_groups %}
+                                                <li>{{cg.getTitle}}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                    {% endif %}
+
+                                    {% if age_groups|length %}
+                                    <div class="col-sm-6 col-md-4">
+                                        <h3>{% trans %}product.age_group{% endtrans %}</h3>
+                                        <ul>
+                                            {% for ag in age_groups %}
+                                                <li>{{ag.getTitle}}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                    {% endif %}
+
+                                    {% if muscles|length > 0 %}
+                                    <div class="col-sm-6 col-md-4">
+                                        <h3>{% trans %}product.sport_science_training{% endtrans %}</h3>
+                                        <ul>
+                                            {% for muscle in muscles %}
+                                                <li>{{muscle.getTitle}}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="pt-20 clear-both">
+                                    {{data.getDescription|raw}}
+                                </div>
+
+                                {% if arr_tags|length > 0 %}
+                                    <div class="pt-20 clear-both">
+                                      <span>{% trans %}product.tags{% endtrans %}:
+                                        {% for tag in arr_tags %}
+                                        <div class="label label-default label-marathon">{{tag}}</div>
+                                        {% endfor %}
+                                      </span>
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            {% if showrooms|length > 0 %}
+                                <div class="single-tab-box tab-pane fade" id="showrooms-box">
+                                    <div class="box-list">
+
+                                        <ul ng-show="data_showroom_showmap">
+                                            <li class="showroom pt-20 clear-both" ng-repeat="showroom in arr_showrooms" ng-cloak>
+                                                <div>
+                                                    <h4>{{'{{showroom.title}}'}}</h4>
+                                                </div>
+                                                <div>
+                                                    {{'{{showroom.address}}'}}
+                                                </div>
+                                                <div ng-if="showroom.phone">{% trans %}showroom.tel{% endtrans %} {{'{{showroom.phone}}'}} </div>
+                                                <div ng-if="showroom.fax">{% trans %}showroom.fax{% endtrans %} {{'{{showroom.fax}}'}} </div>
+                                                <div ng-if="showroom.mobile">{% trans %}showroom.mobile{% endtrans %} {{'{{showroom.mobile}}'}} </div>
+                                                <div>
+                                                <span ng-if="showroom.distance">Distance ({{'{{showroom.distance| currency:"":2}}'}} km)  <a ng-href="https://www.google.com/maps/search/?api=1&query={{'{{showroom.latitude}}'}},{{'{{showroom.longitude}}'}}&query_place_id={{'{{showroom.placeId}}'}}&hl={{app.request.locale}}" target="_blank">MAP</a> </span>
+                                                </div>
+                                            </li>
+                                        </ul>
+
+                                        {#
+                                        <ul>
+                                            Default data
+                                            {% for showroom in showrooms %}
+                                                <li>
+                                                    <div><b>{{showroom.getTitle}}</b></div>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                        #}
+                                    </div>
+
+                                </div>
+                            {% endif %}
+                        </div>
+
+                    </div>
+{#
+{{dump('{{arr_showrooms}}')}}
+{{ dump('{{arr_sku_variant_data|json}}') }}
+-------<br/>
+{{ dump('{{arr_variant_option_data|json}}') }}
+#}
+                </div>
+
+                {% if products_relateds|length > 0 %}
+                <div class="related-product-box">
+                    <div class="section-title">
+                        <h1><span>Related products</span></h1>
+                    </div>
+                    <!-- /.section-title -->
+                    <div class="related-project-carousel-3col related-product-carousel owl-theme owl-carousel">
+                        {% for rs in products_relateds %}
+                        {% set products_related = rs[0] %}
+                        {% set price_data = getPriceData(rs) %}
+
+                        <div class="item">
+                            <a href="{{path('product_detail',{'id':products_related.id,'slug':products_related.getSlug})}}">
+                                <div class="single-product-item text-center product-border">
+                                    <div class="img-holder productZoom">
+                                        {% if products_related.image %}
+                                            {% set image = asset(products_related.image)|imagine_filter('img_480x480') %}
+                                            {% set image_zoom = asset(products_related.image)|imagine_filter('img_1000x1000') %}
+                                        {% else %}
+                                            {% set image = 'https://placehold.it/480x480' %}
+                                            {% set image_zoom = 'https://placehold.it/1000x1000' %}
+                                        {% endif %}
+                                        <img src="{{image}}" alt="{{products_related.getTitle}}" class="img-responsive" data-zoom-image="{{image_zoom}}"/>
+                                        {# <div class="overlay">
+                                            <div class="icon-holder">
+                                                <ul>
+                                                    <!-- <li><a href="{{path('product_detail',{'id':products_related.id,'slug':products_related.getSlug})}}"><i class="fa fa-shopping-cart"></i></a></li> -->
+                                                    <!-- <li><a href="{{path('product_detail',{'id':products_related.id,'slug':products_related.getSlug})}}"><i class="fa fa-heart"></i></a></li> -->
+                                                    <li><a href="{{path('product_detail',{'id':products_related.id,'slug':products_related.getSlug})}}"><i class="fa fa-search-plus"></i></a></li>
+                                                </ul>
+                                            </div>
+                                            <!-- /.icon-holder -->
+                                        </div> #}
+                                        <!-- /.overlay -->
+                                    </div>
+                                    <!-- /.img-holder -->
+                                    <div class="title">
+                                        <h3>{{products_related.getTitle}}</h3>
+                                        <h2>
+                                            {% if price_data.price and price_data.price > 0 %}
+                								{% if (price_data.compare_at_price > price_data.price) %}
+                									<del class="before-rate">
+                										฿{{ price_data.compare_at_price|number_format(2, '.', ',') }}
+                									</del>
+                								{% endif %}
+                								฿{{ price_data.price|number_format(2, '.', ',') }}
+                							{% else %}
+                								&nbsp;
+                							{% endif %}
+                                        </h2>
+                                    </div>
+                                    <!-- /.title -->
+                                </div>
+                                <!-- /.single-product-item text-center -->
+                            </a>
+                        </div>
+                        <!-- /.item -->
+                        {% endfor %}
+                    </div>
+                </div>
+                <!-- /.related-product-box -->
+                {% endif %}
+
+            </div>
+            <!-- /.inner-page-wrapper -->
+        </div>
+        <!-- /.sidebar-page-content -->
+    </div>
+    <!-- /.container -->
+</section>
+{% endblock %}
+
+{% block javascripts_body %}
+{{ parent() }}
+<script src="{{ asset('javascripts/base_product.js') }}"></script>
+<script>
+
+    var app = angular.module('productDetailApp', []);
+
+    app.factory('product_data', ['$http', function product_data($http) {
+        return {
+            add_item_to_cart: function(dataObj){
+                return $http({
+                    method: 'POST',
+                    // url: Routing.generate('api_1_post_public_additemtocart'),
+                    url: Routing.generate('cart_add_item_to_cart'),
+                    data: $.param(dataObj),
+                    headers: {
+                        'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'
+                    }
+                });
+            }
+            ,find_fastest_showroom_distance: function(product_id, lat, lng){
+                return $http({
+                    method:'GET',
+                    url: Routing.generate('api_1_get_public_find_fastest_showroom_distance', { product_id:product_id, lat:lat, lng:lng } ),
+                    headers: {
+                        'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'
+                    }
+                });
+            }
+        }
+    }]);
+
+    app.controller('productDetailCtrl',['$scope', '$sce', '$http', 'product_data', function($scope, $sce, $http, product_data){
+
+        $scope.init = function(product_id, is_role_client)
+        {
+            $scope.product_id = product_id;
+            $scope.is_variant = '{{is_variant}}';
+            $scope.arr_sku_variant_data = {{arr_sku_variant_data|json_encode|raw}}
+            $scope.arr_variant_option_data = {{arr_variant_option_data|json_encode|raw}}
+
+            $scope.varian_option_selected = {};
+            if($scope.arr_variant_option_data['variant_default_option'].length>0){
+                var key_name = $scope.getVariantKeyName($scope.arr_variant_option_data['variant_default_option'], 'array');
+                $scope.varian_option_selected = $scope.arr_variant_option_data['variant_option_data'][key_name];
+            }
+
+            $scope.frm = {};
+            $scope.frm.quantity = 1;
+            $scope.frm.product_id = $scope.product_id;
+
+            $scope.showprice = {};
+            $scope.setShowPriceData();
+
+            $scope.arr_cart_data = {};
+            $scope.arr_cart_data.products = [];
+            $scope.arr_cart_data.summary = [];
+            $scope.error_msg = '';
+
+            $scope.is_role_client = is_role_client;
+
+            //$scope.arr_sku_variant_data = JSON.parse(arr_sku_variant_data);
+            //$scope.arr_sku_variant_data = JSON.parse(arr_sku_variant_data);
+
+            // geolocation getting the current positionSection
+            $scope.arr_showrooms = {};
+            $scope.arr_showrooms_raw_data = {{showrooms|json_encode|raw}};
+            $scope.arr_showrooms = $scope.arr_showrooms_raw_data;
+            $scope.data_showroom_loaded = false;
+            $scope.data_showroom_showmap = false;
+        }
+        //--------------------------//
+        // geolocation
+        $scope.getShowroomLocation = function(){
+            if(!$scope.data_showroom_loaded){
+                if ("geolocation" in navigator){
+                    // geolocation is available
+                    if (navigator.geolocation){
+                        navigator.geolocation.getCurrentPosition(
+                            // $scope.displayLocationInfo, $scope.handleLocationError, { maximumAge: 1500000, timeout: 0 }
+                            $scope.displayLocationInfo, $scope.handleLocationError
+                        );
+                    }else{
+                        // Geolocation is not supported by this browser
+                    }
+                }
+            }
+        }
+        // geolocation
+        $scope.displayLocationInfoWithoutLatLng = function() {
+            $scope.data_showroom_showmap = true;
+            product_data.find_fastest_showroom_distance($scope.product_id, '', '').then(function onSuccess(response){
+                $scope.data_showroom_loaded = true;
+            }).catch(function onError(response) {
+            });
+        }
+        // geolocation
+        $scope.displayLocationInfo = function(position) {
+            var lat = position.coords.latitude;
+            var lng = position.coords.longitude;
+            product_data.find_fastest_showroom_distance($scope.product_id, lat, lng).then(function onSuccess(response){
+                $scope.arr_showrooms = response.data.arr_showrooms;
+                $scope.data_showroom_loaded = true;
+                $scope.data_showroom_showmap = true;
+            }).catch(function onError(response) {
+                // closeDomWindow();
+            });
+        }
+        // geolocation
+        $scope.handleLocationError = function(error) {
+            console.log('error.code: '+error.code+' '+error.message);
+            switch (error.code) {
+                case 3:
+                    // #timeout was hit, meaning nothing's in the cache
+                    // #provide a default location:
+                    // displayLocationInfo({ coords: { latitude: 27.380583, longitude: 33.631839 } });
+
+                    // #now make a non-cached request to get the actual position
+                    navigator.geolocation.getCurrentPosition($scope.displayLocationInfo, $scope.handleLocationError);
+                    break;
+                case 2:
+                    // #Unable to retrieve your location
+                    $scope.tryGoogleAPIGeolocation();
+                    break;
+                case 1:
+                    // #User denied geolocation prompt
+                    $scope.tryGoogleAPIGeolocation();
+            }
+        }
+        // google geolocation
+        $scope.tryGoogleAPIGeolocation = function() {
+            $http.post('https://www.googleapis.com/geolocation/v1/geolocate?key={{geolocation_api_key}}').then(function onSuccess(success){
+                var position = {coords: {latitude: success.data.location.lat, longitude: success.data.location.lng}};
+                $scope.displayLocationInfo(position);
+            }, function errorCallback(err) {
+                console.log("Google API Geolocation error!");
+                $scope.ipLookUp();
+            });
+        }
+        // IP address lookup
+        $scope.ipLookUp = function(){
+            $http({method: 'GET', url: 'http://ip-api.com/json'
+            }).then(function successCallback(response) {
+                // this callback will be called asynchronously
+                var position = {coords: {latitude: response.data.lat, longitude: response.data.lon}};
+                $scope.displayLocationInfo(position);
+            }, function errorCallback(err) {
+                // // called asynchronously if an error occurs
+                console.log('ip-api request failed ', err);
+                $scope.displayLocationInfoWithoutLatLng();
+            });
+
+            /*
+            $http({method: 'GET', url: 'https://ipinfo.io/geo?token=542c42b197dc75'
+            }).then(function successCallback(response) {
+                if (typeof response.data.loc !== 'undefined') {
+                    // this callback will be called asynchronously
+                    var loc = response.data.loc.split(',');
+                    var position = {coords: {latitude: loc[0], longitude: loc[1]}};
+                    $scope.displayLocationInfo(position);
+                }else{
+                    console.log('Ipinfo request failed');
+                    $scope.displayLocationInfoWithoutLatLng();
+                }
+            }, function errorCallback(err) {
+                // // called asynchronously if an error occurs
+                console.log('Ipinfo request failed');
+                $scope.displayLocationInfoWithoutLatLng();
+            });
+            */
+        }
+        //--------------------------//
+
+        // add product to cart
+        $scope.submitAddToCart = function(is_order_now)
+        {
+            $scope.frm._token = angular.element('#add_to_cart__token').val();
+
+            if($scope.is_variant){
+                $scope.frm.varian_option = $scope.varian_option_selected;
+            }
+
+            product_data.add_item_to_cart($scope.frm).then(function onSuccess(response){
+                // closeDomWindow();
+
+                if(response.data.status==true){
+                    $scope.arr_cart_data = response.data.arr_cart_data;
+                    $scope.error_msg='';
+
+                    //redirect to cart
+                    if(is_order_now==1){
+                        $(location).attr('href', '{{url('cart')}}');
+                    }else{
+
+                        if($scope.arr_cart_data.summary.total){
+                            angular.element($( "#cart_summary_item_count" ).html('<span class="cart-item">'+$scope.arr_cart_data.summary.item_count+'</span>'));
+                            angular.element($( "#cart_summary_item_count_sub" ).html($scope.arr_cart_data.summary.item_count));
+                            if(!$scope.is_role_client){
+                                angular.element($( "#cart_summary_total" ).html("- ฿"+numeral( $scope.arr_cart_data.summary.total).format('0,0.00') ));
+                            }
+                        }
+                        if($scope.arr_cart_data.products){
+                            angular.element($( "#cart_list_products_item" ).html(''));
+                            $scope.arr_cart_data.products.forEach(function(element) {
+                                updateCartBoxData(element, $scope.is_role_client);
+                            });
+                        }
+
+                        //angular.element($( "#cart_list_products" ).css({'display':'block'}));
+                        angular.element($( "#cart_list_products" ).fadeIn('fast'));
+                    }
+                }else{
+                    $scope.error_msg = response.data.error_msg;
+                }
+
+            }).catch(function onError(response) {
+                // closeDomWindow();
+            });
+        }
+
+        $scope.setVariantSelectedData = function()
+        {
+            if($scope.arr_sku_variant_data.variant_data.length>0){
+                var key_name = $scope.getVariantKeyName($scope.arr_sku_variant_data.variant_data, 'object_selected');
+                $scope.varian_option_selected = $scope.arr_variant_option_data['variant_option_data'][key_name];
+            }
+            $scope.setShowPriceData();
+        }
+
+        $scope.getVariantKeyName = function(data, type)
+        {
+            var arr_data = [];
+            data.forEach(function(element) {
+                if(type=='array'){
+                    arr_data.push(element); //when initial
+                }else if(type=='object_selected'){
+                    arr_data.push(element.selected); //when change variants
+                }
+            });
+            var tmp_key_name = arr_data.join('-');
+            return tmp_key_name;
+        }
+
+        $scope.setShowPriceData = function()
+        {
+            if($scope.is_variant){
+                //string to float
+                $scope.showprice.price = Number.parseFloat($scope.varian_option_selected.price);
+                $scope.showprice.compare_at_price = Number.parseFloat($scope.varian_option_selected.compare_at_price);
+            }else{
+                //string to float
+                $scope.showprice.price = Number.parseFloat('{{data.price}}');
+                $scope.showprice.compare_at_price = Number.parseFloat('{{data.compareAtPrice}}');
+            }
+
+            //calculate total price with quantity
+            if($scope.frm.quantity>1){
+                $scope.showprice.total_price = ($scope.showprice.price * $scope.frm.quantity);
+                $scope.showprice.total_compare_at_price = ($scope.showprice.compare_at_price * $scope.frm.quantity);
+            }else{
+                $scope.showprice.total_price = ($scope.showprice.price);
+                $scope.showprice.total_compare_at_price = ($scope.showprice.compare_at_price);
+            }
+            // js ceil
+            // Math.ceil($scope.varian_option_selected.price);
+        }
+
+    }]);
+
+    // angular.module("CombineModule", ["productDetailApp", "cartboxApp"]);
+
+    if ($('.single-product-carousel-content-box1').length && $('.single-product-carousel-thumbnail-box1').length) {
+
+        var $sync1 = $(".single-product-carousel-content-box1"),
+            $sync2 = $(".single-product-carousel-thumbnail-box1"),
+        flag = false,
+        duration = 1000;
+
+        $sync1
+        .owlCarousel({
+            items: 1,
+            margin: 0,
+            nav: false,
+            dots: false
+        })
+        .on('changed.owl.carousel', function(e) {
+            if (!flag) {
+                flag = true;
+                $sync2.trigger('to.owl.carousel', [e.item.index, duration, true]);
+                flag = false;
+            }
+
+        });
+
+        $sync2
+        .owlCarousel({
+            margin: 10,
+            items: 2,
+            nav: false,
+            dots: false,
+            navText: [
+                '<i class="fa fa-angle-left"></i>',
+                '<i class="fa fa-angle-right"></i>'
+            ],
+            center: false,
+            responsive: {
+                0: {
+                    items: 3,
+                    autoWidth: false
+                },
+                480: {
+                    items: 3,
+                    center: false,
+                    autoWidth: false
+                },
+                600: {
+                    items: 3,
+                    autoWidth: false
+                },
+                1000: {
+                    items: 3,
+                    autoWidth: false
+                }
+            },
+        })
+        .on('click', '.owl-item', function() {
+            $sync1.trigger('to.owl.carousel', [$(this).index(), duration, true]);
+
+        })
+        .on('changed.owl.carousel', function(e) {
+            if (!flag) {
+                flag = true;
+                $sync1.trigger('to.owl.carousel', [e.item.index, duration, true]);
+                flag = false;
+            }
+        });
+
+    };
+
+    if ($('.productZoom').length) {
+        $(".productZoom").each(function(arg, el){
+            var image = $(el).find("img").data("zoomImage");
+            $(el).zoom({
+                on: 'mouseover',
+                url: image
+            });
+        });
+    }
+
+</script>
+{% endblock %}

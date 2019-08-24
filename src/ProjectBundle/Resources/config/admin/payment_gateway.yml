@@ -1,0 +1,5 @@
+admin_payment_gateway_setting:
+  path: /setting
+  defaults: {_controller: ProjectBundle:AdminPaymentGateway:setting}
+  requirements:
+    _method: get, post

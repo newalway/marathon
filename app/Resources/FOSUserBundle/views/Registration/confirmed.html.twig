@@ -1,0 +1,21 @@
+{% extends "FOSUserBundle::bundle-layout.html.twig" %}
+
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block content %}
+<div class="container fos-container text-center">
+  <div class="fos-regis-confirm">
+    <i class="ion-ios-checkmark" style="font-size:3em;"></i>
+
+    <h2>{{'registration.confirmed_title'|trans()}}</h2>
+    <p>{{ 'registration.confirmed'|trans({'%username%': user.username}) }}</p>
+    <br/>
+    {#
+    {% if targetUrl %}
+    <p><a href="{{ targetUrl }}">{{ 'registration.back'|trans }}</a></p>
+    {% endif %}
+    #}
+    <p><a href="{{ path('member') }}" class="btn btn-marathon">{{ 'registration.back'|trans }}</a></p>
+  </div>
+</div>
+{% endblock content %}

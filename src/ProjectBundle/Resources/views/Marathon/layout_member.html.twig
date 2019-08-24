@@ -1,0 +1,78 @@
+{% extends "ProjectBundle:"~ view_layout ~":layout.html.twig" %}
+
+{% block title %}{% trans %}member.title{% endtrans %}{% endblock %}
+
+{% block body_class %}{{ parent() }} body-member{% endblock %}
+
+{% block breadcrumb_title1 %}{% trans %}member.title{% endtrans %}{% endblock %}
+
+{% block breadcrumb_sub %}
+  {{ parent() }}
+  <li><a href="{{path('fos_user_profile_show')}}">{% trans %}member.title{% endtrans %}</a></li>
+{% endblock %}
+
+{% block content %}
+<section class="section-padding member-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="member-panel">
+                    <div class="p-0-15">
+                        <i class="glyphicon glyphicon-user"></i> {% trans %}member.hello{% endtrans %}, {{ app.user.firstName }} {{ app.user.lastName }}
+                    </div>
+                    <hr class="mb-10 mt-10" />
+                    <ul class="nav nav-pills nav-stacked">
+
+                        <li class="{% block member_profile_active %}{% endblock %}">
+                            <a href="{{path('fos_user_profile_show')}}">{% trans %}member.personal{% endtrans %}</a>
+                        </li>
+                        <li class="{% block member_profile_edit_active %}{% endblock %}">
+                            <a href="{{path('fos_user_profile_edit')}}">{% trans %}member.change.personal.info{% endtrans %}</a>
+                        </li>
+
+                        {% if app.user.issetpassword == 1 %}
+                            <li class="{% block member_change_password_active %}{% endblock %}">
+                                <a href="{{path('fos_user_change_password')}}">{% trans %}member.change.password{% endtrans %}</a>
+                            </li>
+                        {% else %}
+                            <li class="{% block member_set_password_active %}{% endblock %}">
+                                <a href="{{path('member_set_password')}}">{% trans %}member.set_password{% endtrans %}</a>
+                            </li>
+                        {% endif %}
+
+                        <li class="{% block member_address_active %}{% endblock %}">
+                            <a href="{{path('address')}}">{% trans %}member.address.book{% endtrans %}</a>
+                        </li>
+                        <li class="{% block member_orders_active %}{% endblock %}">
+                            <a href="{{path('member_orders')}}">
+                              {% if is_granted('ROLE_CUSTOMER') %}
+                                  {% trans %}member.my.orders{% endtrans %}
+                              {% elseif is_granted('ROLE_CLIENT')  %}
+                                  {% trans %}member.my.rfq{% endtrans %}
+                              {% endif %}
+                            </a>
+                        </li>
+
+
+                        {% if is_granted('ROLE_CUSTOMER') %}
+                            <li class="{% block member_social_connections_active %}{% endblock %}">
+                                <a href="{{path('member_social_connections')}}">{% trans %}member.social.connections{% endtrans %}</a>
+                            </li>
+                        {% endif %}
+
+                        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                            <li><a href="{{path('fos_user_security_logout')}}">{% trans %}menu.logout{% endtrans %}</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="section-title">
+                    <h1><span>{% block member_header %}{% endblock %}</span></h1>
+                </div>
+                {% block content_member %}{% endblock %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
